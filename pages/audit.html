@@ -57,73 +57,32 @@
       </div>
     </header>
     
-    <!-- Hero Section -->
-    <section class="audit-hero">
-      <div class="audit-hero__bg"></div>
-      <div class="container">
-        <div class="audit-hero__content">
-          <h1 class="audit-hero__title">Международный аудит компаний</h1>
-          <p class="audit-hero__desc">
-            Профессиональные аудиторские услуги для компаний, зарегистрированных в различных юрисдикциях. 
-            Налоговое планирование, подготовка отчётности, консультации по особенностям налогообложения.
-          </p>
-          <div class="audit-hero__features">
-            <div class="audit-hero__feature">
-              <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                <path d="M3 9l9-7 9 7v11a2 2 0 01-2 2H5a2 2 0 01-2-2z"/>
-                <polyline points="9 22 9 12 15 12 15 22"/>
-              </svg>
-              <span>50+ юрисдикций</span>
-            </div>
-            <div class="audit-hero__feature">
-              <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                <circle cx="12" cy="12" r="10"/>
-                <polyline points="12 6 12 12 16 14"/>
-              </svg>
-              <span>От 7 дней</span>
-            </div>
-            <div class="audit-hero__feature">
-              <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                <path d="M12 2L2 7l10 5 10-5-10-5z"/>
-                <path d="M2 17l10 5 10-5"/>
-                <path d="M2 12l10 5 10-5"/>
-              </svg>
-              <span>Все виды аудита</span>
-            </div>
-          </div>
-        </div>
-      </div>
-    </section>
     
-    <!-- Filters Section -->
-    <section class="audit-filters">
+    <!-- Audit Page Header -->
+    <section class="audit-header">
       <div class="container">
-        <div class="filters-container">
-          <div class="filter-group">
-            <label for="search">Поиск страны</label>
-            <input type="text" id="search" placeholder="Введите название...">
-          </div>
-          <div class="filter-group">
-            <label for="region">Регион</label>
-            <select id="region">
-              <option value="">Все регионы</option>
-              <option value="europe">Европа</option>
-              <option value="asia">Азия</option>
-              <option value="america">Америка</option>
-              <option value="africa">Африка</option>
-              <option value="oceania">Океания</option>
-            </select>
-          </div>
-          <div class="filter-group">
-            <label for="type">Тип аудита</label>
-            <select id="type">
-              <option value="">Все типы</option>
-              <option value="financial">Финансовый</option>
-              <option value="tax">Налоговый</option>
-              <option value="operational">Операционный</option>
-              <option value="compliance">Комплаенс</option>
-            </select>
-          </div>
+        <h1 class="audit-header__title">Аудит международных компаний</h1>
+        <p class="audit-header__desc">Выберите юрисдикцию для получения информации о требованиях к аудиту</p>
+        
+        <div class="audit-dropdown">
+          <select id="country-select" class="audit-dropdown__select">
+            <option value="">Выберите страну регистрации</option>
+            <optgroup label="Европа">
+              <option value="cyprus">🇨🇾 Кипр - налог 12.5%</option>
+              <option value="malta">🇲🇹 Мальта - налог 35%</option>
+              <option value="uk">🇬🇧 Великобритания - налог 19-25%</option>
+              <option value="estonia">🇪🇪 Эстония - налог 20%</option>
+              <option value="switzerland">🇨🇭 Швейцария - налог 8.5%</option>
+            </optgroup>
+            <optgroup label="Азия">
+              <option value="singapore">🇸🇬 Сингапур - налог 17%</option>
+              <option value="hongkong">🇭🇰 Гонконг - налог 16.5%</option>
+              <option value="uae">🇦🇪 ОАЭ - налог 0-9%</option>
+            </optgroup>
+            <optgroup label="Америка">
+              <option value="usa">🇺🇸 США - налог 21-35%</option>
+            </optgroup>
+          </select>
         </div>
       </div>
     </section>

@@ -981,4 +981,165 @@
   if (document.querySelector('#kik-title')) {
     loadKikData();
   }
+
+  // ========== SHOWCASE MANAGEMENT ==========
+  const showcaseList = document.getElementById('showcase-list');
+  const addSlideBtn = document.getElementById('add-slide-btn');
+  const showcaseModal = document.getElementById('showcase-modal');
+  const showcaseModalTitle = document.getElementById('showcase-modal-title');
+  const showcaseForm = document.getElementById('showcase-form');
+  const showcaseModalClose = document.getElementById('showcase-modal-close');
+  const showcaseModalCancel = document.getElementById('showcase-modal-cancel');
+
+  function loadShowcaseSlides() {
+    const slides = localStorage.getItem('showcaseSlides');
+    return slides ? JSON.parse(slides) : getDefaultSlides();
+  }
+
+  function getDefaultSlides() {
+    return [
+      {
+        id: '1',
+        title: 'Спецпредложение месяца',
+        desc: 'Регистрация компании в ОАЭ + открытие корпоративного счета всего за $2,500',
+        link: './pages/registratsiya.html',
+        linkText: 'Узнать подробнее →',
+        image: 'https://images.unsplash.com/photo-1512453979798-5ea266f8880c?w=600&h=400&fit=crop',
+        imageAlt: 'Dubai skyline'
+      },
+      {
+        id: '2',
+        title: 'Новые юрисдикции',
+        desc: 'Теперь доступна регистрация компаний в Эстонии и Швейцарии с дистанционным открытием счетов',
+        link: './pages/registratsiya.html',
+        linkText: 'Выбрать юрисдикцию →',
+        image: 'https://images.unsplash.com/photo-1521295121783-8a321d551ad2?w=600&h=400&fit=crop',
+        imageAlt: 'European city'
+      },
+      {
+        id: '3',
+        title: 'Банки для IT',
+        desc: 'Специальные условия открытия счетов для IT-компаний. Быстрое рассмотрение заявок',
+        link: './pages/banki.html',
+        linkText: 'Подобрать банк →',
+        image: 'https://images.unsplash.com/photo-1563986768609-322da13575f3?w=600&h=400&fit=crop',
+        imageAlt: 'Digital banking'
+      }
+    ];
+  }
+
+  function renderShowcaseSlides() {
+    const slides = loadShowcaseSlides();
+    showcaseList.innerHTML = slides.map(slide => `
+      <div class="showcase-admin-item">
+        <div class="showcase-admin-image">
+          <img src="${slide.image}" alt="${slide.imageAlt || slide.title}" onerror="this.src='data:image/svg+xml,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 150 100%22%3E%3Crect fill=%22%23ddd%22 width=%22150%22 height=%22100%22/%3E%3Ctext x=%2275%22 y=%2250%22 text-anchor=%22middle%22 dy=%22.3em%22 fill=%22%23999%22%3ENo Image%3C/text%3E%3C/svg%3E'">
+        </div>
+        <div class="showcase-admin-content">
+          <h4 class="showcase-admin-title">${slide.title}</h4>
+          <p class="showcase-admin-desc">${slide.desc}</p>
+          <a href="${slide.link}" class="showcase-admin-link" target="_blank">${slide.linkText}</a>
+        </div>
+        <div class="showcase-admin-actions">
+          <button class="btn btn--sm" onclick="editShowcaseSlide('${slide.id}')">✏️</button>
+          <button class="btn btn--sm btn--danger" onclick="deleteShowcaseSlide('${slide.id}')">🗑️</button>
+        </div>
+      </div>
+    `).join('');
+  }
+
+  window.editShowcaseSlide = function(id) {
+    const slides = loadShowcaseSlides();
+    const slide = slides.find(s => s.id === id);
+    if (!slide) return;
+
+    showcaseModalTitle.textContent = 'Редактировать слайд';
+    document.getElementById('showcase-id').value = slide.id;
+    document.getElementById('showcase-title').value = slide.title;
+    document.getElementById('showcase-desc').value = slide.desc;
+    document.getElementById('showcase-link').value = slide.link;
+    document.getElementById('showcase-link-text').value = slide.linkText;
+    document.getElementById('showcase-image').value = slide.image;
+    document.getElementById('showcase-image-alt').value = slide.imageAlt || '';
+    
+    showcaseModal.style.display = 'block';
+  };
+
+  window.deleteShowcaseSlide = function(id) {
+    if (!confirm('Удалить этот слайд?')) return;
+    
+    let slides = loadShowcaseSlides();
+    slides = slides.filter(s => s.id !== id);
+    localStorage.setItem('showcaseSlides', JSON.stringify(slides));
+    renderShowcaseSlides();
+    showNotification('Слайд удален');
+  };
+
+  function showShowcaseModal() {
+    showcaseModalTitle.textContent = 'Добавить слайд';
+    showcaseForm.reset();
+    document.getElementById('showcase-id').value = '';
+    showcaseModal.style.display = 'block';
+  }
+
+  // Event listeners
+  if (addSlideBtn) {
+    addSlideBtn.addEventListener('click', showShowcaseModal);
+  }
+
+  if (showcaseModalClose) {
+    showcaseModalClose.addEventListener('click', () => {
+      showcaseModal.style.display = 'none';
+    });
+  }
+
+  if (showcaseModalCancel) {
+    showcaseModalCancel.addEventListener('click', () => {
+      showcaseModal.style.display = 'none';
+    });
+  }
+
+  if (showcaseForm) {
+    showcaseForm.addEventListener('submit', (e) => {
+      e.preventDefault();
+      
+      const slideData = {
+        id: document.getElementById('showcase-id').value || Date.now().toString(),
+        title: document.getElementById('showcase-title').value,
+        desc: document.getElementById('showcase-desc').value,
+        link: document.getElementById('showcase-link').value,
+        linkText: document.getElementById('showcase-link-text').value,
+        image: document.getElementById('showcase-image').value,
+        imageAlt: document.getElementById('showcase-image-alt').value
+      };
+      
+      let slides = loadShowcaseSlides();
+      
+      if (slideData.id && slides.find(s => s.id === slideData.id)) {
+        // Update existing
+        slides = slides.map(s => s.id === slideData.id ? slideData : s);
+      } else {
+        // Add new
+        slides.push(slideData);
+      }
+      
+      localStorage.setItem('showcaseSlides', JSON.stringify(slides));
+      showcaseModal.style.display = 'none';
+      renderShowcaseSlides();
+      showNotification('Слайд сохранен');
+    });
+  }
+
+  // Initialize showcase on tab switch
+  document.querySelectorAll('.admin-tab').forEach(tab => {
+    if (tab.dataset.tab === 'showcase') {
+      tab.addEventListener('click', () => {
+        setTimeout(() => {
+          if (showcaseList) {
+            renderShowcaseSlides();
+          }
+        }, 10);
+      });
+    }
+  });
 })();

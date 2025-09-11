@@ -33,12 +33,12 @@ a{color:var(--brand-light);text-decoration:none;transition:color 0.2s ease}
 a:hover{color:#fff}
 .container{width:100%;max-width:1140px;margin:0 auto;padding:0 20px}
 
-/* PRELOADER - НОВЫЙ С НУЛЯ */
+/* PRELOADER - SBERBANK STYLE */
 .preloader{
   position:fixed;
   top:0;left:0;right:0;bottom:0;
   z-index:999999;
-  background:#0a0f1e;
+  background:#f9f9f9;
   display:flex;
   align-items:center;
   justify-content:center;
@@ -55,21 +55,23 @@ a:hover{color:#fff}
   display:flex;
   flex-direction:column;
   align-items:center;
-  gap:20px;
+  gap:24px;
 }
 /* preloader-logo стили в index.html */
 .spinner{
-  width:50px;
-  height:50px;
-  border:4px solid rgba(255,255,255,.1);
-  border-left-color:var(--brand-light);
+  width:48px;
+  height:48px;
+  border:3px solid #e0e0e0;
+  border-left-color:#21a038;
   border-radius:50%;
-  animation:spin 1s linear infinite;
+  animation:spin 0.8s linear infinite;
 }
 .preloader p{
-  color:var(--text-secondary);
+  color:#333;
   font-size:16px;
+  font-weight:500;
   margin:0;
+  letter-spacing:0.5px;
 }
 @keyframes spin{
   to{transform:rotate(360deg)}
@@ -106,10 +108,12 @@ a:hover{color:#fff}
 
 /* Dropdown */
 .nav__item{position:relative}
-.dropdown{position:absolute;left:0;top:100%;background:rgba(13,20,35,.98);border:1px solid var(--border);border-radius:10px;padding:10px;min-width:220px;display:none;box-shadow:var(--shadow)}
-.dropdown a{display:block;padding:8px 10px;border-radius:6px}
+.dropdown{position:absolute;left:0;top:100%;background:rgba(13,20,35,.98);border:1px solid var(--border);border-radius:10px;padding:10px;min-width:220px;display:none;box-shadow:var(--shadow);list-style:none;margin:0}
+.dropdown li{list-style:none;margin:0;padding:0}
+.dropdown a{display:flex;align-items:center;gap:10px;padding:8px 10px;border-radius:6px}
 .dropdown a:hover{background:rgba(255,255,255,.06)}
 .nav__item.open > .dropdown{display:block}
+.dropdown-flag{font-size:20px;width:24px;text-align:center;filter:drop-shadow(0 1px 2px rgba(0,0,0,0.3))}
 
 /* Hero */
 .hero{
@@ -139,6 +143,11 @@ a:hover{color:#fff}
   align-items: stretch;
   flex-wrap: wrap;
   margin-top: 48px;
+}
+
+.hero__messengers {
+  display: flex;
+  gap: 12px;
 }
 
 /* Buttons */
@@ -725,6 +734,145 @@ tbody tr:hover{background:rgba(255,255,255,.08)}
   }
 }
 
+/* Showcase Section */
+.showcase {
+  padding: 80px 0;
+  background: var(--bg);
+}
+
+.showcase__wrapper {
+  position: relative;
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+.showcase__slider {
+  position: relative;
+  height: 400px;
+  overflow: hidden;
+  border-radius: 24px;
+  background: var(--bg-card);
+  box-shadow: 0 10px 40px rgba(0,0,0,0.1);
+}
+
+.showcase__slide {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  opacity: 0;
+  visibility: hidden;
+  transition: all 0.5s ease;
+}
+
+.showcase__slide.active {
+  opacity: 1;
+  visibility: visible;
+}
+
+.showcase__content {
+  flex: 1;
+  padding: 60px;
+}
+
+.showcase__title {
+  font-size: 32px;
+  font-weight: 700;
+  color: var(--text-primary);
+  margin-bottom: 16px;
+  background: var(--gradient-brand);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+}
+
+.showcase__desc {
+  font-size: 18px;
+  line-height: 1.6;
+  color: var(--text-secondary);
+  margin-bottom: 24px;
+}
+
+.showcase__link {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  color: var(--brand-light);
+  font-weight: 600;
+  font-size: 16px;
+  transition: transform 0.2s;
+}
+
+.showcase__link:hover {
+  transform: translateX(4px);
+}
+
+.showcase__image {
+  flex: 1;
+  height: 100%;
+  position: relative;
+  overflow: hidden;
+}
+
+.showcase__image img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transition: transform 0.5s ease;
+}
+
+.showcase__slide.active .showcase__image img {
+  transform: scale(1.05);
+}
+
+.showcase__dots {
+  display: flex;
+  gap: 12px;
+  justify-content: center;
+  margin-top: 32px;
+}
+
+.showcase__dot {
+  width: 12px;
+  height: 12px;
+  border-radius: 50%;
+  border: none;
+  background: rgba(255,255,255,0.3);
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.showcase__dot.active {
+  width: 32px;
+  border-radius: 6px;
+  background: var(--brand-light);
+}
+
+@media (max-width: 768px) {
+  .showcase__slider {
+    height: auto;
+  }
+  
+  .showcase__slide {
+    flex-direction: column;
+  }
+  
+  .showcase__content {
+    padding: 40px;
+  }
+  
+  .showcase__image {
+    height: 250px;
+  }
+  
+  .showcase__title {
+    font-size: 24px;
+  }
+}
+
 /* NEW SERVICE CARDS */
 .services {
   padding: 100px 0;
@@ -962,6 +1110,32 @@ tbody tr:hover{background:rgba(255,255,255,.08)}
 
 .btn--ghost:hover::after {
   background-position: 100% 0;
+}
+
+/* Messenger buttons */
+.btn--messenger {
+  background: #25D366;
+  color: #ffffff;
+  border-color: transparent;
+  min-width: 140px;
+  padding: 16px 24px !important;
+  box-shadow: 0 4px 20px rgba(37, 211, 102, 0.3);
+}
+
+.btn--messenger:hover {
+  background: #1fb855;
+  transform: translateY(-2px);
+  box-shadow: 0 6px 25px rgba(37, 211, 102, 0.4);
+}
+
+.btn--telegram {
+  background: #0088cc;
+  box-shadow: 0 4px 20px rgba(0, 136, 204, 0.3);
+}
+
+.btn--telegram:hover {
+  background: #0077b5;
+  box-shadow: 0 6px 25px rgba(0, 136, 204, 0.4);
 }
 
 .btn svg {

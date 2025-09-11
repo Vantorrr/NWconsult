@@ -131,7 +131,6 @@
   const countriesGrid = document.getElementById('countries-grid');
   const searchInput = document.getElementById('country-search');
   const regionFilter = document.getElementById('region-filter');
-  const priceFilter = document.getElementById('price-filter');
   const resetBtn = document.getElementById('reset-filters');
 
   // Render countries
@@ -185,17 +184,6 @@
       filtered = filtered.filter(c => c.region === region);
     }
     
-    // Price filter
-    const priceRange = priceFilter?.value || '';
-    if (priceRange) {
-      if (priceRange === '0-1000') {
-        filtered = filtered.filter(c => c.price <= 1000);
-      } else if (priceRange === '1000-3000') {
-        filtered = filtered.filter(c => c.price > 1000 && c.price <= 3000);
-      } else if (priceRange === '3000+') {
-        filtered = filtered.filter(c => c.price > 3000);
-      }
-    }
     
     renderCountries(filtered);
   }
@@ -203,12 +191,10 @@
   // Event listeners
   searchInput?.addEventListener('input', filterCountries);
   regionFilter?.addEventListener('change', filterCountries);
-  priceFilter?.addEventListener('change', filterCountries);
   
   resetBtn?.addEventListener('click', () => {
     if (searchInput) searchInput.value = '';
     if (regionFilter) regionFilter.value = '';
-    if (priceFilter) priceFilter.value = '';
     renderCountries();
   });
 

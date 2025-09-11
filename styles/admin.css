@@ -80,6 +80,82 @@ body {
   min-height: 20px;
 }
 
+/* Developer Info */
+.pin-footer {
+  margin-top: 48px;
+  padding-top: 32px;
+  border-top: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.developer-info {
+  text-align: center;
+}
+
+.developer-title {
+  font-size: 12px;
+  color: rgba(255, 255, 255, 0.5);
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  margin: 0 0 12px;
+}
+
+.developer-brand {
+  display: inline-block;
+  text-decoration: none;
+  margin-bottom: 16px;
+  transition: transform 0.3s ease;
+}
+
+.developer-brand:hover {
+  transform: scale(1.05);
+}
+
+.developer-logo {
+  display: block;
+  font-size: 28px;
+  font-weight: 900;
+  background: linear-gradient(45deg, #00bfff, #8b5cf6);
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+  letter-spacing: 2px;
+  margin-bottom: 4px;
+}
+
+.developer-tagline {
+  display: block;
+  font-size: 11px;
+  color: rgba(255, 255, 255, 0.6);
+  text-transform: uppercase;
+  letter-spacing: 1px;
+}
+
+.developer-contacts {
+  display: flex;
+  gap: 20px;
+  justify-content: center;
+  margin-top: 16px;
+}
+
+.developer-link {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 13px;
+  color: rgba(255, 255, 255, 0.7);
+  text-decoration: none;
+  transition: all 0.3s ease;
+}
+
+.developer-link:hover {
+  color: var(--brand-light);
+  transform: translateY(-2px);
+}
+
+.developer-link svg {
+  opacity: 0.7;
+}
+
 /* Admin Header */
 .admin-header {
   background: rgba(26, 35, 50, 0.8);
@@ -677,6 +753,177 @@ body {
 textarea.form-control {
   resize: vertical;
   min-height: 80px;
+}
+
+/* Showcase Admin */
+.showcase-admin-list {
+  display: grid;
+  gap: 16px;
+  margin-top: 24px;
+}
+
+.showcase-admin-item {
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  padding: 20px;
+  display: flex;
+  gap: 20px;
+  align-items: center;
+}
+
+.showcase-admin-image {
+  width: 150px;
+  height: 100px;
+  border-radius: 8px;
+  overflow: hidden;
+  flex-shrink: 0;
+  background: var(--bg-section);
+}
+
+.showcase-admin-image img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.showcase-admin-content {
+  flex: 1;
+}
+
+.showcase-admin-title {
+  font-size: 18px;
+  font-weight: 600;
+  color: var(--text-primary);
+  margin-bottom: 8px;
+}
+
+.showcase-admin-desc {
+  color: var(--text-secondary);
+  font-size: 14px;
+  margin-bottom: 8px;
+}
+
+.showcase-admin-link {
+  color: var(--brand-light);
+  font-size: 13px;
+  text-decoration: none;
+}
+
+.showcase-admin-actions {
+  display: flex;
+  gap: 8px;
+  margin-left: auto;
+}
+
+/* Developer Card in Settings */
+.developer-card {
+  background: rgba(255, 255, 255, 0.03);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 16px;
+  padding: 32px;
+  margin-top: 20px;
+}
+
+.developer-card-header {
+  text-align: center;
+  margin-bottom: 24px;
+}
+
+.developer-card-logo {
+  display: block;
+  font-size: 42px;
+  font-weight: 900;
+  background: linear-gradient(45deg, #00bfff, #8b5cf6);
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+  letter-spacing: 3px;
+  margin-bottom: 8px;
+}
+
+.developer-card-badge {
+  display: inline-block;
+  font-size: 12px;
+  color: rgba(255, 255, 255, 0.6);
+  text-transform: uppercase;
+  letter-spacing: 2px;
+  padding: 6px 16px;
+  background: rgba(139, 92, 246, 0.1);
+  border: 1px solid rgba(139, 92, 246, 0.3);
+  border-radius: 20px;
+}
+
+.developer-card-desc {
+  text-align: center;
+  color: rgba(255, 255, 255, 0.8);
+  line-height: 1.6;
+  margin: 24px 0;
+  font-size: 15px;
+}
+
+.developer-card-stats {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 24px;
+  margin: 32px 0;
+  text-align: center;
+}
+
+.stat {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.stat-value {
+  font-size: 28px;
+  font-weight: 700;
+  color: var(--brand-light);
+}
+
+.stat-label {
+  font-size: 13px;
+  color: rgba(255, 255, 255, 0.5);
+  text-transform: uppercase;
+  letter-spacing: 1px;
+}
+
+.developer-card-links {
+  display: flex;
+  gap: 16px;
+  justify-content: center;
+  margin: 32px 0;
+}
+
+.developer-card-link {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 12px 24px;
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 8px;
+  color: rgba(255, 255, 255, 0.9);
+  text-decoration: none;
+  font-size: 14px;
+  font-weight: 500;
+  transition: all 0.3s ease;
+}
+
+.developer-card-link:hover {
+  background: rgba(0, 191, 255, 0.1);
+  border-color: rgba(0, 191, 255, 0.3);
+  transform: translateY(-2px);
+}
+
+.developer-card-footer {
+  text-align: center;
+  font-size: 13px;
+  color: rgba(255, 255, 255, 0.4);
+  font-style: italic;
+  margin: 0;
+  letter-spacing: 1px;
 }
 
 /* Responsive */

@@ -81,7 +81,7 @@
 /* Filters Section */
 .filters-section {
   background: #0f1823;
-  padding: 60px 0;
+  padding: 100px 0 60px;
   border-bottom: 1px solid rgba(255, 255, 255, 0.1);
 }
 
@@ -197,15 +197,19 @@
 }
 
 .country-flag {
-  width: 48px;
-  height: 48px;
-  background: rgba(255, 255, 255, 0.1);
-  border-radius: 8px;
-  margin-bottom: 16px;
+  width: 72px;
+  height: 72px;
+  margin-bottom: 20px;
   display: flex;
   align-items: center;
   justify-content: center;
-  font-size: 28px;
+  font-size: 56px;
+  filter: drop-shadow(0 4px 12px rgba(0,0,0,0.3));
+  transition: transform 0.3s ease;
+}
+
+.country-card:hover .country-flag {
+  transform: scale(1.1);
 }
 
 .country-name {

@@ -1,5 +1,19 @@
 // Audit page functionality
 
+// Simple dropdown functionality
+document.addEventListener('DOMContentLoaded', function() {
+  const countrySelect = document.getElementById('country-select');
+  if (countrySelect) {
+    countrySelect.addEventListener('change', function() {
+      const selectedCountry = this.value;
+      if (selectedCountry) {
+        // Redirect to the country audit page
+        window.location.href = `./articles/audit-${selectedCountry}.html`;
+      }
+    });
+  }
+});
+
 // Get countries data from registration
 function getCountriesData() {
   // Try to get from localStorage first

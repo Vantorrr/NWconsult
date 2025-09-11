@@ -3,7 +3,7 @@
 /* Hero Section */
 .accounting-hero {
   background: #0a0f1e;
-  padding: 100px 0 120px;
+  padding: 60px 0 60px;
   position: relative;
   overflow: hidden;
 }
@@ -35,9 +35,9 @@
 }
 
 .accounting-hero__title {
-  font-size: clamp(36px, 5vw, 56px);
+  font-size: clamp(32px, 4vw, 44px);
   font-weight: 800;
-  margin: 0 0 24px 0;
+  margin: 0 0 20px 0;
   color: #ffffff;
   line-height: 1.2;
 }
@@ -50,9 +50,9 @@
 }
 
 .accounting-hero__desc {
-  font-size: 20px;
+  font-size: 18px;
   color: rgba(255, 255, 255, 0.8);
-  margin: 0 0 40px 0;
+  margin: 0 0 32px 0;
   line-height: 1.6;
 }
 
@@ -339,7 +339,7 @@
 
 @media (max-width: 768px) {
   .accounting-hero {
-    padding: 80px 0 100px;
+    padding: 50px 0 50px;
   }
   
   .accounting-hero__cta {

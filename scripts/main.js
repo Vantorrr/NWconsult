@@ -166,3 +166,99 @@ window.addEventListener('load', () => {
   
   counters.forEach(counter => counterObserver.observe(counter));
 });
+
+// Showcase Slider
+document.addEventListener('DOMContentLoaded', () => {
+  const showcaseSlider = document.querySelector('.showcase__slider');
+  
+  if (!showcaseSlider) return;
+  
+  // Load slides from localStorage
+  function loadShowcaseSlides() {
+    const slides = localStorage.getItem('showcaseSlides');
+    if (slides) {
+      return JSON.parse(slides);
+    }
+    // Default slides
+    return [
+      {
+        id: '1',
+        title: 'Спецпредложение месяца',
+        desc: 'Регистрация компании в ОАЭ + открытие корпоративного счета всего за $2,500',
+        link: './pages/registratsiya.html',
+        linkText: 'Узнать подробнее →',
+        image: 'https://images.unsplash.com/photo-1512453979798-5ea266f8880c?w=600&h=400&fit=crop',
+        imageAlt: 'Dubai skyline'
+      },
+      {
+        id: '2',
+        title: 'Новые юрисдикции',
+        desc: 'Теперь доступна регистрация компаний в Эстонии и Швейцарии с дистанционным открытием счетов',
+        link: './pages/registratsiya.html',
+        linkText: 'Выбрать юрисдикцию →',
+        image: 'https://images.unsplash.com/photo-1521295121783-8a321d551ad2?w=600&h=400&fit=crop',
+        imageAlt: 'European city'
+      },
+      {
+        id: '3',
+        title: 'Банки для IT',
+        desc: 'Специальные условия открытия счетов для IT-компаний. Быстрое рассмотрение заявок',
+        link: './pages/banki.html',
+        linkText: 'Подобрать банк →',
+        image: 'https://images.unsplash.com/photo-1563986768609-322da13575f3?w=600&h=400&fit=crop',
+        imageAlt: 'Digital banking'
+      }
+    ];
+  }
+  
+  // Render slides
+  const slidesData = loadShowcaseSlides();
+  const dotsContainer = document.querySelector('.showcase__dots');
+  
+  showcaseSlider.innerHTML = slidesData.map((slide, index) => `
+    <div class="showcase__slide ${index === 0 ? 'active' : ''}" data-slide="${index + 1}">
+      <div class="showcase__content">
+        <h3 class="showcase__title">${slide.title}</h3>
+        <p class="showcase__desc">${slide.desc}</p>
+        <a href="${slide.link}" class="showcase__link">${slide.linkText}</a>
+      </div>
+      <div class="showcase__image">
+        <img src="${slide.image}" alt="${slide.imageAlt || slide.title}" onerror="this.src='data:image/svg+xml,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 600 400%22%3E%3Crect fill=%22%23f0f0f0%22 width=%22600%22 height=%22400%22/%3E%3Ctext x=%22300%22 y=%22200%22 text-anchor=%22middle%22 dy=%22.3em%22 fill=%22%23999%22 font-size=%2224%22%3E${slide.title}%3C/text%3E%3C/svg%3E'">
+      </div>
+    </div>
+  `).join('');
+  
+  dotsContainer.innerHTML = slidesData.map((_, index) => `
+    <button class="showcase__dot ${index === 0 ? 'active' : ''}" data-slide="${index + 1}"></button>
+  `).join('');
+  
+  // Re-query elements after rendering
+  const slides = document.querySelectorAll('.showcase__slide');
+  const dots = document.querySelectorAll('.showcase__dot');
+  
+  if (!slides.length || !dots.length) return;
+  
+  let currentSlide = 0;
+  
+  function showSlide(index) {
+    slides.forEach(slide => slide.classList.remove('active'));
+    dots.forEach(dot => dot.classList.remove('active'));
+    
+    slides[index].classList.add('active');
+    dots[index].classList.add('active');
+  }
+  
+  // Auto-play
+  setInterval(() => {
+    currentSlide = (currentSlide + 1) % slides.length;
+    showSlide(currentSlide);
+  }, 5000);
+  
+  // Dot navigation
+  dots.forEach((dot, index) => {
+    dot.addEventListener('click', () => {
+      currentSlide = index;
+      showSlide(currentSlide);
+    });
+  });
+});

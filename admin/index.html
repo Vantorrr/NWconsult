@@ -22,6 +22,32 @@
           <input type="password" id="pin-input" class="pin-input" maxlength="6" placeholder="••••••" autocomplete="off">
         </div>
         <div id="pin-error" class="pin-error"></div>
+        
+        <div class="pin-footer">
+          <div class="developer-info">
+            <p class="developer-title">Разработано командой</p>
+            <a href="https://noface.digital" target="_blank" class="developer-brand">
+              <span class="developer-logo">N0FACE</span>
+              <span class="developer-tagline">Digital Legends</span>
+            </a>
+            <div class="developer-contacts">
+              <a href="https://noface.digital" target="_blank" class="developer-link">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <circle cx="12" cy="12" r="10"></circle>
+                  <path d="M2 12h20"></path>
+                  <path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"></path>
+                </svg>
+                noface.digital
+              </a>
+              <a href="https://t.me/pavel_xdev" target="_blank" class="developer-link">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <path d="M21 2l-18 9 5 1m0 0l-5 9 18-9-13 8m8-8v7"></path>
+                </svg>
+                @pavel_xdev
+              </a>
+            </div>
+          </div>
+        </div>
       </div>
     </div>
     
@@ -51,6 +77,7 @@
             <button class="admin-tab" data-tab="audit">Аудит</button>
             <button class="admin-tab" data-tab="other-services">Прочие услуги</button>
             <button class="admin-tab" data-tab="articles">Статьи</button>
+            <button class="admin-tab" data-tab="showcase">Слайдер</button>
             <button class="admin-tab" data-tab="settings">Настройки</button>
           </div>
           
@@ -311,6 +338,34 @@
             </div>
           </div>
           
+          <!-- Showcase Tab -->
+          <div id="showcase-tab" class="admin-tab-content">
+            <div class="admin-section">
+              <h2>Управление слайдером на главной странице</h2>
+              
+              <div class="admin-section-info">
+                <p>🎨 Здесь вы можете управлять слайдами на главной странице</p>
+              </div>
+              
+              <div class="admin-actions">
+                <button id="add-slide-btn" class="btn btn--primary">
+                  <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2">
+                    <path d="M8 1v14M1 8h14"/>
+                  </svg>
+                  Добавить слайд
+                </button>
+              </div>
+              
+              <div id="showcase-list" class="showcase-admin-list">
+                <!-- Slides will be loaded here -->
+              </div>
+              
+              <div class="admin-note">
+                <p><strong>Подсказка:</strong> Рекомендуемый размер изображений: 600x400px</p>
+              </div>
+            </div>
+          </div>
+          
           <!-- Settings Tab -->
           <div id="settings-tab" class="admin-tab-content">
             <div class="admin-section">
@@ -343,6 +398,52 @@
                 <div class="setting-item">
                   <p class="warning-text">⚠️ Это действие необратимо!</p>
                   <button id="clear-all" class="btn btn--danger">Очистить все данные</button>
+                </div>
+              </div>
+              
+              <div class="settings-group">
+                <h3>О разработчике</h3>
+                <div class="developer-card">
+                  <div class="developer-card-header">
+                    <span class="developer-card-logo">N0FACE</span>
+                    <span class="developer-card-badge">Digital Legends</span>
+                  </div>
+                  <p class="developer-card-desc">
+                    Профессиональная команда разработчиков, специализирующаяся на создании современных веб-решений высокого уровня.
+                  </p>
+                  <div class="developer-card-stats">
+                    <div class="stat">
+                      <span class="stat-value">1337+</span>
+                      <span class="stat-label">Проектов</span>
+                    </div>
+                    <div class="stat">
+                      <span class="stat-value">24/7</span>
+                      <span class="stat-label">Поддержка</span>
+                    </div>
+                    <div class="stat">
+                      <span class="stat-value">∞</span>
+                      <span class="stat-label">Возможности</span>
+                    </div>
+                  </div>
+                  <div class="developer-card-links">
+                    <a href="https://noface.digital" target="_blank" class="developer-card-link">
+                      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <circle cx="12" cy="12" r="10"></circle>
+                        <path d="M2 12h20"></path>
+                        <path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"></path>
+                      </svg>
+                      Официальный сайт
+                    </a>
+                    <a href="https://t.me/pavel_xdev" target="_blank" class="developer-card-link">
+                      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M21 2l-18 9 5 1m0 0l-5 9 18-9-13 8m8-8v7"></path>
+                      </svg>
+                      Telegram Dev
+                    </a>
+                  </div>
+                  <p class="developer-card-footer">
+                    Coded in the shadows | Delivered to the light
+                  </p>
                 </div>
               </div>
             </div>
@@ -395,6 +496,48 @@
             </div>
           </form>
         </div>
+      </div>
+    </div>
+    
+    <!-- Showcase Modal -->
+    <div id="showcase-modal" class="modal" style="display: none;">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h3 id="showcase-modal-title">Добавить слайд</h3>
+          <button type="button" class="modal-close" id="showcase-modal-close">&times;</button>
+        </div>
+        <form id="showcase-form">
+          <input type="hidden" id="showcase-id">
+          <div class="form-group">
+            <label for="showcase-title">Заголовок *</label>
+            <input type="text" id="showcase-title" required>
+          </div>
+          <div class="form-group">
+            <label for="showcase-desc">Описание *</label>
+            <textarea id="showcase-desc" rows="3" required></textarea>
+          </div>
+          <div class="form-group">
+            <label for="showcase-link">Ссылка *</label>
+            <input type="text" id="showcase-link" placeholder="/pages/registratsiya.html" required>
+          </div>
+          <div class="form-group">
+            <label for="showcase-link-text">Текст кнопки *</label>
+            <input type="text" id="showcase-link-text" placeholder="Узнать подробнее →" required>
+          </div>
+          <div class="form-group">
+            <label for="showcase-image">URL изображения *</label>
+            <input type="text" id="showcase-image" placeholder="https://example.com/image.jpg" required>
+            <small>Рекомендуемый размер: 600x400px</small>
+          </div>
+          <div class="form-group">
+            <label for="showcase-image-alt">Описание изображения</label>
+            <input type="text" id="showcase-image-alt" placeholder="Описание для SEO">
+          </div>
+          <div class="modal-actions">
+            <button type="button" class="btn btn--ghost" id="showcase-modal-cancel">Отмена</button>
+            <button type="submit" class="btn btn--primary">Сохранить</button>
+          </div>
+        </form>
       </div>
     </div>
     

@@ -1,0 +1,346 @@
+<!doctype html>
+<html lang="ru">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Бухгалтерские услуги — NW Consulting</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link rel="stylesheet" href="../styles/fonts.css">
+    <link rel="stylesheet" href="../styles/main.css">
+    <link rel="stylesheet" href="../styles/accounting.css">
+    <link rel="icon" href="../logo.png">
+  </head>
+  <body>
+    <header class="site-header">
+      <div class="container header-inner">
+        <a class="brand" href="../index.html">
+          <img src="../logo.png" alt="NW Consulting" class="brand__logo">
+          <span class="brand__name">NW Consulting</span>
+        </a>
+        <nav class="nav">
+          <button class="nav__toggle" aria-label="Меню">
+            <span></span><span></span><span></span>
+          </button>
+          <ul class="nav__list">
+            <li><a href="../index.html">Главная</a></li>
+            <li><a href="./registratsiya.html">Регистрация компаний</a></li>
+            <li><a href="./banki.html">Открытие счетов</a></li>
+            <li><a href="./buhgalteriya.html" class="active">Бухгалтерия</a></li>
+            <li><a href="./audit.html">Аудит</a></li>
+            <li><a href="./prochie-uslugi.html">Прочие услуги</a></li>
+            <li><a href="./kontakty.html">Контакты</a></li>
+          </ul>
+        </nav>
+      </div>
+    </header>
+    
+    <!-- Hero Section -->
+    <section class="accounting-hero">
+      <div class="accounting-hero__bg"></div>
+      <div class="container">
+        <div class="accounting-hero__content">
+          <h1 class="accounting-hero__title">
+            Бухгалтерские услуги<br>
+            <span class="accounting-hero__accent">для международного бизнеса</span>
+          </h1>
+          <p class="accounting-hero__desc">
+            Ведём бухгалтерию компаний в любой юрисдикции. Готовим отчётность, 
+            восстанавливаем учёт, консультируем по налогам
+          </p>
+          <div class="accounting-hero__cta">
+            <a href="#services" class="btn btn--primary">Выбрать услугу</a>
+            <a href="./kontakty.html#form" class="btn btn--ghost">Консультация</a>
+          </div>
+        </div>
+      </div>
+    </section>
+    
+    <!-- Services Section -->
+    <section id="services" class="accounting-services">
+      <div class="container">
+        <h2 class="section__title">Наши услуги</h2>
+        <p class="section__subtitle">Комплексное бухгалтерское обслуживание для вашего бизнеса</p>
+        
+        <div class="services-grid">
+          <!-- Service 1 -->
+          <div class="service-card">
+            <div class="service-card__icon">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M9 11l3 3L22 4"/>
+                <path d="M21 12v7a2 2 0 01-2 2H5a2 2 0 01-2-2V5a2 2 0 012-2h11"/>
+              </svg>
+            </div>
+            <h3 class="service-card__title">Составление расчётов для аудита</h3>
+            <p class="service-card__desc">
+              Подготовим все необходимые расчёты и документы для успешного прохождения аудиторской проверки
+            </p>
+            <ul class="service-card__features">
+              <li>Анализ первичных документов</li>
+              <li>Подготовка финансовых отчётов</li>
+              <li>Расчёт налоговых обязательств</li>
+              <li>Сверка с контрагентами</li>
+            </ul>
+            <div class="service-card__price">
+              от <span>$500</span> / проект
+            </div>
+            <div class="service-card__actions">
+              <a href="./articles/audit-calculations.html" class="service-card__link">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"/>
+                  <polyline points="14 2 14 8 20 8"/>
+                  <line x1="16" y1="13" x2="8" y2="13"/>
+                  <line x1="16" y1="17" x2="8" y2="17"/>
+                  <polyline points="10 9 9 9 8 9"/>
+                </svg>
+                Подробнее
+              </a>
+              <a href="./kontakty.html#form" class="btn btn--primary">Заказать услугу</a>
+            </div>
+          </div>
+          
+          <!-- Service 2 -->
+          <div class="service-card">
+            <div class="service-card__icon">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M19 21l-7-5-7 5V5a2 2 0 012-2h10a2 2 0 012 2z"/>
+              </svg>
+            </div>
+            <h3 class="service-card__title">Восстановление бухучёта</h3>
+            <p class="service-card__desc">
+              Восстановим бухгалтерский учёт за любой период. Приведём документы в порядок
+            </p>
+            <ul class="service-card__features">
+              <li>Анализ имеющихся документов</li>
+              <li>Восстановление отсутствующих</li>
+              <li>Исправление ошибок учёта</li>
+              <li>Подготовка отчётности</li>
+            </ul>
+            <div class="service-card__price">
+              от <span>$800</span> / месяц
+            </div>
+            <div class="service-card__actions">
+              <a href="./articles/accounting-restore.html" class="service-card__link">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"/>
+                  <polyline points="14 2 14 8 20 8"/>
+                  <line x1="16" y1="13" x2="8" y2="13"/>
+                  <line x1="16" y1="17" x2="8" y2="17"/>
+                  <polyline points="10 9 9 9 8 9"/>
+                </svg>
+                Подробнее
+              </a>
+              <a href="./kontakty.html#form" class="btn btn--primary">Заказать услугу</a>
+            </div>
+          </div>
+          
+          <!-- Service 3 -->
+          <div class="service-card">
+            <div class="service-card__icon">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"/>
+                <polyline points="14 2 14 8 20 8"/>
+                <line x1="16" y1="13" x2="8" y2="13"/>
+                <line x1="16" y1="17" x2="8" y2="17"/>
+                <polyline points="10 9 9 9 8 9"/>
+              </svg>
+            </div>
+            <h3 class="service-card__title">Требования к документам</h3>
+            <p class="service-card__desc">
+              Консультация по требованиям к документам для подготовки расчётов и отчётности
+            </p>
+            <ul class="service-card__features">
+              <li>Перечень необходимых документов</li>
+              <li>Образцы заполнения</li>
+              <li>Сроки предоставления</li>
+              <li>Форматы документов</li>
+            </ul>
+            <div class="service-card__price">
+              <span>Бесплатно</span>
+            </div>
+            <div class="service-card__actions">
+              <a href="./articles/docs-requirements.html" class="service-card__link">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"/>
+                  <polyline points="14 2 14 8 20 8"/>
+                  <line x1="16" y1="13" x2="8" y2="13"/>
+                  <line x1="16" y1="17" x2="8" y2="17"/>
+                  <polyline points="10 9 9 9 8 9"/>
+                </svg>
+                Подробнее
+              </a>
+              <a href="./kontakty.html#form" class="btn btn--primary">Получить консультацию</a>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+    
+    <!-- Why Choose Us -->
+    <section class="why-section">
+      <div class="container">
+        <h2 class="section__title">Почему выбирают нас</h2>
+        
+        <div class="why-grid">
+          <div class="why-item">
+            <div class="why-item__icon">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <circle cx="12" cy="12" r="10"/>
+                <path d="M12 6v6l4 2"/>
+              </svg>
+            </div>
+            <h3>15+ лет опыта</h3>
+            <p>Работаем с международными компаниями с 2010 года</p>
+          </div>
+          
+          <div class="why-item">
+            <div class="why-item__icon">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M12 2L2 7l10 5 10-5-10-5z"/>
+                <path d="M2 17l10 5 10-5"/>
+                <path d="M2 12l10 5 10-5"/>
+              </svg>
+            </div>
+            <h3>Все юрисдикции</h3>
+            <p>Ведём учёт компаний в любой стране мира</p>
+          </div>
+          
+          <div class="why-item">
+            <div class="why-item__icon">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M17 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2"/>
+                <circle cx="9" cy="7" r="4"/>
+                <path d="M23 21v-2a4 4 0 00-3-3.87"/>
+                <path d="M16 3.13a4 4 0 010 7.75"/>
+              </svg>
+            </div>
+            <h3>Команда экспертов</h3>
+            <p>Сертифицированные бухгалтеры и налоговые консультанты</p>
+          </div>
+          
+          <div class="why-item">
+            <div class="why-item__icon">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <rect x="3" y="11" width="18" height="10" rx="2" ry="2"/>
+                <path d="M7 11V7a5 5 0 0110 0v4"/>
+              </svg>
+            </div>
+            <h3>Конфиденциальность</h3>
+            <p>Гарантируем полную защиту ваших данных</p>
+          </div>
+        </div>
+      </div>
+    </section>
+    
+    <!-- CTA Section -->
+    <section class="accounting-cta">
+      <div class="container">
+        <div class="accounting-cta__card">
+          <div class="accounting-cta__content">
+            <h2>Нужна бухгалтерская помощь?</h2>
+            <p>Проконсультируем бесплатно и подберём оптимальное решение для вашего бизнеса</p>
+            <div class="accounting-cta__buttons">
+              <a href="./kontakty.html#form" class="btn btn--primary btn--large">Получить консультацию</a>
+              <a href="tel:+00000000000" class="btn btn--ghost btn--large">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <path d="M22 16.92v3a2 2 0 01-2.18 2 19.79 19.79 0 01-8.63-3.07 19.5 19.5 0 01-6-6 19.79 19.79 0 01-3.07-8.67A2 2 0 014.11 2h3a2 2 0 012 1.72 12.84 12.84 0 00.7 2.81 2 2 0 01-.45 2.11L8.09 9.91a16 16 0 006 6l1.27-1.27a2 2 0 012.11-.45 12.84 12.84 0 002.81.7A2 2 0 0122 16.92z"/>
+                </svg>
+                Позвонить
+              </a>
+            </div>
+          </div>
+          <div class="accounting-cta__image">
+            <svg viewBox="0 0 400 300" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <rect x="50" y="50" width="300" height="200" rx="10" fill="url(#grad1)" opacity="0.1"/>
+              <rect x="70" y="70" width="260" height="160" rx="8" stroke="url(#grad1)" stroke-width="2" fill="none"/>
+              <line x1="70" y1="110" x2="330" y2="110" stroke="url(#grad1)" stroke-width="2"/>
+              <line x1="70" y1="150" x2="330" y2="150" stroke="url(#grad1)" stroke-width="2"/>
+              <line x1="70" y1="190" x2="330" y2="190" stroke="url(#grad1)" stroke-width="2"/>
+              <line x1="150" y1="70" x2="150" y2="230" stroke="url(#grad1)" stroke-width="2"/>
+              <line x1="250" y1="70" x2="250" y2="230" stroke="url(#grad1)" stroke-width="2"/>
+              <defs>
+                <linearGradient id="grad1" x1="0%" y1="0%" x2="100%" y2="100%">
+                  <stop offset="0%" style="stop-color:#00bfff;stop-opacity:1" />
+                  <stop offset="100%" style="stop-color:#00ff9d;stop-opacity:1" />
+                </linearGradient>
+              </defs>
+            </svg>
+          </div>
+        </div>
+      </div>
+    </section>
+    
+    <footer class="site-footer">
+      <div class="footer__top">
+        <div class="container">
+          <div class="footer__grid">
+            <div class="footer__col">
+              <div class="footer__logo">
+                <img src="../logo.png" alt="NW Consulting">
+                <span>NW Consulting</span>
+              </div>
+              <p class="footer__desc">Международный бизнес-консалтинг с 2010 года</p>
+            </div>
+            
+            <div class="footer__col">
+              <h3>Услуги</h3>
+              <ul class="footer__services">
+                <li><a href="./registratsiya.html">Регистрация компаний</a></li>
+                <li><a href="./banki.html">Открытие счетов</a></li>
+                <li><a href="./buhgalteriya.html">Бухгалтерия</a></li>
+                <li><a href="./audit.html">Аудит</a></li>
+              </ul>
+            </div>
+            
+            <div class="footer__col">
+              <h3>Контакты</h3>
+              <div class="footer__contacts">
+                <a href="tel:+00000000000">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <path d="M22 16.92v3a2 2 0 01-2.18 2 19.79 19.79 0 01-8.63-3.07 19.5 19.5 0 01-6-6 19.79 19.79 0 01-3.07-8.67A2 2 0 014.11 2h3a2 2 0 012 1.72 12.84 12.84 0 00.7 2.81 2 2 0 01-.45 2.11L8.09 9.91a16 16 0 006 6l1.27-1.27a2 2 0 012.11-.45 12.84 12.84 0 002.81.7A2 2 0 0122 16.92z"/>
+                  </svg>
+                  +0 000 000-00-00
+                </a>
+                <a href="mailto:info@nw.consulting">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <rect x="2" y="4" width="20" height="16" rx="2"/>
+                    <path d="m22 7-10 5L2 7"/>
+                  </svg>
+                  info@nw.consulting
+                </a>
+              </div>
+            </div>
+            
+            <div class="footer__col">
+              <h3>Связаться с нами</h3>
+              <p class="footer__cta">Готовы начать? Свяжитесь с нами для консультации</p>
+              <a href="./kontakty.html#form" class="footer__btn">Оставить заявку</a>
+              
+              <div class="footer__socials">
+                <a href="https://t.me/your_username" target="_blank" aria-label="Telegram">
+                  <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
+                    <path d="M11.944 0A12 12 0 0 0 0 12a12 12 0 0 0 12 12 12 12 0 0 0 12-12A12 12 0 0 0 12 0a12 12 0 0 0-.056 0zm4.962 7.224c.1-.002.321.023.465.14a.506.506 0 0 1 .171.325c.016.093.036.306.02.472-.18 1.898-.962 6.502-1.36 8.627-.168.9-.499 1.201-.82 1.23-.696.065-1.225-.46-1.9-.902-1.056-.693-1.653-1.124-2.678-1.8-1.185-.78-.417-1.21.258-1.91.177-.184 3.247-2.977 3.307-3.23.007-.032.014-.15-.056-.212s-.174-.041-.249-.024c-.106.024-1.793 1.14-5.061 3.345-.48.33-.913.49-1.302.48-.428-.008-1.252-.241-1.865-.44-.752-.245-1.349-.374-1.297-.789.027-.216.325-.437.893-.663 3.498-1.524 5.83-2.529 6.998-3.014 3.332-1.386 4.025-1.627 4.476-1.635z"/>
+                  </svg>
+                </a>
+                <a href="https://wa.me/00000000000" target="_blank" aria-label="WhatsApp">
+                  <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
+                    <path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413Z"/>
+                  </svg>
+                </a>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      
+      <div class="footer__bottom">
+        <div class="container">
+          <p>© 2025 NW Consulting. Все права защищены.</p>
+        </div>
+      </div>
+    </footer>
+    
+    <script src="../scripts/main.js"></script>
+    <script src="../scripts/animations.js"></script>
+  </body>
+</html>

@@ -1,0 +1,492 @@
+<!doctype html>
+<html lang="ru">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>NW Consulting — Международные компании, банки, бухгалтерия, аудит</title>
+    <meta name="description" content="Регистрация компаний, открытие счетов в банках и EMI, бухгалтерия по МСФО и аудит. NW Consulting.">
+    <link rel="canonical" href="/">
+    <meta property="og:title" content="NW Consulting — Международные компании и банки">
+    <meta property="og:description" content="Регистрация компаний, открытие счетов, бухгалтерия по МСФО и аудит.">
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="/">
+    <meta property="og:image" content="/logo.png">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <style>
+      /* Топовый прелоадер */
+      body { margin: 0; }
+      #preloader {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background: radial-gradient(ellipse at center, #1a2332 0%, #0a0f1e 100%);
+        z-index: 9999999;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        flex-direction: column;
+        gap: 40px;
+        overflow: hidden;
+      }
+      
+      /* Фоновые частицы */
+      #preloader::before {
+        content: '';
+        position: absolute;
+        width: 200%;
+        height: 200%;
+        top: -50%;
+        left: -50%;
+        background-image: 
+          radial-gradient(2px 2px at 20% 30%, white, transparent),
+          radial-gradient(2px 2px at 60% 70%, white, transparent),
+          radial-gradient(1px 1px at 50% 50%, white, transparent);
+        background-size: 50px 50px;
+        opacity: 0.1;
+        animation: drift 20s linear infinite;
+      }
+      
+      @keyframes drift {
+        from { transform: rotate(0deg); }
+        to { transform: rotate(360deg); }
+      }
+      
+      .preloader-content {
+        position: relative;
+        z-index: 1;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        gap: 20px;
+      }
+      
+      .preloader-logo {
+        width: 360px;
+        height: 360px;
+        object-fit: contain;
+        filter: brightness(1.4) drop-shadow(0 0 80px rgba(0, 191, 255, 0.8));
+        animation: logoFloat 3s ease-in-out infinite;
+      }
+      
+      @keyframes logoFloat {
+        0%, 100% { 
+          transform: translateY(0) scale(1);
+          filter: brightness(1.4) drop-shadow(0 0 80px rgba(0, 191, 255, 0.8));
+        }
+        50% { 
+          transform: translateY(-20px) scale(1.1);
+          filter: brightness(1.6) drop-shadow(0 0 120px rgba(0, 191, 255, 1));
+        }
+      }
+      
+      .spinner-container {
+        position: relative;
+        width: 60px;
+        height: 60px;
+      }
+      
+      .spinner {
+        position: absolute;
+        width: 100%;
+        height: 100%;
+        border: 3px solid transparent;
+        border-top-color: #00bfff;
+        border-radius: 50%;
+        animation: spin 1s cubic-bezier(0.68, -0.55, 0.265, 1.55) infinite;
+      }
+      
+      .spinner::before {
+        content: '';
+        position: absolute;
+        top: -3px;
+        left: -3px;
+        right: -3px;
+        bottom: -3px;
+        border: 3px solid transparent;
+        border-top-color: rgba(0, 191, 255, 0.3);
+        border-radius: 50%;
+        animation: spin 2s linear infinite reverse;
+      }
+      
+      @keyframes spin {
+        to { transform: rotate(360deg); }
+      }
+      
+      .preloader-text {
+        color: #ffffff;
+        font-size: 18px;
+        font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Arial, sans-serif;
+        font-weight: 300;
+        letter-spacing: 2px;
+        text-transform: uppercase;
+        margin: 0;
+        opacity: 0;
+        animation: fadeInUp 1s ease forwards 0.5s;
+      }
+      
+      @keyframes fadeInUp {
+        from {
+          opacity: 0;
+          transform: translateY(20px);
+        }
+        to {
+          opacity: 1;
+          transform: translateY(0);
+        }
+      }
+      
+      /* Точки загрузки */
+      .loading-dots {
+        display: inline-block;
+      }
+      
+      .loading-dots::after {
+        content: '';
+        animation: dots 1.5s steps(4, end) infinite;
+      }
+      
+      @keyframes dots {
+        0% { content: ''; }
+        25% { content: '.'; }
+        50% { content: '..'; }
+        75% { content: '...'; }
+        100% { content: ''; }
+      }
+      
+      #preloader.hidden {
+        opacity: 0;
+        transition: opacity 0.6s ease;
+      }
+    </style>
+    <link rel="stylesheet" href="./styles/fonts.css">
+    <link rel="stylesheet" href="./styles/main.css">
+    <link rel="stylesheet" href="./styles/animations.css">
+    <link rel="icon" href="./logo.png">
+  </head>
+  <body>
+    <!-- Preloader -->
+    <div id="preloader">
+      <div class="preloader-content">
+        <img src="./logo.png" alt="NW Consulting" class="preloader-logo">
+        <div class="spinner-container">
+          <div class="spinner"></div>
+        </div>
+        <p class="preloader-text">Загрузка<span class="loading-dots"></span></p>
+      </div>
+    </div>
+    
+    <!-- Preloader Script - должен быть сразу после preloader -->
+    <script>
+      // Ждём 3 секунды для топового эффекта
+      setTimeout(function() {
+        var preloader = document.getElementById('preloader');
+        if (preloader) {
+          preloader.classList.add('hidden');
+          // Полностью удаляем после анимации
+          setTimeout(function() {
+            preloader.remove();
+          }, 600);
+        }
+      }, 3000);
+    </script>
+
+    <div class="topbar">
+      <div class="container topbar__inner">
+        <div>Телефон: <a href="tel:+00000000000">+0 000 000-00-00</a></div>
+        <div>Email: <a href="mailto:info@nw.consulting">info@nw.consulting</a></div>
+      </div>
+    </div>
+    <header class="site-header">
+      <div class="container header-inner">
+        <a class="brand" href="/">
+          <img src="./logo.png" alt="NW Consulting" class="brand__logo">
+          <span class="brand__name" aria-label="NW Consulting">NW Consulting</span>
+        </a>
+        <nav class="nav" aria-label="Главное меню">
+          <button class="nav__toggle" aria-expanded="false" aria-controls="navMenu" aria-label="Открыть меню">
+            <span></span><span></span><span></span>
+          </button>
+          <ul id="navMenu" class="nav__list">
+            <li class="nav__item"><a href="./pages/registratsiya.html">Регистрация компаний</a>
+              <ul class="dropdown">
+                <li><a href="./pages/registratsiya.html#CY">Кипр</a></li>
+                <li><a href="./pages/registratsiya.html#AEFZ">ОАЭ</a></li>
+                <li><a href="./pages/registratsiya.html#HK">Гонконг</a></li>
+                <li><a href="./pages/registratsiya.html#CN">Китай</a></li>
+                <li><a href="./pages/registratsiya.html#UK">Великобритания</a></li>
+                <li><a href="./pages/registratsiya.html#US">США</a></li>
+                <li><a href="./pages/registratsiya.html#SG">Сингапур</a></li>
+                <li><a href="./pages/registratsiya.html#BVI">БВО</a></li>
+                <li><a href="./pages/registratsiya.html#SC">Сейшелы</a></li>
+                <li><a href="./pages/registratsiya.html#BZ">Белиз</a></li>
+                <li><a href="./pages/registratsiya.html">Другие по запросу</a></li>
+              </ul>
+            </li>
+            <li class="nav__item"><a href="./pages/banki.html">Банки</a>
+              <ul class="dropdown">
+                <li><a href="./pages/banki.html#banks">Банки</a></li>
+                <li><a href="./pages/banki.html#emi">EMI/IBAN</a></li>
+                <li><a href="./pages/banki.html#fx">Курс валют</a></li>
+              </ul>
+            </li>
+            <li class="nav__item"><a href="./pages/buhgalteriya.html">Бухгалтерия</a>
+              <ul class="dropdown">
+                <li><a href="./pages/articles/audit-calculations.html">МСФО расчёты</a></li>
+                <li><a href="./pages/articles/accounting-restore.html">Восстановление учёта</a></li>
+                <li><a href="./pages/articles/docs-requirements.html">Подготовка к аудиту</a></li>
+              </ul>
+            </li>
+            <li class="nav__item"><a href="./pages/audit.html">Аудит</a>
+              <ul class="dropdown">
+                <li><a href="./pages/audit-country.html?country=Cyprus">Кипр</a></li>
+                <li><a href="./pages/audit-country.html?country=UAE">ОАЭ</a></li>
+                <li><a href="./pages/audit-country.html?country=Hong%20Kong">Гонконг</a></li>
+                <li><a href="./pages/audit-country.html?country=United%20Kingdom">Великобритания</a></li>
+                <li><a href="./pages/audit-country.html?country=USA">США</a></li>
+                <li><a href="./pages/audit-country.html?country=Singapore">Сингапур</a></li>
+              </ul>
+            </li>
+            <li class="nav__item"><a href="./pages/prochie-uslugi.html">Прочие услуги</a>
+              <ul class="dropdown">
+                <li><a href="./pages/articles/ru-kik.html">КИК</a></li>
+                <li><a href="./en/it-services.html">IT services (EN)</a></li>
+                <li><a href="./fr/it-services.html">Services IT (FR)</a></li>
+              </ul>
+            </li>
+            <li class="nav__item"><a href="./pages/kontakty.html">Контакты</a>
+              <ul class="dropdown">
+                <li><a target="_blank" rel="noopener" href="https://t.me/your_username">Telegram</a></li>
+                <li><a target="_blank" rel="noopener" href="https://wa.me/00000000000">WhatsApp</a></li>
+              </ul>
+            </li>
+            <li class="nav__lang">
+              <a class="is-active" href="/index.html" data-lang="ru">RU</a>
+              <a href="/en/index.html" data-lang="en">EN</a>
+              <a href="/fr/index.html" data-lang="fr">FR</a>
+            </li>
+          </ul>
+        </nav>
+      </div>
+    </header>
+
+    <main>
+      <!-- Hero Section -->
+      <section class="hero">
+        <div class="hero__bg"></div>
+        <div class="container">
+          <div class="hero__content">
+            <h1 class="hero__title reveal-up">
+              NW Consulting<br>
+              <span class="hero__accent">Международный бизнес под ключ</span>
+            </h1>
+            <p class="hero__desc reveal-up">
+              Регистрация компаний • Открытие счетов • Бухгалтерия • Аудит<br>
+              50+ юрисдикций • 15 лет опыта • Работаем по всему миру
+            </p>
+          <div class="hero__cta reveal-up">
+            <a class="btn btn--primary" href="./pages/kontakty.html#form">Оставить заявку</a>
+            <a class="btn btn--ghost" target="_blank" rel="noopener" href="https://wa.me/00000000000">
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
+                <path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413Z"/>
+              </svg>
+              Консультация в WhatsApp
+            </a>
+          </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- Services Section -->
+      <section class="services">
+        <div class="container">
+          <div class="services__wrapper">
+            <h2 class="section__title reveal-up">Наши услуги</h2>
+            <div class="services__grid">
+            <!-- Регистрация компаний -->
+            <a href="./pages/registratsiya.html" class="service-card reveal-up">
+              <div class="service-card__icon">
+                <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+                  <path d="M3 21v-2a4 4 0 014-4h10a4 4 0 014 4v2M12 3v6m0 0l3-3m-3 3l-3-3"/>
+                  <circle cx="12" cy="11" r="3"/>
+                </svg>
+              </div>
+              <h3 class="service-card__title">Регистрация компаний</h3>
+              <p class="service-card__desc">Кипр, ОАЭ, Гонконг, Китай, Великобритания, США и др.</p>
+              <span class="service-card__arrow">→</span>
+            </a>
+
+            <!-- Банки и EMI -->
+            <a href="./pages/banki.html" class="service-card reveal-up">
+              <div class="service-card__icon">
+                <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+                  <rect x="3" y="6" width="18" height="12" rx="2"/>
+                  <path d="M3 10h18M7 14h3"/>
+                </svg>
+              </div>
+              <h3 class="service-card__title">Банки и EMI</h3>
+              <p class="service-card__desc">Подбор и открытие счетов, сопровождение KYC</p>
+              <span class="service-card__arrow">→</span>
+            </a>
+
+            <!-- Бухгалтерия -->
+            <a href="./pages/buhgalteriya.html" class="service-card reveal-up">
+              <div class="service-card__icon">
+                <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+                  <path d="M9 11h6M9 15h6M12 3l-2 2v14l2 2 2-2V5l-2-2z"/>
+                  <path d="M5 7h14M5 17h14"/>
+                </svg>
+              </div>
+              <h3 class="service-card__title">Бухгалтерия</h3>
+              <p class="service-card__desc">МСФО, восстановление учёта, подготовка к аудиту</p>
+              <span class="service-card__arrow">→</span>
+            </a>
+
+            <!-- Аудит -->
+            <a href="./pages/audit.html" class="service-card reveal-up">
+              <div class="service-card__icon">
+                <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+                  <path d="M9 11l3 3L22 4"/>
+                  <path d="M21 12v7a2 2 0 01-2 2H5a2 2 0 01-2-2V5a2 2 0 012-2h11"/>
+                </svg>
+              </div>
+              <h3 class="service-card__title">Аудит</h3>
+              <p class="service-card__desc">Сопровождение проверок и отчётности</p>
+              <span class="service-card__arrow">→</span>
+            </a>
+
+            <!-- Прочие услуги -->
+            <a href="./pages/prochie-uslugi.html" class="service-card reveal-up">
+              <div class="service-card__icon">
+                <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+                  <circle cx="12" cy="12" r="3"/>
+                  <path d="M12 1v6m0 6v6m11-7h-6m-6 0H1m16.65-5.65l-4.25 4.25m-6.8 0l-4.25-4.25m0 11.3l4.25-4.25m6.8 0l4.25 4.25"/>
+                </svg>
+              </div>
+              <h3 class="service-card__title">Прочие услуги</h3>
+              <p class="service-card__desc">КИК, IT и др.</p>
+              <span class="service-card__arrow">→</span>
+            </a>
+          </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- News Section -->
+      <section class="news-section">
+        <div class="container">
+          <h2 class="section__title reveal-up">Новости</h2>
+          <div class="news__grid">
+            <article class="news-card reveal-up">
+              <time class="news-card__date">01.09.2025</time>
+              <h3 class="news-card__title">
+                <a href="#">Открыт новый банк для IT-компаний в ОАЭ</a>
+              </h3>
+              <p class="news-card__excerpt">Принимает резидентов свободных зон с минимальными требованиями к документам.</p>
+            </article>
+            <article class="news-card reveal-up">
+              <time class="news-card__date">28.08.2025</time>
+              <h3 class="news-card__title">
+                <a href="#">Снижение пошлин на регистрацию в Кипре</a>
+              </h3>
+              <p class="news-card__excerpt">С 2025 года государственные пошлины снижены на 15% для новых компаний.</p>
+            </article>
+            <article class="news-card reveal-up">
+              <time class="news-card__date">15.08.2025</time>
+              <h3 class="news-card__title">
+                <a href="#">Сроки проверки KYC в EMI сократились</a>
+              </h3>
+              <p class="news-card__excerpt">Ведущие EMI провайдеры оптимизировали процедуры - теперь от 1 до 3 дней.</p>
+            </article>
+          </div>
+        </div>
+      </section>
+    </main>
+
+    <footer class="site-footer">
+      <div class="footer__top">
+        <div class="container">
+          <div class="footer__grid">
+            <!-- Колонка с логотипом -->
+            <div class="footer__brand">
+              <div class="footer__logo">
+                <img src="./logo.png" alt="NW Consulting" width="60" height="60">
+                <span>NW Consulting</span>
+              </div>
+              <p class="footer__desc">
+                Международное корпоративное и банковское<br>
+                сопровождение. Работаем с 2008 года.
+              </p>
+            </div>
+            
+            <!-- Услуги -->
+            <div class="footer__services">
+              <h4>Услуги</h4>
+              <nav>
+                <a href="./pages/registratsiya.html">Регистрация компаний</a>
+                <a href="./pages/banki.html">Банки и EMI</a>
+                <a href="./pages/buhgalteriya.html">Бухгалтерия</a>
+                <a href="./pages/audit.html">Аудит</a>
+                <a href="./pages/prochie-uslugi.html">Прочие услуги</a>
+              </nav>
+            </div>
+            
+            <!-- Контакты -->
+            <div class="footer__contacts">
+              <h4>Контакты</h4>
+              <div class="footer__contact-item">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor">
+                  <path d="M20.01 15.38c-1.23 0-2.42-.2-3.53-.56a.977.977 0 00-1.01.24l-1.57 1.97c-2.83-1.35-5.48-3.9-6.89-6.83l1.95-1.66c.27-.28.35-.67.24-1.02-.37-1.11-.56-2.3-.56-3.53 0-.54-.45-.99-.99-.99H4.19C3.65 3 3 3.24 3 3.99 3 13.28 10.73 21 20.01 21c.71 0 .99-.63.99-1.18v-3.45c0-.54-.45-.99-.99-.99z"/>
+                </svg>
+                <a href="tel:+00000000000">+0 000 000-00-00</a>
+              </div>
+              <div class="footer__contact-item">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor">
+                  <path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/>
+                  <path d="M22 6l-10 7L2 6" fill="none" stroke="currentColor" stroke-width="2"/>
+                </svg>
+                <a href="mailto:info@nw.consulting">info@nw.consulting</a>
+              </div>
+            </div>
+            
+            <!-- CTA -->
+            <div class="footer__cta">
+              <h4>Начните сегодня</h4>
+              <p>Получите бесплатную консультацию</p>
+              <a class="footer__btn" href="./pages/kontakty.html">Оставить заявку</a>
+              <div class="footer__socials">
+                <a href="https://t.me/your_username" target="_blank" rel="noopener" aria-label="Telegram">
+                  <svg width="24" height="24" viewBox="0 0 24 24" fill="currentColor">
+                    <path d="M11.944 0A12 12 0 0 0 0 12a12 12 0 0 0 12 12 12 12 0 0 0 12-12A12 12 0 0 0 12 0a12 12 0 0 0-.056 0zm4.962 7.224c.1-.002.321.023.465.14a.506.506 0 0 1 .171.325c.016.093.036.306.02.472-.18 1.898-.962 6.502-1.36 8.627-.168.9-.499 1.201-.82 1.23-.696.065-1.225-.46-1.9-.902-1.056-.693-1.653-1.124-2.678-1.8-1.185-.78-.417-1.21.258-1.91.177-.184 3.247-2.977 3.307-3.23.007-.032.014-.15-.056-.212s-.174-.041-.249-.024c-.106.024-1.793 1.14-5.061 3.345-.48.33-.913.49-1.302.48-.428-.008-1.252-.241-1.865-.44-.752-.245-1.349-.374-1.297-.789.027-.216.325-.437.893-.663 3.498-1.524 5.83-2.529 6.998-3.014 3.332-1.386 4.025-1.627 4.476-1.635z"/>
+                  </svg>
+                </a>
+                <a href="https://wa.me/00000000000" target="_blank" rel="noopener" aria-label="WhatsApp">
+                  <svg width="24" height="24" viewBox="0 0 24 24" fill="currentColor">
+                    <path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413Z"/>
+                  </svg>
+                </a>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="footer__bottom">
+        <div class="container">
+          <p>© 2025 NW Consulting. Все права защищены.</p>
+        </div>
+      </div>
+    </footer>
+
+    <a class="call-fab" href="tel:+00000000000" aria-label="Позвонить">
+      <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
+        <path d="M20.01 15.38c-1.23 0-2.42-.2-3.53-.56a.977.977 0 00-1.01.24l-1.57 1.97c-2.83-1.35-5.48-3.9-6.89-6.83l1.95-1.66c.27-.28.35-.67.24-1.02-.37-1.11-.56-2.3-.56-3.53 0-.54-.45-.99-.99-.99H4.19C3.65 3 3 3.24 3 3.99 3 13.28 10.73 21 20.01 21c.71 0 .99-.63.99-1.18v-3.45c0-.54-.45-.99-.99-.99z"/>
+      </svg>
+      Позвонить
+    </a>
+    <script src="./scripts/main.js"></script>
+    <script src="./scripts/animations.js"></script>
+    <script src="./scripts/forms.js"></script>
+  </body>
+  </html>

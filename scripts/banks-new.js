@@ -202,7 +202,7 @@
         <td>${bank.time}</td>
         <td>${bank.minimum}</td>
         <td>
-          <button class="bank-cta" onclick="window.location.href='./kontakty.html#form'">
+          <button class="bank-cta" onclick="openBankModal('${bank.id}')">
             Заказать
           </button>
         </td>
@@ -318,6 +318,91 @@
   // Initial render
   renderBanks();
   
+  // Bank Modal functionality
+  const bankModal = document.getElementById('bank-modal');
+  const bankModalClose = document.getElementById('bank-modal-close');
+  const bankModalFlag = document.getElementById('bank-modal-flag');
+  const bankModalTitle = document.getElementById('bank-modal-title');
+  const bankModalSubtitle = document.getElementById('bank-modal-subtitle');
+  const bankInput = document.getElementById('bank-input');
+  const bankFormSubject = document.getElementById('bank-form-subject');
+  const bankForm = document.getElementById('bank-form');
+  const bankFormSuccess = document.getElementById('bank-form-success');
+
+  // Open bank modal function
+  window.openBankModal = (bankId) => {
+    const bank = banks.find(b => b.id === bankId);
+    if (!bank) return;
+
+    if (!bankModal) {
+      console.error('Bank modal not found!');
+      return;
+    }
+
+    bankModalFlag.textContent = bank.flag;
+    bankModalTitle.textContent = `Открытие счета в ${bank.bank}`;
+    bankModalSubtitle.textContent = `Заполните форму и получите консультацию по открытию счета в ${bank.bank} (${bank.country})`;
+    bankInput.value = `${bank.bank} (${bank.country})`;
+    bankFormSubject.value = `Заказ открытия счета в ${bank.bank} (${bank.country})`;
+    
+    bankModal.classList.add('active');
+    document.body.style.overflow = 'hidden';
+  };
+
+  // Close bank modal function
+  function closeBankModal() {
+    bankModal.classList.remove('active');
+    document.body.style.overflow = '';
+    // Reset form
+    bankForm.reset();
+    bankForm.style.display = 'flex';
+    bankFormSuccess.style.display = 'none';
+  }
+
+  // Event listeners for bank modal
+  bankModalClose?.addEventListener('click', closeBankModal);
+  bankModal?.addEventListener('click', (e) => {
+    if (e.target === bankModal) closeBankModal();
+  });
+
+  // Bank form submission
+  bankForm?.addEventListener('submit', async (e) => {
+    e.preventDefault();
+    
+    const formData = new FormData(bankForm);
+    
+    try {
+      const response = await fetch(bankForm.action, {
+        method: 'POST',
+        body: formData,
+        headers: {
+          'Accept': 'application/json'
+        }
+      });
+      
+      if (response.ok) {
+        bankForm.style.display = 'none';
+        bankFormSuccess.style.display = 'block';
+        
+        // Auto close after 3 seconds
+        setTimeout(() => {
+          closeBankModal();
+        }, 3000);
+      } else {
+        throw new Error('Network response was not ok');
+      }
+    } catch (error) {
+      alert('Произошла ошибка при отправке формы. Пожалуйста, попробуйте еще раз или свяжитесь с нами напрямую.');
+    }
+  });
+
+  // Escape key to close bank modal
+  document.addEventListener('keydown', (e) => {
+    if (e.key === 'Escape' && bankModal.classList.contains('active')) {
+      closeBankModal();
+    }
+  });
+
   // Export functions for admin panel
   window.getBanksData = () => banks;
   window.setBanksData = (newBanks) => {

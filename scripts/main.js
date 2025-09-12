@@ -167,6 +167,83 @@ window.addEventListener('load', () => {
   counters.forEach(counter => counterObserver.observe(counter));
 });
 
+// Hero Slider
+document.addEventListener('DOMContentLoaded', () => {
+  const heroSlides = document.getElementById('hero-slides');
+  const heroDots = document.getElementById('hero-dots');
+  
+  if (!heroSlides) return;
+  
+  // Load slides from localStorage
+  function loadHeroSlides() {
+    const slides = localStorage.getItem('showcaseSlides');
+    if (slides) {
+      return JSON.parse(slides);
+    }
+    // Default slides
+    return [
+      {
+        id: '1',
+        image: 'https://images.unsplash.com/photo-1512453979798-5ea266f8880c?w=1920&h=1080&fit=crop',
+        imageAlt: 'Dubai skyline'
+      },
+      {
+        id: '2',
+        image: 'https://images.unsplash.com/photo-1521295121783-8a321d551ad2?w=1920&h=1080&fit=crop',
+        imageAlt: 'European city'
+      },
+      {
+        id: '3',
+        image: 'https://images.unsplash.com/photo-1563986768609-322da13575f3?w=1920&h=1080&fit=crop',
+        imageAlt: 'Digital banking'
+      }
+    ];
+  }
+  
+  // Render slides
+  const slidesData = loadHeroSlides();
+  
+  heroSlides.innerHTML = slidesData.map((slide, index) => `
+    <div class="hero__slide ${index === 0 ? 'active' : ''}">
+      <img src="${slide.image}" alt="${slide.imageAlt}">
+    </div>
+  `).join('');
+  
+  heroDots.innerHTML = slidesData.map((_, index) => `
+    <button class="hero__dot ${index === 0 ? 'active' : ''}" data-slide="${index}"></button>
+  `).join('');
+  
+  // Re-query elements after dynamic content
+  const slides = document.querySelectorAll('.hero__slide');
+  const dots = document.querySelectorAll('.hero__dot');
+  let currentSlide = 0;
+  
+  // Change slide function
+  function changeSlide(index) {
+    slides[currentSlide].classList.remove('active');
+    dots[currentSlide].classList.remove('active');
+    
+    currentSlide = index;
+    
+    slides[currentSlide].classList.add('active');
+    dots[currentSlide].classList.add('active');
+  }
+  
+  // Auto-play
+  setInterval(() => {
+    const nextSlide = (currentSlide + 1) % slides.length;
+    changeSlide(nextSlide);
+  }, 5000);
+  
+  // Dot navigation
+  dots.forEach((dot, index) => {
+    dot.addEventListener('click', () => {
+      changeSlide(index);
+    });
+  });
+});
+
+// Keep the old Showcase Slider for compatibility
 // Showcase Slider
 document.addEventListener('DOMContentLoaded', () => {
   const showcaseSlider = document.querySelector('.showcase__slider');

@@ -1143,3 +1143,143 @@
     }
   });
 })();
+
+// Article Editor
+(function() {
+  const editKikBtn = document.getElementById('edit-kik-btn');
+  const articleModal = document.getElementById('article-modal');
+  const articleEditor = document.getElementById('article-editor');
+  const articlePreview = document.getElementById('article-preview');
+  const articleTitle = document.getElementById('article-title');
+  const saveArticleBtn = document.getElementById('save-article-btn');
+  
+  if (!editKikBtn || !articleModal) return;
+  
+  // Load article content from localStorage
+  function loadArticle() {
+    const savedArticle = localStorage.getItem('kikArticle');
+    if (savedArticle) {
+      const article = JSON.parse(savedArticle);
+      articleTitle.value = article.title || 'КИК (Контролируемые иностранные компании)';
+      articleEditor.innerHTML = article.content || '';
+      updatePreview();
+    } else {
+      // Default content
+      articleTitle.value = 'КИК (Контролируемые иностранные компании)';
+      articleEditor.innerHTML = `
+        <h2>Что такое КИК?</h2>
+        <p>КИК (контролируемая иностранная компания) — это иностранная организация или структура без образования юридического лица, которая контролируется налоговым резидентом РФ.</p>
+        
+        <h2>Кто должен отчитываться о КИК?</h2>
+        <p>Отчитываться о КИК обязаны российские налоговые резиденты (физические и юридические лица), которые:</p>
+        <ul>
+          <li>Владеют долей более 25% в иностранной компании</li>
+          <li>Владеют долей более 10%, если доля всех резидентов РФ превышает 50%</li>
+          <li>Осуществляют контроль над иностранной структурой</li>
+        </ul>
+        
+        <h2>Налогообложение прибыли КИК</h2>
+        <p>Прибыль КИК включается в налоговую базу контролирующего лица и облагается налогом по ставке:</p>
+        <ul>
+          <li>13% — для физических лиц</li>
+          <li>20% — для юридических лиц</li>
+        </ul>
+        
+        <h3>Освобождение от налогообложения</h3>
+        <p>Прибыль КИК освобождается от налогообложения, если:</p>
+        <ul>
+          <li>Размер прибыли не превышает 10 млн рублей</li>
+          <li>КИК является резидентом страны из утвержденного перечня</li>
+          <li>Эффективная ставка налога на прибыль КИК составляет не менее 75% от средневзвешенной налоговой ставки по налогу на прибыль в РФ</li>
+        </ul>
+      `;
+      updatePreview();
+    }
+  }
+  
+  // Update preview
+  function updatePreview() {
+    articlePreview.innerHTML = `
+      <h1 class="article-title">${articleTitle.value}</h1>
+      ${articleEditor.innerHTML}
+    `;
+  }
+  
+  // Editor toolbar commands
+  document.querySelectorAll('.editor-btn').forEach(btn => {
+    btn.addEventListener('click', (e) => {
+      e.preventDefault();
+      const cmd = btn.dataset.cmd;
+      
+      switch(cmd) {
+        case 'bold':
+          document.execCommand('bold', false, null);
+          break;
+        case 'italic':
+          document.execCommand('italic', false, null);
+          break;
+        case 'underline':
+          document.execCommand('underline', false, null);
+          break;
+        case 'h2':
+          document.execCommand('formatBlock', false, '<h2>');
+          break;
+        case 'h3':
+          document.execCommand('formatBlock', false, '<h3>');
+          break;
+        case 'paragraph':
+          document.execCommand('formatBlock', false, '<p>');
+          break;
+        case 'unorderedList':
+          document.execCommand('insertUnorderedList', false, null);
+          break;
+        case 'orderedList':
+          document.execCommand('insertOrderedList', false, null);
+          break;
+        case 'link':
+          const url = prompt('Введите URL:');
+          if (url) {
+            document.execCommand('createLink', false, url);
+          }
+          break;
+      }
+      
+      articleEditor.focus();
+      updatePreview();
+    });
+  });
+  
+  // Update preview on input
+  articleEditor.addEventListener('input', updatePreview);
+  articleTitle.addEventListener('input', updatePreview);
+  
+  // Show modal
+  editKikBtn.addEventListener('click', () => {
+    loadArticle();
+    articleModal.style.display = 'block';
+  });
+  
+  // Close modal
+  articleModal.querySelector('.modal-close').addEventListener('click', () => {
+    articleModal.style.display = 'none';
+  });
+  
+  articleModal.querySelector('.modal-cancel').addEventListener('click', () => {
+    articleModal.style.display = 'none';
+  });
+  
+  // Save article
+  saveArticleBtn.addEventListener('click', () => {
+    const article = {
+      title: articleTitle.value,
+      content: articleEditor.innerHTML
+    };
+    
+    localStorage.setItem('kikArticle', JSON.stringify(article));
+    showNotification('Статья сохранена');
+    articleModal.style.display = 'none';
+    
+    // Update the actual article page if needed
+    // This would require additional implementation
+  });
+})();

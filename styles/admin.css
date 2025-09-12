@@ -926,6 +926,118 @@ textarea.form-control {
   letter-spacing: 1px;
 }
 
+/* Article Editor Styles */
+.modal-content--large {
+  max-width: 1000px;
+  width: 90%;
+}
+
+.editor-toolbar {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  padding: 12px;
+  background: rgba(255, 255, 255, 0.03);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 8px 8px 0 0;
+  margin-bottom: -1px;
+}
+
+.editor-btn {
+  padding: 8px;
+  background: transparent;
+  border: 1px solid transparent;
+  border-radius: 6px;
+  color: rgba(255, 255, 255, 0.7);
+  cursor: pointer;
+  transition: all 0.2s ease;
+  font-size: 14px;
+  font-weight: 600;
+}
+
+.editor-btn:hover {
+  background: rgba(255, 255, 255, 0.05);
+  border-color: rgba(255, 255, 255, 0.1);
+  color: #ffffff;
+}
+
+.editor-btn:active,
+.editor-btn.active {
+  background: rgba(0, 191, 255, 0.1);
+  border-color: rgba(0, 191, 255, 0.3);
+  color: var(--brand-light);
+}
+
+.editor-separator {
+  width: 1px;
+  height: 24px;
+  background: rgba(255, 255, 255, 0.1);
+  margin: 0 8px;
+}
+
+.article-editor {
+  min-height: 400px;
+  padding: 20px;
+  background: rgba(255, 255, 255, 0.03);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 0 0 8px 8px;
+  color: rgba(255, 255, 255, 0.9);
+  font-size: 16px;
+  line-height: 1.6;
+  overflow-y: auto;
+  max-height: 500px;
+}
+
+.article-editor:focus {
+  outline: none;
+  background: rgba(255, 255, 255, 0.05);
+  border-color: rgba(0, 191, 255, 0.3);
+}
+
+.article-editor h2 {
+  font-size: 28px;
+  font-weight: 700;
+  margin: 24px 0 16px;
+  color: #ffffff;
+}
+
+.article-editor h3 {
+  font-size: 22px;
+  font-weight: 600;
+  margin: 20px 0 12px;
+  color: #ffffff;
+}
+
+.article-editor p {
+  margin: 0 0 16px;
+}
+
+.article-editor ul,
+.article-editor ol {
+  margin: 0 0 16px;
+  padding-left: 32px;
+}
+
+.article-editor li {
+  margin-bottom: 8px;
+}
+
+.article-editor a {
+  color: var(--brand-light);
+  text-decoration: underline;
+}
+
+.article-preview {
+  min-height: 200px;
+  padding: 20px;
+  background: rgba(255, 255, 255, 0.02);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 8px;
+  color: rgba(255, 255, 255, 0.9);
+  overflow-y: auto;
+  max-height: 300px;
+}
+
 /* Responsive */
 @media (max-width: 768px) {
   .admin-section-header {

@@ -12,6 +12,12 @@
     <link rel="icon" href="../../logo.png">
   </head>
   <body>
+    <div class="topbar">
+      <div class="container topbar__inner">
+        <div>Телефон: <a href="tel:+00000000000">+0 000 000-00-00</a></div>
+        <div>Email: <a href="mailto:info@nw.consulting">info@nw.consulting</a></div>
+      </div>
+    </div>
     <header class="site-header">
       <div class="container header-inner">
         <a class="brand" href="../../index.html">
@@ -21,6 +27,11 @@
         <nav class="nav">
           <a href="../prochie-uslugi.html" class="btn btn--ghost">← К услугам</a>
         </nav>
+        <div class="nav__lang">
+          <a class="is-active" href="#" data-lang="ru">RU</a>
+          <a href="#" data-lang="en">EN</a>
+          <a href="#" data-lang="fr">FR</a>
+        </div>
       </div>
     </header>
     
@@ -227,5 +238,44 @@
     </footer>
     
     <script src="../../scripts/main.js"></script>
+    <script>
+      // Load article content from localStorage
+      document.addEventListener('DOMContentLoaded', function() {
+        const savedArticle = localStorage.getItem('kikArticle');
+        if (savedArticle) {
+          const article = JSON.parse(savedArticle);
+          
+          // Update title
+          const titleElement = document.querySelector('.article__title');
+          if (titleElement && article.title) {
+            titleElement.textContent = article.title;
+            document.title = article.title + ' — NW Consulting';
+          }
+          
+          // Update content
+          const contentElement = document.getElementById('article-content');
+          if (contentElement && article.content) {
+            // Keep the container and lead paragraph structure
+            contentElement.innerHTML = `
+              <div class="container">
+                <div class="article__lead">
+                  <p>Комплексные консультации по вопросам КИК. Поможем разобраться в законодательстве, подготовить уведомления, рассчитать налоги и оптимизировать структуру владения иностранными компаниями.</p>
+                </div>
+                
+                <div class="article__sections">
+                  ${article.content}
+                </div>
+                
+                <div class="article__cta">
+                  <h2>Нужна консультация по КИК?</h2>
+                  <p>Наши эксперты помогут разобраться в вашей ситуации и найти оптимальное решение</p>
+                  <a href="../../index.html#contact-form" class="btn btn--primary btn--large">Получить консультацию</a>
+                </div>
+              </div>
+            `;
+          }
+        }
+      });
+    </script>
   </body>
 </html>

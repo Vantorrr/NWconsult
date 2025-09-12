@@ -274,8 +274,16 @@
 
     <main>
       <!-- Hero Section -->
-      <section class="hero">
-        <div class="hero__bg"></div>
+      <section class="hero hero--with-slider">
+        <div class="hero__slider">
+          <div class="hero__slides" id="hero-slides">
+            <!-- Slides will be loaded here -->
+          </div>
+          <div class="hero__dots" id="hero-dots">
+            <!-- Dots will be generated here -->
+          </div>
+        </div>
+        <div class="hero__overlay"></div>
         <div class="container">
           <div class="hero__content">
             <h1 class="hero__title reveal-up">
@@ -308,52 +316,6 @@
       </section>
 
       <!-- Dynamic Showcase Section -->
-      <section class="showcase">
-        <div class="container">
-          <div class="showcase__wrapper">
-            <div class="showcase__slider">
-              <div class="showcase__slide active" data-slide="1">
-                <div class="showcase__content">
-                  <h3 class="showcase__title">Спецпредложение месяца</h3>
-                  <p class="showcase__desc">Регистрация компании в ОАЭ + открытие корпоративного счета всего за $2,500</p>
-                  <a href="./pages/registratsiya.html" class="showcase__link">Узнать подробнее →</a>
-                </div>
-                <div class="showcase__image">
-                  <img src="https://images.unsplash.com/photo-1512453979798-5ea266f8880c?w=600&h=400&fit=crop" alt="Dubai skyline">
-                </div>
-              </div>
-              
-              <div class="showcase__slide" data-slide="2">
-                <div class="showcase__content">
-                  <h3 class="showcase__title">Новые юрисдикции</h3>
-                  <p class="showcase__desc">Теперь доступна регистрация компаний в Эстонии и Швейцарии с дистанционным открытием счетов</p>
-                  <a href="./pages/registratsiya.html" class="showcase__link">Выбрать юрисдикцию →</a>
-                </div>
-                <div class="showcase__image">
-                  <img src="https://images.unsplash.com/photo-1565620731264-67da378c3d16?w=600&h=400&fit=crop" alt="European city">
-                </div>
-              </div>
-              
-              <div class="showcase__slide" data-slide="3">
-                <div class="showcase__content">
-                  <h3 class="showcase__title">Банки для IT</h3>
-                  <p class="showcase__desc">Специальные условия открытия счетов для IT-компаний. Быстрое рассмотрение заявок</p>
-                  <a href="./pages/banki.html" class="showcase__link">Подобрать банк →</a>
-                </div>
-                <div class="showcase__image">
-                  <img src="https://images.unsplash.com/photo-1563986768609-322da13575f3?w=600&h=400&fit=crop" alt="Digital banking">
-                </div>
-              </div>
-            </div>
-            
-            <div class="showcase__dots">
-              <button class="showcase__dot active" data-slide="1"></button>
-              <button class="showcase__dot" data-slide="2"></button>
-              <button class="showcase__dot" data-slide="3"></button>
-            </div>
-          </div>
-        </div>
-      </section>
 
       <!-- Services Section -->
       <section class="services">

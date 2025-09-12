@@ -222,6 +222,12 @@
     </style>
   </head>
   <body>
+    <div class="topbar">
+      <div class="container topbar__inner">
+        <div>Телефон: <a href="tel:+00000000000">+0 000 000-00-00</a></div>
+        <div>Email: <a href="mailto:info@nw.consulting">info@nw.consulting</a></div>
+      </div>
+    </div>
     <header class="site-header">
       <div class="container header-inner">
         <a class="brand" href="../index.html">
@@ -229,13 +235,24 @@
           <span class="brand__name">NW Consulting</span>
         </a>
         <nav class="nav">
-          <a class="btn btn--ghost" href="../index.html">
-            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-              <path d="M19 12H5M12 19l-7-7 7-7"/>
-            </svg>
-            На главную
-          </a>
+          <button class="nav__toggle" aria-label="Меню">
+            <span></span><span></span><span></span>
+          </button>
+          <ul class="nav__list">
+            <li><a href="../index.html">Главная</a></li>
+            <li><a href="./registratsiya.html">Регистрация компаний</a></li>
+            <li><a href="./banki.html">Открытие счетов</a></li>
+            <li><a href="./buhgalteriya.html">Бухгалтерия</a></li>
+            <li><a href="./audit.html">Аудит</a></li>
+            <li><a href="./prochie-uslugi.html">Прочие услуги</a></li>
+            <li><a href="./kontakty.html" class="active">Контакты</a></li>
+          </ul>
         </nav>
+        <div class="nav__lang">
+          <a class="is-active" href="#" data-lang="ru">RU</a>
+          <a href="#" data-lang="en">EN</a>
+          <a href="#" data-lang="fr">FR</a>
+        </div>
       </div>
     </header>
     

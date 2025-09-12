@@ -364,7 +364,29 @@
       </div>
     </footer>
     
-    <script src="../scripts/main.js"></script>
-    <script src="../scripts/forms.js"></script>
+    <!-- Success Modal -->
+    <div id="success-modal" class="modal">
+      <div class="modal__content">
+        <button class="modal__close" id="success-modal-close">&times;</button>
+        <div class="modal__header">
+          <span class="modal__flag">✅</span>
+          <h2 class="modal__title">Заявка отправлена!</h2>
+          <p class="modal__subtitle">Мы свяжемся с вами в ближайшее время</p>
+        </div>
+        
+        <div class="form-success">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M22 11.08V12a10 10 0 11-5.93-9.14"/>
+            <polyline points="22,4 12,14.01 9,11.01"/>
+          </svg>
+          <h3>Спасибо за обращение!</h3>
+          <p>Ваша заявка успешно отправлена. Наши специалисты свяжутся с вами в течение 15 минут в рабочее время.</p>
+        </div>
+      </div>
+    </div>
+    
+    <script src="../scripts/telegram-sender.js?v=8"></script>
+    <script src="../scripts/main.js?v=8"></script>
+    <script src="../scripts/forms.js?v=8"></script>
   </body>
 </html>

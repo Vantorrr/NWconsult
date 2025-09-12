@@ -372,15 +372,10 @@
     const formData = new FormData(bankForm);
     
     try {
-      const response = await fetch(bankForm.action, {
-        method: 'POST',
-        body: formData,
-        headers: {
-          'Accept': 'application/json'
-        }
-      });
+      // Send to Telegram
+      const telegramSent = await window.sendBankToTelegram(formData);
       
-      if (response.ok) {
+      if (telegramSent) {
         bankForm.style.display = 'none';
         bankFormSuccess.style.display = 'block';
         
@@ -389,9 +384,10 @@
           closeBankModal();
         }, 3000);
       } else {
-        throw new Error('Network response was not ok');
+        throw new Error('Failed to send to Telegram');
       }
     } catch (error) {
+      console.error('Bank form submission error:', error);
       alert('Произошла ошибка при отправке формы. Пожалуйста, попробуйте еще раз или свяжитесь с нами напрямую.');
     }
   });

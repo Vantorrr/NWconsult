@@ -260,15 +260,10 @@
     const formData = new FormData(registrationForm);
     
     try {
-      const response = await fetch(registrationForm.action, {
-        method: 'POST',
-        body: formData,
-        headers: {
-          'Accept': 'application/json'
-        }
-      });
+      // Send to Telegram
+      const telegramSent = await window.sendRegistrationToTelegram(formData);
       
-      if (response.ok) {
+      if (telegramSent) {
         registrationForm.style.display = 'none';
         formSuccess.style.display = 'block';
         
@@ -277,9 +272,10 @@
           closeModal();
         }, 3000);
       } else {
-        throw new Error('Network response was not ok');
+        throw new Error('Failed to send to Telegram');
       }
     } catch (error) {
+      console.error('Form submission error:', error);
       alert('Произошла ошибка при отправке формы. Пожалуйста, попробуйте еще раз или свяжитесь с нами напрямую.');
     }
   });

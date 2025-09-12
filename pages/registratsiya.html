@@ -231,8 +231,62 @@
       </div>
     </footer>
     
-    <script src="../scripts/main.js"></script>
-    <script src="../scripts/animations.js"></script>
-    <script src="../scripts/registration-new.js"></script>
+    <!-- Registration Modal -->
+    <div id="registration-modal" class="modal">
+      <div class="modal__content">
+        <button class="modal__close" id="modal-close">&times;</button>
+        <div class="modal__header">
+          <span class="modal__flag" id="modal-flag">🏢</span>
+          <h2 class="modal__title" id="modal-title">Заказать регистрацию компании</h2>
+          <p class="modal__subtitle" id="modal-subtitle">Заполните форму и мы свяжемся с вами в течение 15 минут</p>
+        </div>
+        
+        <form class="modal__form" id="registration-form" action="https://formspree.io/f/YOUR_FORM_ID" method="POST">
+          <input type="hidden" id="country-input" name="country" value="">
+          <input type="hidden" name="_subject" id="form-subject" value="Заказ регистрации компании">
+          
+          <div class="form-group">
+            <label class="form-label" for="client-name">Ваше имя *</label>
+            <input type="text" id="client-name" name="name" class="form-input" placeholder="Иван Петров" required>
+          </div>
+          
+          <div class="form-group">
+            <label class="form-label" for="client-email">Email *</label>
+            <input type="email" id="client-email" name="email" class="form-input" placeholder="ivan@example.com" required>
+          </div>
+          
+          <div class="form-group">
+            <label class="form-label" for="client-phone">Телефон *</label>
+            <input type="tel" id="client-phone" name="phone" class="form-input" placeholder="+7 (999) 123-45-67" required>
+          </div>
+          
+          <div class="form-group">
+            <label class="form-label" for="client-message">Дополнительная информация</label>
+            <textarea id="client-message" name="message" class="form-input" rows="3" placeholder="Расскажите о ваших планах и требованиях к компании..."></textarea>
+          </div>
+          
+          <button type="submit" class="btn btn--primary">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M22 2L11 13"/>
+              <path d="M22 2l-7 20-4-9-9-4 20-7z"/>
+            </svg>
+            Отправить заявку
+          </button>
+        </form>
+        
+        <div class="form-success" id="form-success" style="display: none;">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M22 11.08V12a10 10 0 11-5.93-9.14"/>
+            <polyline points="22,4 12,14.01 9,11.01"/>
+          </svg>
+          <h3>Заявка отправлена!</h3>
+          <p>Мы свяжемся с вами в ближайшее время для обсуждения деталей регистрации.</p>
+        </div>
+      </div>
+    </div>
+    
+    <script src="../scripts/main.js?v=3"></script>
+    <script src="../scripts/animations.js?v=3"></script>
+    <script src="../scripts/registration-new.js?v=3"></script>
   </body>
 </html>

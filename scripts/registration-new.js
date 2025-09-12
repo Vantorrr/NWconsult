@@ -159,7 +159,7 @@
         
         <div class="country-price">от ${country.priceText}</div>
         
-        <button class="country-cta" onclick="window.location.href='./kontakty.html#form'">
+        <button class="country-cta" onclick="openRegistrationModal('${country.id}')">
           Заказать регистрацию
         </button>
       </div>
@@ -201,6 +201,96 @@
   // Initial render
   renderCountries();
   
+  // Modal functionality
+  const modal = document.getElementById('registration-modal');
+  const modalClose = document.getElementById('modal-close');
+  const modalFlag = document.getElementById('modal-flag');
+  const modalTitle = document.getElementById('modal-title');
+  const modalSubtitle = document.getElementById('modal-subtitle');
+  const countryInput = document.getElementById('country-input');
+  const formSubject = document.getElementById('form-subject');
+  const registrationForm = document.getElementById('registration-form');
+  const formSuccess = document.getElementById('form-success');
+  
+  // Debug check
+  if (!modal) {
+    console.error('Modal not found! Make sure the modal HTML is on the page.');
+  }
+
+  // Open modal function
+  window.openRegistrationModal = (countryId) => {
+    const country = countries.find(c => c.id === countryId);
+    if (!country) return;
+
+    if (!modal) {
+      console.error('Modal not found!');
+      return;
+    }
+
+    modalFlag.textContent = country.flag;
+    modalTitle.textContent = `Регистрация компании в ${country.name}`;
+    modalSubtitle.textContent = `Заполните форму и получите консультацию по регистрации в ${country.name}`;
+    countryInput.value = country.name;
+    formSubject.value = `Заказ регистрации компании в ${country.name}`;
+    
+    modal.classList.add('active');
+    document.body.style.overflow = 'hidden';
+  };
+
+  // Close modal function
+  function closeModal() {
+    modal.classList.remove('active');
+    document.body.style.overflow = '';
+    // Reset form
+    registrationForm.reset();
+    registrationForm.style.display = 'flex';
+    formSuccess.style.display = 'none';
+  }
+
+  // Event listeners for modal
+  modalClose?.addEventListener('click', closeModal);
+  modal?.addEventListener('click', (e) => {
+    if (e.target === modal) closeModal();
+  });
+
+  // Form submission
+  registrationForm?.addEventListener('submit', async (e) => {
+    e.preventDefault();
+    
+    const formData = new FormData(registrationForm);
+    
+    try {
+      const response = await fetch(registrationForm.action, {
+        method: 'POST',
+        body: formData,
+        headers: {
+          'Accept': 'application/json'
+        }
+      });
+      
+      if (response.ok) {
+        registrationForm.style.display = 'none';
+        formSuccess.style.display = 'block';
+        
+        // Auto close after 3 seconds
+        setTimeout(() => {
+          closeModal();
+        }, 3000);
+      } else {
+        throw new Error('Network response was not ok');
+      }
+    } catch (error) {
+      alert('Произошла ошибка при отправке формы. Пожалуйста, попробуйте еще раз или свяжитесь с нами напрямую.');
+    }
+  });
+
+  // Escape key to close modal
+  document.addEventListener('keydown', (e) => {
+    if (e.key === 'Escape' && modal.classList.contains('active')) {
+      closeModal();
+    }
+  });
+
   // Export function for admin panel
   window.getRegistrationCountries = () => countries;
   window.setRegistrationCountries = (newCountries) => {

@@ -338,7 +338,15 @@
   const importBanksBtn = document.getElementById('bank-import');
   
   function loadBanks() {
-    const banks = JSON.parse(localStorage.getItem('banksData')) || getDefaultBanks();
+    let banks = JSON.parse(localStorage.getItem('banksData'));
+    
+    // If only one bank exists, reset to defaults
+    if (!banks || banks.length <= 1) {
+      banks = getDefaultBanks();
+      localStorage.setItem('banksData', JSON.stringify(banks));
+    }
+    
+    console.log('Loading banks:', banks.length, 'banks');
     renderBanks(banks);
   }
   
@@ -356,6 +364,123 @@
         time: '10-14 дней',
         minimum: '$5,000',
         features: 'Мультивалютные счета, инвестиции, премиум обслуживание'
+      },
+      {
+        id: 'singapore-dbs',
+        country: 'Сингапур',
+        countryCode: 'singapore',
+        flag: '🇸🇬',
+        bank: 'DBS Bank',
+        type: 'traditional',
+        typeText: 'Традиционный',
+        remote: false,
+        time: '2-3 недели',
+        minimum: '$30,000',
+        features: 'Азиатский хаб, мультивалютные счета, торговое финансирование'
+      },
+      {
+        id: 'uk-revolut',
+        country: 'Великобритания',
+        countryCode: 'uk',
+        flag: '🇬🇧',
+        bank: 'Revolut Business',
+        type: 'digital',
+        typeText: 'Цифровой банк',
+        remote: true,
+        time: '1-2 дня',
+        minimum: '$0',
+        features: 'Мультивалютные счета, крипто операции, API интеграция'
+      },
+      {
+        id: 'usa-mercury',
+        country: 'США',
+        countryCode: 'usa',
+        flag: '🇺🇸',
+        bank: 'Mercury Bank',
+        type: 'digital',
+        typeText: 'Цифровой банк',
+        remote: true,
+        time: '1-3 дня',
+        minimum: '$0',
+        features: 'USD счета, интеграции, высокие лимиты'
+      },
+      {
+        id: 'cyprus-bank',
+        country: 'Кипр',
+        countryCode: 'cyprus',
+        flag: '🇨🇾',
+        bank: 'Bank of Cyprus',
+        type: 'traditional',
+        typeText: 'Традиционный',
+        remote: false,
+        time: '5-7 дней',
+        minimum: '€5,000',
+        features: 'EU счета, торговое финансирование'
+      },
+      {
+        id: 'wise-business',
+        country: 'Бельгия',
+        countryCode: 'belgium',
+        flag: '🇧🇪',
+        bank: 'Wise Business',
+        type: 'emi',
+        typeText: 'EMI',
+        remote: true,
+        time: '1 день',
+        minimum: '$0',
+        features: 'Мультивалютные счета, низкие комиссии, API'
+      },
+      {
+        id: 'lithuania-paysera',
+        country: 'Литва',
+        countryCode: 'lithuania',
+        flag: '🇱🇹',
+        bank: 'Paysera',
+        type: 'emi',
+        typeText: 'EMI',
+        remote: true,
+        time: '1-2 дня',
+        minimum: '€0',
+        features: 'SEPA платежи, мультивалютные счета'
+      },
+      {
+        id: 'estonia-lpb',
+        country: 'Эстония',
+        countryCode: 'estonia',
+        flag: '🇪🇪',
+        bank: 'LHV Bank',
+        type: 'traditional',
+        typeText: 'Традиционный',
+        remote: true,
+        time: '7-10 дней',
+        minimum: '€1,000',
+        features: 'e-Residency поддержка, крипто-френдли'
+      },
+      {
+        id: 'hongkong-hsbc',
+        country: 'Гонконг',
+        countryCode: 'hongkong',
+        flag: '🇭🇰',
+        bank: 'HSBC',
+        type: 'traditional',
+        typeText: 'Традиционный',
+        remote: false,
+        time: '2-4 недели',
+        minimum: 'HKD 50,000',
+        features: 'Глобальная сеть, премиум обслуживание'
+      },
+      {
+        id: 'uae-emirates',
+        country: 'ОАЭ',
+        countryCode: 'uae',
+        flag: '🇦🇪',
+        bank: 'Emirates NBD',
+        type: 'traditional',
+        typeText: 'Традиционный',
+        remote: false,
+        time: '1-2 недели',
+        minimum: 'AED 25,000',
+        features: 'Исламский банкинг, мультивалютные счета'
       }
     ];
   }

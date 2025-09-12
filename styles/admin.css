@@ -361,6 +361,25 @@ body {
   background: rgba(255, 255, 255, 0.03);
 }
 
+/* Table scrolling */
+.tab-content {
+  max-height: calc(100vh - 300px);
+  overflow-y: auto;
+}
+
+.admin-table-container {
+  max-height: 600px;
+  overflow-y: auto;
+  margin-bottom: 20px;
+}
+
+.admin-table thead {
+  position: sticky;
+  top: 0;
+  background: #0f172a;
+  z-index: 10;
+}
+
 /* Settings */
 .settings-group {
   margin-bottom: 48px;

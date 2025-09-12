@@ -202,9 +202,6 @@
         <td>${bank.time}</td>
         <td>${bank.minimum}</td>
         <td>
-          <div class="bank-features">${bank.features}</div>
-        </td>
-        <td>
           <button class="bank-cta" onclick="window.location.href='./kontakty.html#form'">
             Заказать
           </button>

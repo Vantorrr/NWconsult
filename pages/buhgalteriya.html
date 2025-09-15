@@ -106,7 +106,7 @@
                 </svg>
                 Подробнее
               </a>
-              <a href="./kontakty.html#form" class="btn btn--primary">Заказать услугу</a>
+              <button onclick="openServiceModal('audit-calculations')" class="btn btn--primary">Заказать услугу</button>
             </div>
           </div>
           
@@ -141,7 +141,7 @@
                 </svg>
                 Подробнее
               </a>
-              <a href="./kontakty.html#form" class="btn btn--primary">Заказать услугу</a>
+              <button onclick="openServiceModal('accounting-restore')" class="btn btn--primary">Заказать услугу</button>
             </div>
           </div>
           
@@ -180,7 +180,7 @@
                 </svg>
                 Подробнее
               </a>
-              <a href="./kontakty.html#form" class="btn btn--primary">Получить консультацию</a>
+              <button onclick="openServiceModal('docs-requirements')" class="btn btn--primary">Получить консультацию</button>
             </div>
           </div>
         </div>
@@ -351,7 +351,69 @@
       </div>
     </footer>
     
+    <!-- Service Modals -->
+    <div id="service-modal" class="modal">
+      <div class="modal__content">
+        <button class="modal__close" onclick="closeServiceModal()">&times;</button>
+        <div class="modal__header">
+          <div class="modal__icon">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M9 11l3 3L22 4"/>
+              <path d="M21 12v7a2 2 0 01-2 2H5a2 2 0 01-2-2V5a2 2 0 012-2h11"/>
+            </svg>
+          </div>
+          <h2 class="modal__title" id="service-modal-title">Заказ услуги</h2>
+          <p class="modal__subtitle" id="service-modal-subtitle">Заполните форму для заказа услуги</p>
+        </div>
+        
+        <form class="modal__form" id="service-form">
+          <div class="form-group">
+            <label class="form-label">Имя *</label>
+            <input type="text" name="name" class="form-input" required>
+          </div>
+          
+          <div class="form-group">
+            <label class="form-label">Email *</label>
+            <input type="email" name="email" class="form-input" required>
+          </div>
+          
+          <div class="form-group">
+            <label class="form-label">Телефон *</label>
+            <input type="tel" name="phone" class="form-input" required>
+          </div>
+          
+          <div class="form-group">
+            <label class="form-label">Компания</label>
+            <input type="text" name="company" class="form-input">
+          </div>
+          
+          <div class="form-group">
+            <label class="form-label">Комментарий</label>
+            <textarea name="message" class="form-input" rows="4" placeholder="Расскажите подробнее о ваших потребностях..."></textarea>
+          </div>
+          
+          <input type="hidden" name="service" id="service-type">
+          
+          <button type="submit" class="btn btn--primary btn--large" style="width: 100%;">
+            Отправить заявку
+          </button>
+        </form>
+        
+        <div class="form-success" id="service-success" style="display: none;">
+          <div class="form-success__icon">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M9 11l3 3L22 4"/>
+            </svg>
+          </div>
+          <h3>Заявка отправлена!</h3>
+          <p>Мы свяжемся с вами в ближайшее время</p>
+        </div>
+      </div>
+    </div>
+
+    <script src="../scripts/telegram-sender.js"></script>
     <script src="../scripts/main.js"></script>
     <script src="../scripts/animations.js"></script>
+    <script src="../scripts/accounting-forms.js?v=1"></script>
   </body>
 </html>

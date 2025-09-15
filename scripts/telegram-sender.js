@@ -86,6 +86,26 @@ ${data.message ? `💬 <b>Сообщение:</b> ${data.message}` : ''}
 🕐 <i>${timestamp}</i>`;
 }
 
+// Format service request
+function formatServiceMessage(data) {
+  const timestamp = new Date().toLocaleString('ru-RU', { 
+    timeZone: 'Europe/Moscow',
+    dateStyle: 'short',
+    timeStyle: 'short'
+  });
+  
+  return `📊 <b>НОВАЯ ЗАЯВКА НА УСЛУГУ</b>
+
+🔧 <b>Услуга:</b> ${data.service}
+👤 <b>Клиент:</b> ${data.name}
+📧 <b>Email:</b> ${data.email}
+📱 <b>Телефон:</b> ${data.phone}
+${data.company && data.company !== 'Не указано' ? `🏢 <b>Компания:</b> ${data.company}` : ''}
+${data.message && data.message !== 'Без комментариев' ? `💬 <b>Сообщение:</b> ${data.message}` : ''}
+
+🕐 <i>${timestamp}</i>`;
+}
+
 // Export functions
 window.sendRegistrationToTelegram = async (formData) => {
   const data = Object.fromEntries(formData);
@@ -102,5 +122,35 @@ window.sendBankToTelegram = async (formData) => {
 window.sendContactToTelegram = async (formData) => {
   const data = Object.fromEntries(formData);
   const message = formatContactMessage(data);
+  return await sendToTelegram(message);
+};
+
+window.sendServiceToTelegram = async (data) => {
+  const message = formatServiceMessage(data);
+  return await sendToTelegram(message);
+};
+
+// Format audit request
+function formatAuditMessage(data) {
+  const timestamp = new Date().toLocaleString('ru-RU', { 
+    timeZone: 'Europe/Moscow',
+    dateStyle: 'short',
+    timeStyle: 'short'
+  });
+  
+  return `🔍 <b>НОВАЯ ЗАЯВКА НА АУДИТ</b>
+
+🌍 <b>Страна:</b> ${data.country}
+👤 <b>Клиент:</b> ${data.name}
+📧 <b>Email:</b> ${data.email}
+📱 <b>Телефон:</b> ${data.phone}
+${data.company && data.company !== 'Не указано' ? `🏢 <b>Компания:</b> ${data.company}` : ''}
+${data.message && data.message !== 'Без комментариев' ? `💬 <b>Сообщение:</b> ${data.message}` : ''}
+
+🕐 <i>${timestamp}</i>`;
+}
+
+window.sendAuditToTelegram = async (data) => {
+  const message = formatAuditMessage(data);
   return await sendToTelegram(message);
 };

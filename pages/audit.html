@@ -104,7 +104,7 @@
         <h2 class="section-title">Выберите юрисдикцию для аудита</h2>
         <div id="countries-grid" class="countries-grid">
           <!-- Кипр -->
-          <a href="./articles/audit-cyprus.html" class="country-card">
+          <div class="country-card" onclick="openAuditModal('cyprus')">
             <div class="country-card__header">
               <span class="country-card__flag">🇨🇾</span>
               <div class="country-card__info">
@@ -142,10 +142,10 @@
                 <polyline points="12 5 19 12 12 19"/>
               </svg>
             </div>
-          </a>
+          </div>
           
           <!-- Мальта -->
-          <a href="./articles/audit-malta.html" class="country-card">
+          <div class="country-card" onclick="openAuditModal('malta')">
             <div class="country-card__header">
               <span class="country-card__flag">🇲🇹</span>
               <div class="country-card__info">
@@ -183,10 +183,10 @@
                 <polyline points="12 5 19 12 12 19"/>
               </svg>
             </div>
-          </a>
+          </div>
           
           <!-- Сингапур -->
-          <a href="./articles/audit-singapore.html" class="country-card">
+          <div class="country-card" onclick="openAuditModal('singapore')">
             <div class="country-card__header">
               <span class="country-card__flag">🇸🇬</span>
               <div class="country-card__info">
@@ -224,10 +224,10 @@
                 <polyline points="12 5 19 12 12 19"/>
               </svg>
             </div>
-          </a>
+          </div>
           
           <!-- Гонконг -->
-          <a href="./articles/audit-hongkong.html" class="country-card">
+          <div class="country-card" onclick="openAuditModal('hongkong')">
             <div class="country-card__header">
               <span class="country-card__flag">🇭🇰</span>
               <div class="country-card__info">
@@ -265,7 +265,7 @@
                 <polyline points="12 5 19 12 12 19"/>
               </svg>
             </div>
-          </a>
+          </div>
         </div>
       </div>
     </section>
@@ -479,11 +479,68 @@
     
     <script src="../scripts/main.js"></script>
     <script src="../scripts/animations.js"></script>
+    <!-- Audit Modal -->
+    <div id="audit-modal" class="modal">
+      <div class="modal__content">
+        <button class="modal__close" onclick="closeAuditModal()">&times;</button>
+        <div class="modal__header">
+          <span class="modal__flag" id="audit-modal-flag">🇨🇾</span>
+          <h2 class="modal__title" id="audit-modal-title">Аудит на Кипре</h2>
+          <p class="modal__subtitle">Заполните форму для заказа аудита</p>
+        </div>
+        
+        <form class="modal__form" id="audit-form">
+          <div class="form-group">
+            <label class="form-label">Имя *</label>
+            <input type="text" name="name" class="form-input" required>
+          </div>
+          
+          <div class="form-group">
+            <label class="form-label">Email *</label>
+            <input type="email" name="email" class="form-input" required>
+          </div>
+          
+          <div class="form-group">
+            <label class="form-label">Телефон *</label>
+            <input type="tel" name="phone" class="form-input" required>
+          </div>
+          
+          <div class="form-group">
+            <label class="form-label">Компания</label>
+            <input type="text" name="company" class="form-input">
+          </div>
+          
+          <div class="form-group">
+            <label class="form-label">Комментарий</label>
+            <textarea name="message" class="form-input" rows="4" placeholder="Расскажите о ваших потребностях в аудите..."></textarea>
+          </div>
+          
+          <input type="hidden" name="country" id="audit-country">
+          
+          <button type="submit" class="btn btn--primary btn--large" style="width: 100%;">
+            Заказать аудит
+          </button>
+        </form>
+        
+        <div class="form-success" id="audit-success" style="display: none;">
+          <div class="form-success__icon">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M9 11l3 3L22 4"/>
+            </svg>
+          </div>
+          <h3>Заявка отправлена!</h3>
+          <p>Мы свяжемся с вами для обсуждения аудита</p>
+        </div>
+      </div>
+    </div>
+
+    <script src="../scripts/telegram-sender.js"></script>
     <script src="../scripts/audit.js"></script>
+    <script src="../scripts/audit-forms.js?v=1"></script>
   </body>
 </html>          
           <!-- ОАЭ -->
-          <a href="./articles/audit-uae.html" class="country-card">
+          <div class="country-card" onclick="openAuditModal('uae')">
             <div class="country-card__header">
               <span class="country-card__flag">🇦🇪</span>
               <div class="country-card__info">
@@ -521,10 +578,10 @@
                 <polyline points="12 5 19 12 12 19"/>
               </svg>
             </div>
-          </a>
+          </div>
           
           <!-- Великобритания -->
-          <a href="./articles/audit-uk.html" class="country-card">
+          <div class="country-card" onclick="openAuditModal('uk')">
             <div class="country-card__header">
               <span class="country-card__flag">🇬🇧</span>
               <div class="country-card__info">
@@ -562,10 +619,10 @@
                 <polyline points="12 5 19 12 12 19"/>
               </svg>
             </div>
-          </a>
+          </div>
           
           <!-- Эстония -->
-          <a href="./articles/audit-estonia.html" class="country-card">
+          <div class="country-card" onclick="openAuditModal('estonia')">
             <div class="country-card__header">
               <span class="country-card__flag">🇪🇪</span>
               <div class="country-card__info">
@@ -603,10 +660,10 @@
                 <polyline points="12 5 19 12 12 19"/>
               </svg>
             </div>
-          </a>
+          </div>
           
           <!-- Швейцария -->
-          <a href="./articles/audit-switzerland.html" class="country-card">
+          <div class="country-card" onclick="openAuditModal('switzerland')">
             <div class="country-card__header">
               <span class="country-card__flag">🇨🇭</span>
               <div class="country-card__info">
@@ -644,4 +701,4 @@
                 <polyline points="12 5 19 12 12 19"/>
               </svg>
             </div>
-          </a>
+          </div>

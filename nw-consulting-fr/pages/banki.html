@@ -1,9 +1,9 @@
 <!doctype html>
-<html lang="ru">
+<html lang="fr">
   <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>Открытие счетов в банках — NW Consulting</title>
+    <title>Ouverture de comptes в банках — NW Consulting</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link rel="stylesheet" href="../styles/fonts.css">
@@ -14,8 +14,8 @@
   <body>
     <div class="topbar">
       <div class="container topbar__inner">
-        <div>Телефон: <a href="tel:+00000000000">+0 000 000-00-00</a></div>
-        <div>Email: <a href="mailto:info@nw.consulting">info@nw.consulting</a></div>
+        <div>Téléphone: <a href="tel:+00000000000">+0 000 000-00-00</a></div>
+        <div>E-mail: <a href="mailto:info@nw.consulting">info@nw.consulting</a></div>
       </div>
     </div>
     <header class="site-header">
@@ -29,13 +29,13 @@
             <span></span><span></span><span></span>
           </button>
           <ul class="nav__list">
-            <li><a href="../index.html">Главная</a></li>
-            <li><a href="./registratsiya.html">Регистрация компаний</a></li>
-            <li><a href="./banki.html" class="active">Открытие счетов</a></li>
-            <li><a href="./buhgalteriya.html">Бухгалтерия</a></li>
-            <li><a href="./audit.html">Аудит</a></li>
-            <li><a href="./prochie-uslugi.html">Прочие услуги</a></li>
-            <li><a href="./kontakty.html">Контакты</a></li>
+            <li><a href="../index.html">Accueil</a></li>
+            <li><a href="./registratsiya.html">Création de sociétés</a></li>
+            <li><a href="./banki.html" class="active">Ouverture de comptes</a></li>
+            <li><a href="./buhgalteriya.html">Comptabilité</a></li>
+            <li><a href="./audit.html">Audit</a></li>
+            <li><a href="./prochie-uslugi.html">Autres services</a></li>
+            <li><a href="./kontakty.html">Contacts</a></li>
           </ul>
         </nav>
       </div>
@@ -47,47 +47,47 @@
       <div class="container">
         <div class="filters-container">
           <div class="filter-group">
-            <label class="filter-label">Поиск</label>
-            <input type="text" class="filter-search" id="bank-search" placeholder="Название банка или страны...">
+            <label class="filter-label">Recherche</label>
+            <input type="text" class="filter-search" id="bank-search" placeholder="Nom банка или depuisтраны...">
           </div>
           
           <div class="filter-group">
-            <label class="filter-label">Страна</label>
+            <label class="filter-label">Pays</label>
             <select class="filter-select" id="country-filter">
-              <option value="">Все страны</option>
-              <option value="switzerland">Швейцария</option>
-              <option value="singapore">Сингапур</option>
-              <option value="uk">Великобритания</option>
-              <option value="cyprus">Кипр</option>
-              <option value="hongkong">Гонконг</option>
-              <option value="uae">ОАЭ</option>
-              <option value="georgia">Грузия</option>
-              <option value="armenia">Армения</option>
+              <option value="">Tous les pays</option>
+              <option value="switzerland">Suisse</option>
+              <option value="singapore">Singapour</option>
+              <option value="uk">Royaume-Uni</option>
+              <option value="cyprus">Chypre</option>
+              <option value="hongkong">Hong Kong</option>
+              <option value="uae">ÉAU</option>
+              <option value="georgia">Géorgie</option>
+              <option value="armenia">Arménie</option>
             </select>
           </div>
           
           <div class="filter-group">
-            <label class="filter-label">Тип счёта</label>
+            <label class="filter-label">Type depuisчёта</label>
             <select class="filter-select" id="type-filter">
-              <option value="">Все типы</option>
-              <option value="traditional">Традиционный банк</option>
-              <option value="digital">Цифровой банк</option>
-              <option value="emi">EMI (платёжная система)</option>
-              <option value="crypto">Крипто-френдли</option>
+              <option value="">Tous les types</option>
+              <option value="traditional">Banque traditionnelle</option>
+              <option value="digital">Banque numérique</option>
+              <option value="emi">EMI (платёжная depuisиdepuisтема)</option>
+              <option value="crypto">Crypto-френдли</option>
             </select>
           </div>
           
           <div class="filter-group">
-            <label class="filter-label">Открытие</label>
+            <label class="filter-label">Ouverture</label>
             <select class="filter-select" id="remote-filter">
-              <option value="">Любое</option>
-              <option value="remote">Удалённо</option>
-              <option value="visit">С визитом</option>
+              <option value="">Toute</option>
+              <option value="remote">À distance</option>
+              <option value="visit">Avec visite</option>
             </select>
           </div>
           
           <div class="filter-buttons">
-            <button class="filter-btn" id="reset-filters">Сбросить фильтры</button>
+            <button class="filter-btn" id="reset-filters">Réinitialiser фильтры</button>
           </div>
         </div>
       </div>
@@ -96,39 +96,39 @@
     <!-- Banks Table Section -->
     <section class="banks-section">
       <div class="container">
-        <h2 class="section__title">Выберите подходящий банк</h2>
+        <h2 class="section__title">Choisissez подходящий банк</h2>
         
         <div class="banks-table-wrapper">
           <table class="banks-table" id="banks-table">
             <thead>
               <tr>
                 <th class="sortable" data-sort="country">
-                  Страна
+                  Pays
                   <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor">
                     <path d="M7 10l5-5 5 5M7 14l5 5 5-5"/>
                   </svg>
                 </th>
                 <th class="sortable" data-sort="bank">
-                  Банк/Система
+                  Banque/Système
                   <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor">
                     <path d="M7 10l5-5 5 5M7 14l5 5 5-5"/>
                   </svg>
                 </th>
-                <th>Тип</th>
-                <th>Открытие</th>
+                <th>Type</th>
+                <th>Ouverture</th>
                 <th class="sortable" data-sort="time">
-                  Срок
+                  Délai
                   <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor">
                     <path d="M7 10l5-5 5 5M7 14l5 5 5-5"/>
                   </svg>
                 </th>
                 <th class="sortable" data-sort="minimum">
-                  Мин. баланс
+                  Solde min.
                   <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor">
                     <path d="M7 10l5-5 5 5M7 14l5 5 5-5"/>
                   </svg>
                 </th>
-                <th>Действие</th>
+                <th>Action</th>
               </tr>
             </thead>
             <tbody id="banks-tbody">
@@ -138,7 +138,7 @@
         </div>
         
         <div class="banks-note">
-          <p>* Минимальный баланс и сроки открытия могут варьироваться в зависимости от юрисдикции компании и типа бизнеса</p>
+          <p>* Минимальный баланdepuis и depuisроки à partir deкрытия могут варьироватьdepuisя в завиdepuisимоdepuisти à partir de юриdepuisдикции компании и типа бизнеdepuisа</p>
         </div>
       </div>
     </section>
@@ -146,7 +146,7 @@
     <!-- Advantages Section -->
     <section class="advantages-section">
       <div class="container">
-        <h2 class="section__title">Почему открывать счета с нами</h2>
+        <h2 class="section__title">Почему à partir deкрывать depuisчета depuis нами</h2>
         
         <div class="advantages-grid">
           <div class="advantage-card">
@@ -155,8 +155,8 @@
                 <path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/>
               </svg>
             </div>
-            <h3>Проверенные банки</h3>
-            <p>Работаем только с надёжными финансовыми институтами с безупречной репутацией</p>
+            <h3>Banques vérifiées</h3>
+            <p>Рабà partir deаем только depuis надёжными institutions financières depuis réputation irréprochable</p>
           </div>
           
           <div class="advantage-card">
@@ -166,8 +166,8 @@
                 <polyline points="12 6 12 12 16 14"/>
               </svg>
             </div>
-            <h3>Быстрое открытие</h3>
-            <p>Открываем счета за 5-14 дней благодаря отлаженным процессам и связям</p>
+            <h3>Rapideе à partir deкрытие</h3>
+            <p>Открываем depuisчета за 5-14 jours блаansря à partir deлаженным процеdepuisdepuisам и depuisвязям</p>
           </div>
           
           <div class="advantage-card">
@@ -179,8 +179,8 @@
                 <line x1="8" y1="23" x2="16" y2="23"/>
               </svg>
             </div>
-            <h3>Полное сопровождение</h3>
-            <p>Готовим документы, консультируем, помогаем с комплаенсом и прохождением проверок</p>
+            <h3>Accompagnement complet</h3>
+            <p>Гà partir deовим документы, конdepuisультируем, помогаем depuis комплаенdepuisом и прохождением проверок</p>
           </div>
           
           <div class="advantage-card">
@@ -190,8 +190,8 @@
                 <path d="M7 11V7a5 5 0 0110 0v4"/>
               </svg>
             </div>
-            <h3>Конфиденциальность</h3>
-            <p>Гарантируем полную конфиденциальность ваших данных и финансовой информации</p>
+            <h3>Confidentialité</h3>
+            <p>Гарантируем полную конфиденциальноdepuisть de vos données и финанdepuisовой информации</p>
           </div>
         </div>
       </div>
@@ -200,21 +200,21 @@
     <!-- Process Section -->
     <section class="process-section">
       <div class="container">
-        <h2 class="section__title">Как мы открываем счета</h2>
+        <h2 class="section__title">Как мы à partir deкрываем depuisчета</h2>
         
         <div class="process-timeline">
           <div class="process-step">
             <div class="process-step__number">1</div>
             <div class="process-step__content">
-              <h3>Анализ потребностей</h3>
-              <p>Изучаем ваш бизнес и подбираем оптимальные банки</p>
+              <h3>Анализ пà partir deребноdepuisтей</h3>
+              <p>Изучаем ваш бизнеdepuis и подбираем оптимальные банки</p>
             </div>
           </div>
           
           <div class="process-step">
             <div class="process-step__number">2</div>
             <div class="process-step__content">
-              <h3>Подготовка документов</h3>
+              <h3>Подгà partir deовка документов</h3>
               <p>Собираем и оформляем полный пакет документов</p>
             </div>
           </div>
@@ -222,16 +222,16 @@
           <div class="process-step">
             <div class="process-step__number">3</div>
             <div class="process-step__content">
-              <h3>Подача заявки</h3>
-              <p>Подаём заявку и сопровождаем на всех этапах</p>
+              <h3>Soumission de la demande</h3>
+              <p>Подаём заявку и depuisопровождаем на вdepuisех этапах</p>
             </div>
           </div>
           
           <div class="process-step">
             <div class="process-step__number">4</div>
             <div class="process-step__content">
-              <h3>Открытие счёта</h3>
-              <p>Получаем реквизиты и помогаем с активацией</p>
+              <h3>Ouverture depuisчёта</h3>
+              <p>Получаем реквизиты и помогаем depuis активацией</p>
             </div>
           </div>
         </div>
@@ -249,21 +249,21 @@
                 <path d="M3 21h18M3 10h18M5 6l7-3 7 3M12 3v18"/>
               </svg>
             </div>
-            <h2 class="banks-cta-title">Нужна консультация по открытию счёта?</h2>
-            <p class="banks-cta-desc">Поможем выбрать подходящий банк и откроем счёт в кратчайшие сроки</p>
+            <h2 class="banks-cta-title">Нужна конdepuisультация по à partir deкрытию depuisчёта?</h2>
+            <p class="banks-cta-desc">Поможем выбрать подходящий банк и à partir deкроем depuisчёт в кратчайшие depuisроки</p>
             
             <div class="banks-cta-features">
               <div class="banks-cta-feature">
                 <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                   <polyline points="20 6 9 17 4 12"></polyline>
                 </svg>
-                <span>Персональный менеджер</span>
+                <span>Перdepuisональный менеджер</span>
               </div>
               <div class="banks-cta-feature">
                 <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                   <polyline points="20 6 9 17 4 12"></polyline>
                 </svg>
-                <span>Гарантия открытия</span>
+                <span>Гарантия à partir deкрытия</span>
               </div>
               <div class="banks-cta-feature">
                 <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
@@ -278,7 +278,7 @@
                 <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                   <path d="M22 16.92v3a2 2 0 01-2.18 2 19.79 19.79 0 01-8.63-3.07 19.5 19.5 0 01-6-6 19.79 19.79 0 01-3.07-8.67A2 2 0 014.11 2h3a2 2 0 012 1.72 12.84 12.84 0 00.7 2.81 2 2 0 01-.45 2.11L8.09 9.91a16 16 0 006 6l1.27-1.27a2 2 0 012.11-.45 12.84 12.84 0 002.81.7A2 2 0 0122 16.92z"/>
                 </svg>
-                Получить консультацию
+                Obtenir une consultation
               </a>
               <a href="https://wa.me/00000000000" target="_blank" class="btn btn--ghost btn--large">
                 <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
@@ -301,21 +301,21 @@
                 <img src="../logo.png" alt="NW Consulting">
                 <span>NW Consulting</span>
               </div>
-              <p class="footer__desc">Международный бизнес-консалтинг с 2010 года</p>
+              <p class="footer__desc">Conseil en affaires internationales depuis 2010</p>
             </div>
             
             <div class="footer__col">
-              <h3>Услуги</h3>
+              <h3>Services</h3>
               <ul class="footer__services">
-                <li><a href="./registratsiya.html">Регистрация компаний</a></li>
-                <li><a href="./banki.html">Открытие счетов</a></li>
-                <li><a href="./buhgalteriya.html">Бухгалтерия</a></li>
-                <li><a href="./audit.html">Аудит</a></li>
+                <li><a href="./registratsiya.html">Création de sociétés</a></li>
+                <li><a href="./banki.html">Ouverture de comptes</a></li>
+                <li><a href="./buhgalteriya.html">Comptabilité</a></li>
+                <li><a href="./audit.html">Audit</a></li>
               </ul>
             </div>
             
             <div class="footer__col">
-              <h3>Контакты</h3>
+              <h3>Contacts</h3>
               <div class="footer__contacts">
                 <a href="tel:+00000000000">
                   <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
@@ -334,9 +334,9 @@
             </div>
             
             <div class="footer__col">
-              <h3>Связаться с нами</h3>
-              <p class="footer__cta">Готовы начать? Свяжитесь с нами для консультации</p>
-              <a href="./kontakty.html#form" class="footer__btn">Оставить заявку</a>
+              <h3>Связатьdepuisя depuis нами</h3>
+              <p class="footer__cta">Prêt à commencer? Contactez-nous для конdepuisультации</p>
+              <a href="./kontakty.html#form" class="footer__btn">Faire une demande</a>
               
               <div class="footer__socials">
                 <a href="https://t.me/your_username" target="_blank" aria-label="Telegram">
@@ -357,7 +357,7 @@
       
       <div class="footer__bottom">
         <div class="container">
-          <p>© 2025 NW Consulting. Все права защищены.</p>
+          <p>© 2025 NW Consulting. Tous droits réservés.</p>
         </div>
       </div>
     </footer>
@@ -368,37 +368,37 @@
         <button class="modal__close" id="bank-modal-close">&times;</button>
         <div class="modal__header">
           <span class="modal__flag" id="bank-modal-flag">🏦</span>
-          <h2 class="modal__title" id="bank-modal-title">Заказать открытие счета</h2>
-          <p class="modal__subtitle" id="bank-modal-subtitle">Заполните форму и мы поможем открыть счет в выбранном банке</p>
+          <h2 class="modal__title" id="bank-modal-title">Commander à partir deкрытие depuisчета</h2>
+          <p class="modal__subtitle" id="bank-modal-subtitle">Заполните форму и мы поможем à partir deкрыть depuisчет в выбранном банке</p>
         </div>
         
         <form class="modal__form" id="bank-form" action="https://formspree.io/f/YOUR_FORM_ID" method="POST">
           <input type="hidden" id="bank-input" name="bank" value="">
-          <input type="hidden" name="_subject" id="bank-form-subject" value="Заказ открытия банковского счета">
+          <input type="hidden" name="_subject" id="bank-form-subject" value="Заказ à partir deкрытия банковdepuisкого depuisчета">
           
           <div class="form-group">
-            <label class="form-label" for="bank-client-name">Ваше имя *</label>
+            <label class="form-label" for="bank-client-name">Votre nom *</label>
             <input type="text" id="bank-client-name" name="name" class="form-input" placeholder="Иван Петров" required>
           </div>
           
           <div class="form-group">
-            <label class="form-label" for="bank-client-email">Email *</label>
+            <label class="form-label" for="bank-client-email">E-mail *</label>
             <input type="email" id="bank-client-email" name="email" class="form-input" placeholder="ivan@example.com" required>
           </div>
           
           <div class="form-group">
-            <label class="form-label" for="bank-client-phone">Телефон *</label>
+            <label class="form-label" for="bank-client-phone">Téléphone *</label>
             <input type="tel" id="bank-client-phone" name="phone" class="form-input" placeholder="+7 (999) 123-45-67" required>
           </div>
           
           <div class="form-group">
-            <label class="form-label" for="bank-client-company">Название компании</label>
-            <input type="text" id="bank-client-company" name="company" class="form-input" placeholder="ООО Моя Компания">
+            <label class="form-label" for="bank-client-company">Nom компании</label>
+            <input type="text" id="bank-client-company" name="company" class="form-input" placeholder="ООО Моя Société">
           </div>
           
           <div class="form-group">
             <label class="form-label" for="bank-client-message">Дополнительная информация</label>
-            <textarea id="bank-client-message" name="message" class="form-input" rows="3" placeholder="Расскажите о планируемых операциях, суммах оборотов и других требованиях..."></textarea>
+            <textarea id="bank-client-message" name="message" class="form-input" rows="3" placeholder="Раdepuisdepuisкажите о планируемых операциях, depuisуммах оборà partir deов и других требованиях..."></textarea>
           </div>
           
           <button type="submit" class="btn btn--primary">
@@ -406,7 +406,7 @@
               <path d="M22 2L11 13"/>
               <path d="M22 2l-7 20-4-9-9-4 20-7z"/>
             </svg>
-            Отправить заявку
+            Envoyer заявку
           </button>
         </form>
         
@@ -415,8 +415,8 @@
             <path d="M22 11.08V12a10 10 0 11-5.93-9.14"/>
             <polyline points="22,4 12,14.01 9,11.01"/>
           </svg>
-          <h3>Заявка отправлена!</h3>
-          <p>Мы свяжемся с вами в ближайшее время для обсуждения открытия счета в выбранном банке.</p>
+          <h3>Заявка à partir deправлена!</h3>
+          <p>Мы depuisвяжемdepuisя depuis вами в ближайшее время для обdepuisуждения à partir deкрытия depuisчета в выбранном банке.</p>
         </div>
       </div>
     </div>

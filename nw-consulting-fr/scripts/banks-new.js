@@ -1,46 +1,59 @@
 // Banks page functionality
 (function() {
   const isEnglish = (document.documentElement.getAttribute('lang') || '').toLowerCase() === 'en';
+  const isFrench = (document.documentElement.getAttribute('lang') || '').toLowerCase() === 'fr';
   // Banks data
   const banksData = [
     {
       id: 'swiss-cim',
       country: 'Switzerland',
+      countryFr: 'Suisse',
       countryCode: 'switzerland',
       flag: '🇨🇭',
       bank: 'CIM Banque',
       type: 'traditional',
       typeText: 'Traditional',
+      typeTextFr: 'Banque traditionnelle',
       remote: false,
       time: '10-14 days',
+      timeFr: '10-14 jours',
       minimum: '$5,000',
-      features: 'Multi-currency accounts, investments, premium service'
+      features: 'Multi-currency accounts, investments, premium service',
+      featuresFr: 'Comptes multidevises, investissements, service premium'
     },
     {
       id: 'singapore-dbs',
       country: 'Singapore',
+      countryFr: 'Singapour',
       countryCode: 'singapore',
       flag: '🇸🇬',
       bank: 'DBS Bank',
       type: 'traditional',
       typeText: 'Traditional',
+      typeTextFr: 'Banque traditionnelle',
       remote: false,
       time: '7-10 days',
+      timeFr: '7-10 jours',
       minimum: '$30,000',
-      features: 'Asian hub, excellent reputation, online banking'
+      features: 'Asian hub, excellent reputation, online banking',
+      featuresFr: 'Hub asiatique, excellente réputation, banque en ligne'
     },
     {
       id: 'uk-revolut',
       country: 'United Kingdom',
+      countryFr: 'Royaume-Uni',
       countryCode: 'uk',
       flag: '🇬🇧',
       bank: 'Revolut Business',
       type: 'digital',
       typeText: 'Digital bank',
+      typeTextFr: 'Banque numérique',
       remote: true,
       time: '1-3 days',
+      timeFr: '1-3 jours',
       minimum: '€0',
-      features: 'Fast opening, multi-currency, business API'
+      features: 'Fast opening, multi-currency, business API',
+      featuresFr: 'Ouverture rapide, multidevise, API business'
     },
     {
       id: 'cyprus-bank',
@@ -66,7 +79,7 @@
       remote: false,
       time: '14-21 days',
       minimum: 'HKD 50,000',
-      features: 'Access to Asian markets, prestige, trade finance'
+      features: 'Access to Asian markets, prestige, financement du commerce'
     },
     {
       id: 'uae-rakbank',
@@ -155,9 +168,9 @@
       type: 'emi',
       typeText: 'EMI',
       remote: true,
-      time: '5-7 дней',
+      time: '5-7 jours',
       minimum: '€0',
-      features: 'Крипто-френдли, IBAN счета, SEPA/SWIFT'
+      features: 'Crypto-френдли, Comptes IBAN, SEPA/SWIFT'
     }
   ];
 
@@ -186,26 +199,26 @@
         <td>
           <div class="bank-country">
             <span class="bank-flag">${bank.flag}</span>
-            <span>${bank.country}</span>
+            <span>${isFrench && bank.countryFr ? bank.countryFr : bank.country}</span>
           </div>
         </td>
         <td>
           <div class="bank-name">${bank.bank}</div>
         </td>
         <td>
-          <span class="bank-type ${bank.type}">${bank.typeText}</span>
+          <span class="bank-type ${bank.type}">${isFrench && bank.typeTextFr ? bank.typeTextFr : bank.typeText}</span>
         </td>
         <td>
           ${bank.remote 
-            ? '<span class="bank-remote">✓ Remote</span>' 
-            : '<span class="bank-visit">✈ With visit</span>'
+            ? `<span class="bank-remote">✓ ${isFrench ? 'À distance' : 'Remote'}</span>` 
+            : `<span class="bank-visit">✈ ${isFrench ? 'Avec visite' : 'With visit'}</span>`
           }
         </td>
-        <td>${bank.time}</td>
+        <td>${isFrench && bank.timeFr ? bank.timeFr : bank.time}</td>
         <td>${bank.minimum}</td>
         <td>
           <button class="bank-cta" onclick="openBankModal('${bank.id}')">
-            Order
+            ${isFrench ? 'Commander' : 'Order'}
           </button>
         </td>
       </tr>
@@ -342,10 +355,16 @@
     }
 
     bankModalFlag.textContent = bank.flag;
+    const countryName = isFrench && bank.countryFr ? bank.countryFr : bank.country;
+    
     if (isEnglish) {
       bankModalTitle.textContent = `Open an account at ${bank.bank}`;
       bankModalSubtitle.textContent = `Fill the form to get a consultation on opening an account at ${bank.bank} (${bank.country})`;
       bankFormSubject.value = `Bank account opening request at ${bank.bank} (${bank.country})`;
+    } else if (isFrench) {
+      bankModalTitle.textContent = `Ouvrir un compte chez ${bank.bank}`;
+      bankModalSubtitle.textContent = `Remplissez le formulaire pour obtenir une consultation sur l'ouverture d'un compte chez ${bank.bank} (${countryName})`;
+      bankFormSubject.value = `Demande d'ouverture de compte chez ${bank.bank} (${countryName})`;
     } else {
       bankModalTitle.textContent = `Открытие счета в ${bank.bank}`;
       bankModalSubtitle.textContent = `Заполните форму и получите консультацию по открытию счета в ${bank.bank} (${bank.country})`;
@@ -396,7 +415,7 @@
       }
     } catch (error) {
       console.error('Bank form submission error:', error);
-      alert(isEnglish ? 'An error occurred while submitting the form. Please try again or contact us directly.' : 'Произошла ошибка при отправке формы. Пожалуйста, попробуйте еще раз или свяжитесь с нами напрямую.');
+      alert(isEnglish ? 'An error occurred while submitting the form. Please try again or contact us directly.' : 'Произошла ошибка при à partir deправке формы. Пожалуйdepuisта, попробуйте еще раз или depuisвяжитеdepuisь depuis нами напрямую.');
     }
   });
 

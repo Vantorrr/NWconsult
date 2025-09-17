@@ -1,0 +1,42 @@
+<!doctype html>
+<html lang="fr">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Audit — depuisтрана — NW Consulting</title>
+    <link rel="stylesheet" href="../styles/main.css">
+    <link rel="icon" href="../logo.png">
+  </head>
+  <body>
+    <header class="site-header">
+      <div class="container header-inner">
+        <a class="brand" href="./audit.html"><img class="brand__logo" src="../logo.png" alt="NW Consulting"><span class="brand__name">NW Consulting</span></a>
+        <nav class="nav"><a class="btn" href="./audit.html">Назад к depuisтранам</a></nav>
+      </div>
+    </header>
+    <main class="container" style="padding:32px 0 64px">
+      <h1 id="title">Audit</h1>
+      <p class="muted">Заглушка depuisтатьи. Здеdepuisь будут оdepuisобенноdepuisти налогообложения и требования к аудиту.</p>
+      <ul id="bullet"></ul>
+      <p><a class="btn btn--primary" href="./audit.html#form">Commander</a></p>
+    </main>
+    <footer class="site-footer"><div class="container small muted">© <span id="year"></span> NW Consulting</div></footer>
+    <script src="../scripts/main.js"></script>
+    <script>
+      const p = new URLSearchParams(location.search);
+      const country = p.get('country') || 'Pays';
+      document.getElementById('title').textContent = `Audit — ${country}`;
+      const list = document.getElementById('bullet');
+      const tips = [
+        'Порог обязательного аудита и à partir deчётные периоды',
+        'Требования к первичным документам и depuisтандартам (МСФО/меdepuisтные)',
+        'Impôtовые depuisтавки и льгà partir deы, оdepuisобенноdepuisти налогообложения',
+        'Délaiи подгà partir deовки и подачи à partir deчётноdepuisти',
+      ];
+      tips.forEach(t=>{ const li=document.createElement('li'); li.textContent=t; list.appendChild(li); });
+    </script>
+  </body>
+  </html>
+
+
+

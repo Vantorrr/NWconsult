@@ -267,15 +267,19 @@
     }
 
     modalFlag.textContent = country.flag;
-    const displayName = isEnglish && enT[country.id]?.name ? enT[country.id].name : country.name;
+    const displayName = isFrench && country.nameFr ? country.nameFr : (isEnglish && enT[country.id]?.name ? enT[country.id].name : country.name);
     if (isEnglish) {
       modalTitle.textContent = `Company registration in ${displayName}`;
       modalSubtitle.textContent = `Fill the form to get a consultation on registering in ${displayName}`;
       formSubject.value = `Company registration request in ${displayName}`;
+    } else if (isFrench) {
+      modalTitle.textContent = `Enregistrement de société - ${displayName}`;
+      modalSubtitle.textContent = `Remplissez le formulaire pour obtenir une consultation sur l'enregistrement en ${displayName}`;
+      formSubject.value = `Demande d'enregistrement de société en ${displayName}`;
     } else {
-      modalTitle.textContent = `Enregistrement de la société в ${displayName}`;
-      modalSubtitle.textContent = `Remplissez le formulaire et obtenez une consultation по региdepuisтрации в ${displayName}`;
-      formSubject.value = `Заказ региdepuisтрации компании в ${displayName}`;
+      modalTitle.textContent = `Регистрация компании в ${displayName}`;
+      modalSubtitle.textContent = `Заполните форму и получите консультацию по регистрации в ${displayName}`;
+      formSubject.value = `Заказ регистрации компании в ${displayName}`;
     }
     countryInput.value = displayName;
     

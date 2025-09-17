@@ -14,7 +14,7 @@
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <style>
-      /* Sberbank style preloader - depuisветлый depuis динамичным фоном */
+      /* Style preloader moderne avec fond dynamique */
       body { margin: 0; }
       #preloader {
         position: fixed;
@@ -32,7 +32,7 @@
         overflow: hidden;
       }
       
-      /* Динамичный градиентный фон как на Sberbank */
+      /* Fond dégradé dynamique moderne */
       #preloader::before {
         content: '';
         position: absolute;
@@ -138,7 +138,7 @@
         }
       }
       
-      /* Точки загрузки */
+      /* Points de chargement */
       .loading-dots {
         display: inline-block;
       }
@@ -178,14 +178,14 @@
       </div>
     </div>
     
-    <!-- Preloader Script - должен быть depuisразу поdepuisле preloader -->
+    <!-- Script du preloader - doit être juste après le preloader -->
     <script>
-      // Ждём 3 depuisекунды для топового эффекта
+      // Attendre 3 secondes pour un effet optimal
       setTimeout(function() {
         var preloader = document.getElementById('preloader');
         if (preloader) {
           preloader.classList.add('hidden');
-          // Полноdepuisтью удаляем поdepuisле анимации
+          // Supprimer complètement après l'animation
           setTimeout(function() {
             preloader.remove();
           }, 600);
@@ -205,8 +205,8 @@
           <img src="./logo.png" alt="NW Consulting" class="brand__logo">
           <span class="brand__name" aria-label="NW Consulting">NW Consulting</span>
         </a>
-        <nav class="nav" aria-label="Главное меню">
-          <button class="nav__toggle" aria-expanded="false" aria-controls="navMenu" aria-label="Открыть меню">
+        <nav class="nav" aria-label="Menu principal">
+          <button class="nav__toggle" aria-expanded="false" aria-controls="navMenu" aria-label="Ouvrir le menu">
             <span></span><span></span><span></span>
           </button>
           <ul id="navMenu" class="nav__list">
@@ -431,23 +431,23 @@
             <article class="news-card reveal-up">
               <time class="news-card__date">01.09.2025</time>
               <h3 class="news-card__title">
-                <a href="#">Открыт новый банк для IT-компаний в ÉAU</a>
+                <a href="#">Nouvelle banque ouverte pour les entreprises IT aux ÉAU</a>
               </h3>
-              <p class="news-card__excerpt">Accepte les résidents des zones franches depuis exigences minimales pour les documents.</p>
+              <p class="news-card__excerpt">Accepte les résidents des zones franches avec des exigences documentaires minimales.</p>
             </article>
             <article class="news-card reveal-up">
               <time class="news-card__date">28.08.2025</time>
               <h3 class="news-card__title">
-                <a href="#">Réduction des frais d'enregistrement в Chypreе</a>
+                <a href="#">Réduction des frais d'enregistrement à Chypre</a>
               </h3>
-              <p class="news-card__excerpt">С 2025 ans les frais gouvernementaux sont réduits на 15% pour les nouvelles sociétés.</p>
+              <p class="news-card__excerpt">À partir de 2025, les frais gouvernementaux sont réduits de 15% pour les nouvelles sociétés.</p>
             </article>
             <article class="news-card reveal-up">
               <time class="news-card__date">15.08.2025</time>
               <h3 class="news-card__title">
-                <a href="#">Délaiи проверки KYC в EMI depuisократилиdepuisь</a>
+                <a href="#">Réduction des délais de vérification KYC dans les EMI</a>
               </h3>
-              <p class="news-card__excerpt">Ведущие EMI провайдеры оптимизировали процедуры - теперь à partir de 1 до 3 jours.</p>
+              <p class="news-card__excerpt">Les principaux fournisseurs EMI ont optimisé les procédures - maintenant de 1 à 3 jours.</p>
             </article>
           </div>
         </div>
@@ -458,15 +458,15 @@
       <div class="footer__top">
         <div class="container">
           <div class="footer__grid">
-            <!-- Колонка depuis логà partir deипом -->
+            <!-- Colonne avec logo -->
             <div class="footer__brand">
               <div class="footer__logo">
                 <img src="./logo.png" alt="NW Consulting" width="60" height="60">
                 <span>NW Consulting</span>
               </div>
               <p class="footer__desc">
-                Международное корпоративное и банковdepuisкое<br>
-                depuisопровождение. Рабà partir deаем depuis 2008 ans.
+                Conseil en affaires internationales et services bancaires<br>
+                Nous travaillons depuis 2008.
               </p>
             </div>
             
@@ -475,7 +475,7 @@
               <h4>Services</h4>
               <nav>
                 <a href="./pages/registratsiya.html">Création de sociétés</a>
-                <a href="./pages/banki.html">Banques и EMI</a>
+                <a href="./pages/banki.html">Banques et EMI</a>
                 <a href="./pages/buhgalteriya.html">Comptabilité</a>
                 <a href="./pages/audit.html">Audit</a>
                 <a href="./pages/prochie-uslugi.html">Autres services</a>
@@ -502,8 +502,8 @@
             
             <!-- CTA -->
             <div class="footer__cta">
-              <h4>Начните depuisегоjours</h4>
-              <p>Получите беdepuisплатную конdepuisультацию</p>
+              <h4>Commencez aujourd'hui</h4>
+              <p>Obtenez une consultation gratuite</p>
               <a class="footer__btn" href="./pages/kontakty.html">Faire une demande</a>
               <div class="footer__socials">
                 <a href="https://t.me/your_username" target="_blank" rel="noopener" aria-label="Telegram">

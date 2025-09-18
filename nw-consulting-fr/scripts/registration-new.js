@@ -254,6 +254,10 @@
       modalTitle.textContent = `Company registration in ${displayName}`;
       modalSubtitle.textContent = `Fill the form to get a consultation on registering in ${displayName}`;
       formSubject.value = `Company registration request in ${displayName}`;
+    } else if (isFrench) {
+      modalTitle.textContent = `Enregistrement de société en ${displayName}`;
+      modalSubtitle.textContent = `Remplissez le formulaire pour obtenir une consultation sur l'enregistrement en ${displayName}`;
+      formSubject.value = `Demande d'enregistrement de société en ${displayName}`;
     } else {
       modalTitle.textContent = `Регистрация компании в ${displayName}`;
       modalSubtitle.textContent = `Заполните форму и получите консультацию по регистрации в ${displayName}`;
@@ -304,7 +308,13 @@
       }
     } catch (error) {
       console.error('Form submission error:', error);
-      alert(isEnglish ? 'An error occurred while submitting the form. Please try again or contact us directly.' : 'Произошла ошибка при отправке формы. Пожалуйста, попробуйте еще раз или свяжитесь с нами напрямую.');
+      alert(
+        isEnglish 
+          ? 'An error occurred while submitting the form. Please try again or contact us directly.'
+          : (isFrench 
+              ? "Une erreur s'est produite lors de l'envoi du formulaire. Veuillez réessayer ou nous contacter directement."
+              : 'Произошла ошибка при отправке формы. Пожалуйста, попробуйте еще раз или свяжитесь с нами напрямую.')
+      );
     }
   });
 

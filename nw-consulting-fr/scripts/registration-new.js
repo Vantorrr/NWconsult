@@ -1,5 +1,5 @@
 // Registration page functionality
-(function() {
+document.addEventListener('DOMContentLoaded', function() {
   const isEnglish = (document.documentElement.getAttribute('lang') || '').toLowerCase() === 'en';
   const isFrench = (document.documentElement.getAttribute('lang') || '').toLowerCase() === 'fr';
   // Countries data with proper structure
@@ -261,8 +261,17 @@
   const formSuccess = document.getElementById('form-success');
   
   // Debug check
+  console.log('Countries grid element:', countriesGrid);
+  console.log('Countries data length:', countriesData.length);
+  console.log('isFrench:', isFrench);
+  console.log('DOM loaded:', document.readyState);
+  
   if (!modal) {
     console.error('Modal not found! Make sure the modal HTML is on the page.');
+  }
+  
+  if (!countriesGrid) {
+    console.error('Countries grid not found! Element ID: countries-grid');
   }
 
   // Open modal function
@@ -359,4 +368,4 @@
     localStorage.setItem('registrationCountries', JSON.stringify(countries));
     renderCountries();
   };
-})();
+});

@@ -1,146 +1,128 @@
 // Registration page functionality
-document.addEventListener('DOMContentLoaded', function() {
+(function() {
   const isEnglish = (document.documentElement.getAttribute('lang') || '').toLowerCase() === 'en';
   const isFrench = (document.documentElement.getAttribute('lang') || '').toLowerCase() === 'fr';
   // Countries data with proper structure
   const countriesData = [
     { 
       id: 'cyprus',
-      name: 'Chypre',
-      nameEn: 'Cyprus',
-      nameFr: 'Chypre',
+      name: 'Кипр',
       flag: '🇨🇾',
       region: 'europe',
-      time: '7-10 jours',
-      timeEn: '7-10 days',
-      timeFr: '7-10 jours',
+      time: '7-10 дней',
       price: 2500,
       priceText: '$2,500',
-      features: ['Société UE', 'Faibles impôts', 'Prestige'],
-      featuresEn: ['EU company', 'Low taxes', 'Prestige'],
-      featuresFr: ['Société UE', 'Faibles impôts', 'Prestige']
+      features: ['EU компания', 'Низкие налоги', 'Престиж']
     },
     { 
       id: 'uk',
-      name: 'Royaume-Uni',
-      nameEn: 'UK',
-      nameFr: 'Royaume-Uni',
+      name: 'Великобритания',
       flag: '🇬🇧',
       region: 'europe',
-      time: '3-5 jours',
-      timeEn: '3-5 days',
-      timeFr: '3-5 jours',
+      time: '3-5 дней',
       price: 1500,
       priceText: '$1,500',
-      features: ['Enregistrement rapide', 'Prestige mondial', 'Banques'],
-      featuresEn: ['Fast registration', 'Global prestige', 'Banks'],
-      featuresFr: ['Enregistrement rapide', 'Prestige mondial', 'Banques']
+      features: ['Быстрая регистрация', 'Мировой престиж', 'Банки']
     },
     { 
       id: 'estonia',
-      name: 'Estonie',
-      nameEn: 'Estonia',
-      nameFr: 'Estonie',
+      name: 'Эстония',
       flag: '🇪🇪',
       region: 'europe',
-      time: '1-3 jours',
-      timeEn: '1-3 days',
-      timeFr: '1-3 jours',
+      time: '1-3 дня',
       price: 1200,
       priceText: '$1,200',
-      features: ['E-Residency', 'Gestion en ligne', 'Société UE'],
-      featuresEn: ['E-Residency', 'Online management', 'EU company'],
-      featuresFr: ['E-Residency', 'Gestion en ligne', 'Société UE']
+      features: ['E-Residency', 'Онлайн управление', 'EU компания']
     },
     { 
       id: 'singapore',
-      name: 'Singapour',
+      name: 'Сингапур',
       flag: '🇸🇬',
       region: 'asia',
-      time: '5-7 jours',
+      time: '5-7 дней',
       price: 3000,
       priceText: '$3,000',
-      features: ['Hub asiatique', 'Stabilité', 'Banques']
+      features: ['Азиатский хаб', 'Стабильность', 'Банки']
     },
     { 
       id: 'hongkong',
-      name: 'Hong Kong',
+      name: 'Гонконг',
       flag: '🇭🇰',
       region: 'asia',
-      time: '7-14 jours',
+      time: '7-14 дней',
       price: 3500,
       priceText: '$3,500',
-      features: ['Accès à la Chine', 'Faibles impôts', 'Prestige']
+      features: ['Доступ к Китаю', 'Низкие налоги', 'Престиж']
     },
     { 
       id: 'uae',
-      name: 'ÉAU',
+      name: 'ОАЭ',
       flag: '🇦🇪',
       region: 'asia',
-      time: '7-10 jours',
+      time: '7-10 дней',
       price: 4000,
       priceText: '$4,000',
-      features: ['0% d'impôts', 'Visa de résidence', 'Banques']
+      features: ['0% налогов', 'Резидентская виза', 'Банки']
     },
     { 
       id: 'usa',
-      name: 'États-Unis (Delaware)',
+      name: 'США (Delaware)',
       flag: '🇺🇸',
       region: 'america',
-      time: '1-2 jours',
+      time: '1-2 дня',
       price: 1000,
       priceText: '$1,000',
-      features: ['Rapide', 'Anonymat', 'Flexibilité']
+      features: ['Быстро', 'Анонимность', 'Гибкость']
     },
     { 
       id: 'marshall',
-      name: 'Îles Marshall',
+      name: 'Маршалловы острова',
       flag: '🇲🇭',
       region: 'offshore',
-      time: '3-5 jours',
+      time: '3-5 дней',
       price: 1800,
       priceText: '$1,800',
-      features: ['Offshore', 'Confidentialité', '0% d'impôts']
+      features: ['Оффшор', 'Конфиденциальность', '0% налогов']
     },
     { 
       id: 'bvi',
-      name: 'Îles Vierges britanniques',
+      name: 'Британские Виргинские острова',
       flag: '🇻🇬',
       region: 'offshore',
-      time: '5-7 jours',
+      time: '5-7 дней',
       price: 2200,
       priceText: '$2,200',
-      features: ['Offshore classique', 'Confidentialité', 'Flexibilité']
+      features: ['Классический оффшор', 'Конфиденциальность', 'Гибкость']
     },
     { 
       id: 'seychelles',
-      name: 'Seychelles',
+      name: 'Сейшельские острова',
       flag: '🇸🇨',
       region: 'offshore',
-      time: '1-2 jours',
+      time: '1-2 дня',
       price: 1500,
       priceText: '$1,500',
-      features: ['Enregistrement rapide', '0% d'impôts', 'Simplicité']
+      features: ['Быстрая регистрация', '0% налогов', 'Простота']
     },
     { 
       id: 'malta',
-      name: 'Malte',
+      name: 'Мальта',
       flag: '🇲🇹',
       region: 'europe',
-      time: '10-14 jours',
+      time: '10-14 дней',
       price: 5000,
       priceText: '$5,000',
-      features: ['Société UE', 'Jeux d'argent', 'Crypto']
+      features: ['EU компания', 'Игорный бизнес', 'Крипто']
     },
     { 
       id: 'switzerland',
-      name: 'Suisse',
+      name: 'Швейцария',
       flag: '🇨🇭',
       region: 'europe',
-      time: '14-21 jours',
+      time: '14-21 день',
       price: 7500,
       priceText: '$7,500',
-      features: ['Prestige maximal', 'Banques', 'Stabilité']
+      features: ['Максимальный престиж', 'Банки', 'Стабильность']
     }
   ];
 
@@ -161,10 +143,8 @@ document.addEventListener('DOMContentLoaded', function() {
   };
 
   // Get countries data from localStorage or use default
-  // For EN/FR pages ignore any stored RU data from localStorage
-  let countries = (isEnglish || isFrench)
-    ? countriesData
-    : (JSON.parse(localStorage.getItem('registrationCountries')) || countriesData);
+  // For EN pages ignore RU data from localStorage
+  let countries = (isEnglish || isFrench) ? countriesData : (JSON.parse(localStorage.getItem('registrationCountries')) || countriesData);
   
   // DOM elements
   const countriesGrid = document.getElementById('countries-grid');
@@ -177,14 +157,7 @@ document.addEventListener('DOMContentLoaded', function() {
     if (!countriesGrid) return;
     
     countriesGrid.innerHTML = data.map((country, index) => {
-      const display = isEnglish && enT[country.id]
-        ? { ...country, ...enT[country.id] }
-        : (isFrench
-            ? { ...country,
-                name: country.nameFr || country.name,
-                time: country.timeFr || country.time,
-                features: country.featuresFr || country.features }
-            : country);
+      const display = isEnglish && enT[country.id] ? { ...country, ...enT[country.id] } : country;
       return `
       <div class="country-card" data-country-id="${country.id}" style="animation-delay: ${index * 0.1}s">
         <div class="country-flag">${country.flag}</div>
@@ -192,12 +165,12 @@ document.addEventListener('DOMContentLoaded', function() {
         
         <div class="country-info">
           <div class="country-info-item">
-            <span class="country-info-label">${isEnglish ? 'Registration time:' : 'Délai de création:'}</span>
+            <span class="country-info-label">${isEnglish ? 'Registration time:' : (isFrench ? 'Délai de création:' : 'Срок регистрации:')}</span>
             <span class="country-info-value">${display.time}</span>
           </div>
           ${display.features ? `
             <div class="country-info-item">
-            <span class="country-info-label">${isEnglish ? 'Advantages:' : 'Avantages:'}</span>
+              <span class="country-info-label">${isEnglish ? 'Advantages:' : (isFrench ? 'Avantages:' : 'Преимущества:')}</span>
             </div>
             <ul style="margin: 8px 0 0 0; padding-left: 20px; color: rgba(255,255,255,0.8); font-size: 14px;">
               ${display.features.map(f => `<li>${f}</li>`).join('')}
@@ -205,10 +178,10 @@ document.addEventListener('DOMContentLoaded', function() {
           ` : ''}
         </div>
         
-        <div class="country-price">${isEnglish ? 'from ' : 'à partir de '} ${country.priceText}</div>
+        <div class="country-price">${isEnglish ? 'from ' : (isFrench ? 'à partir de ' : 'от ')} ${country.priceText}</div>
         
         <button class="country-cta" onclick="openRegistrationModal('${country.id}')">
-          ${isEnglish ? 'Order registration' : 'Commander l\'enregistrement'}
+          ${isEnglish ? 'Order registration' : (isFrench ? 'Commander l\'enregistrement' : 'Заказать регистрацию')}
         </button>
       </div>
     `}).join('');
@@ -261,17 +234,8 @@ document.addEventListener('DOMContentLoaded', function() {
   const formSuccess = document.getElementById('form-success');
   
   // Debug check
-  console.log('Countries grid element:', countriesGrid);
-  console.log('Countries data length:', countriesData.length);
-  console.log('isFrench:', isFrench);
-  console.log('DOM loaded:', document.readyState);
-  
   if (!modal) {
     console.error('Modal not found! Make sure the modal HTML is on the page.');
-  }
-  
-  if (!countriesGrid) {
-    console.error('Countries grid not found! Element ID: countries-grid');
   }
 
   // Open modal function
@@ -285,15 +249,11 @@ document.addEventListener('DOMContentLoaded', function() {
     }
 
     modalFlag.textContent = country.flag;
-    const displayName = isFrench && country.nameFr ? country.nameFr : (isEnglish && enT[country.id]?.name ? enT[country.id].name : country.name);
+    const displayName = isEnglish && enT[country.id]?.name ? enT[country.id].name : country.name;
     if (isEnglish) {
       modalTitle.textContent = `Company registration in ${displayName}`;
       modalSubtitle.textContent = `Fill the form to get a consultation on registering in ${displayName}`;
       formSubject.value = `Company registration request in ${displayName}`;
-    } else if (isFrench) {
-      modalTitle.textContent = `Enregistrement de société - ${displayName}`;
-      modalSubtitle.textContent = `Remplissez le formulaire pour obtenir une consultation sur l'enregistrement en ${displayName}`;
-      formSubject.value = `Demande d'enregistrement de société en ${displayName}`;
     } else {
       modalTitle.textContent = `Регистрация компании в ${displayName}`;
       modalSubtitle.textContent = `Заполните форму и получите консультацию по регистрации в ${displayName}`;
@@ -344,13 +304,7 @@ document.addEventListener('DOMContentLoaded', function() {
       }
     } catch (error) {
       console.error('Form submission error:', error);
-      alert(
-        isEnglish
-          ? 'An error occurred while submitting the form. Please try again or contact us directly.'
-          : (isFrench
-              ? "Une erreur s'est produite lors de l'envoi du formulaire. Veuillez réessayer ou contactez-nous directement."
-              : 'Произошла ошибка при отправке формы. Пожалуйста, попробуйте еще раз или свяжитесь с нами напрямую.')
-      );
+      alert(isEnglish ? 'An error occurred while submitting the form. Please try again or contact us directly.' : 'Произошла ошибка при отправке формы. Пожалуйста, попробуйте еще раз или свяжитесь с нами напрямую.');
     }
   });
 
@@ -368,4 +322,4 @@ document.addEventListener('DOMContentLoaded', function() {
     localStorage.setItem('registrationCountries', JSON.stringify(countries));
     renderCountries();
   };
-});
+})();

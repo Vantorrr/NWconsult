@@ -6,49 +6,49 @@
   const countriesData = [
     { 
       id: 'cyprus',
-      name: 'Кипр',
+      name: 'Chypre',
       nameEn: 'Cyprus',
       nameFr: 'Chypre',
       flag: '🇨🇾',
       region: 'europe',
-      time: '7-10 дней',
+      time: '7-10 jours',
       timeEn: '7-10 days',
       timeFr: '7-10 jours',
       price: 2500,
       priceText: '$2,500',
-      features: ['EU компания', 'Низкие налоги', 'Престиж'],
+      features: ['Société UE', 'Faibles impôts', 'Prestige'],
       featuresEn: ['EU company', 'Low taxes', 'Prestige'],
       featuresFr: ['Société UE', 'Faibles impôts', 'Prestige']
     },
     { 
       id: 'uk',
-      name: 'Великобритания',
+      name: 'Royaume-Uni',
       nameEn: 'UK',
       nameFr: 'Royaume-Uni',
       flag: '🇬🇧',
       region: 'europe',
-      time: '3-5 дней',
+      time: '3-5 jours',
       timeEn: '3-5 days',
       timeFr: '3-5 jours',
       price: 1500,
       priceText: '$1,500',
-      features: ['Быстрая регистрация', 'Мировой престиж', 'Банки'],
+      features: ['Enregistrement rapide', 'Prestige mondial', 'Banques'],
       featuresEn: ['Fast registration', 'Global prestige', 'Banks'],
       featuresFr: ['Enregistrement rapide', 'Prestige mondial', 'Banques']
     },
     { 
       id: 'estonia',
-      name: 'Эстония',
+      name: 'Estonie',
       nameEn: 'Estonia',
       nameFr: 'Estonie',
       flag: '🇪🇪',
       region: 'europe',
-      time: '1-3 дня',
+      time: '1-3 jours',
       timeEn: '1-3 days',
       timeFr: '1-3 jours',
       price: 1200,
       priceText: '$1,200',
-      features: ['E-Residency', 'Онлайн управление', 'EU компания'],
+      features: ['E-Residency', 'Gestion en ligne', 'Société UE'],
       featuresEn: ['E-Residency', 'Online management', 'EU company'],
       featuresFr: ['E-Residency', 'Gestion en ligne', 'Société UE']
     },
@@ -120,7 +120,7 @@
       time: '1-2 jours',
       price: 1500,
       priceText: '$1,500',
-      features: ['Enregistrement rapide', '0% d'impôts', 'Проdepuisтà partir deа']
+      features: ['Enregistrement rapide', '0% d'impôts', 'Simplicité']
     },
     { 
       id: 'malta',
@@ -137,7 +137,7 @@
       name: 'Suisse',
       flag: '🇨🇭',
       region: 'europe',
-      time: '14-21 jour',
+      time: '14-21 jours',
       price: 7500,
       priceText: '$7,500',
       features: ['Prestige maximal', 'Banques', 'Stabilité']
@@ -161,8 +161,10 @@
   };
 
   // Get countries data from localStorage or use default
-  // For EN pages ignore RU data from localStorage
-  let countries = isEnglish ? countriesData : (JSON.parse(localStorage.getItem('registrationCountries')) || countriesData);
+  // For EN/FR pages ignore any stored RU data from localStorage
+  let countries = (isEnglish || isFrench)
+    ? countriesData
+    : (JSON.parse(localStorage.getItem('registrationCountries')) || countriesData);
   
   // DOM elements
   const countriesGrid = document.getElementById('countries-grid');
@@ -175,7 +177,14 @@
     if (!countriesGrid) return;
     
     countriesGrid.innerHTML = data.map((country, index) => {
-      const display = isEnglish && enT[country.id] ? { ...country, ...enT[country.id] } : country;
+      const display = isEnglish && enT[country.id]
+        ? { ...country, ...enT[country.id] }
+        : (isFrench
+            ? { ...country,
+                name: country.nameFr || country.name,
+                time: country.timeFr || country.time,
+                features: country.featuresFr || country.features }
+            : country);
       return `
       <div class="country-card" data-country-id="${country.id}" style="animation-delay: ${index * 0.1}s">
         <div class="country-flag">${country.flag}</div>
@@ -188,7 +197,7 @@
           </div>
           ${display.features ? `
             <div class="country-info-item">
-              <span class="country-info-label">${isEnglish ? 'Advantages:' : 'Avantages:'}</span>
+            <span class="country-info-label">${isEnglish ? 'Advantages:' : 'Avantages:'}</span>
             </div>
             <ul style="margin: 8px 0 0 0; padding-left: 20px; color: rgba(255,255,255,0.8); font-size: 14px;">
               ${display.features.map(f => `<li>${f}</li>`).join('')}
@@ -199,7 +208,7 @@
         <div class="country-price">${isEnglish ? 'from ' : 'à partir de '} ${country.priceText}</div>
         
         <button class="country-cta" onclick="openRegistrationModal('${country.id}')">
-          ${isEnglish ? 'Order registration' : 'Commander l'enregistrement'}
+          ${isEnglish ? 'Order registration' : 'Commander l\'enregistrement'}
         </button>
       </div>
     `}).join('');
@@ -326,7 +335,13 @@
       }
     } catch (error) {
       console.error('Form submission error:', error);
-      alert(isEnglish ? 'An error occurred while submitting the form. Please try again or contact us directly.' : 'Произошла ошибка при à partir deправке формы. Пожалуйdepuisта, попробуйте еще раз или depuisвяжитеdepuisь depuis нами напрямую.');
+      alert(
+        isEnglish
+          ? 'An error occurred while submitting the form. Please try again or contact us directly.'
+          : (isFrench
+              ? "Une erreur s'est produite lors de l'envoi du formulaire. Veuillez réessayer ou contactez-nous directement."
+              : 'Произошла ошибка при отправке формы. Пожалуйста, попробуйте еще раз или свяжитесь с нами напрямую.')
+      );
     }
   });
 

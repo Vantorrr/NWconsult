@@ -6,123 +6,123 @@
   const countriesData = [
     { 
       id: 'cyprus',
-      name: 'Кипр',
+      name: 'Chypre',
       flag: '🇨🇾',
       region: 'europe',
-      time: '7-10 дней',
+      time: '7-10 jours',
       price: 2500,
       priceText: '$2,500',
-      features: ['EU компания', 'Низкие налоги', 'Престиж']
+      features: ['Société UE', 'Faibles impôts', 'Prestige']
     },
     { 
       id: 'uk',
-      name: 'Великобритания',
+      name: 'Royaume-Uni',
       flag: '🇬🇧',
       region: 'europe',
-      time: '3-5 дней',
+      time: '3-5 jours',
       price: 1500,
       priceText: '$1,500',
-      features: ['Быстрая регистрация', 'Мировой престиж', 'Банки']
+      features: ['Enregistrement rapide', 'Prestige mondial', 'Banques']
     },
     { 
       id: 'estonia',
-      name: 'Эстония',
+      name: 'Estonie',
       flag: '🇪🇪',
       region: 'europe',
-      time: '1-3 дня',
+      time: '1-3 jours',
       price: 1200,
       priceText: '$1,200',
-      features: ['E-Residency', 'Онлайн управление', 'EU компания']
+      features: ['E-Residency', 'Gestion en ligne', 'Société UE']
     },
     { 
       id: 'singapore',
-      name: 'Сингапур',
+      name: 'Singapour',
       flag: '🇸🇬',
       region: 'asia',
-      time: '5-7 дней',
+      time: '5-7 jours',
       price: 3000,
       priceText: '$3,000',
-      features: ['Азиатский хаб', 'Стабильность', 'Банки']
+      features: ['Hub asiatique', 'Stabilité', 'Banques']
     },
     { 
       id: 'hongkong',
-      name: 'Гонконг',
+      name: 'Hong Kong',
       flag: '🇭🇰',
       region: 'asia',
-      time: '7-14 дней',
+      time: '7-14 jours',
       price: 3500,
       priceText: '$3,500',
-      features: ['Доступ к Китаю', 'Низкие налоги', 'Престиж']
+      features: ['Accès à la Chine', 'Faibles impôts', 'Prestige']
     },
     { 
       id: 'uae',
-      name: 'ОАЭ',
+      name: 'ÉAU',
       flag: '🇦🇪',
       region: 'asia',
-      time: '7-10 дней',
+      time: '7-10 jours',
       price: 4000,
       priceText: '$4,000',
-      features: ['0% налогов', 'Резидентская виза', 'Банки']
+      features: ['0% d\'impôts', 'Visa de résidence', 'Banques']
     },
     { 
       id: 'usa',
-      name: 'США (Delaware)',
+      name: 'États-Unis (Delaware)',
       flag: '🇺🇸',
       region: 'america',
-      time: '1-2 дня',
+      time: '1-2 jours',
       price: 1000,
       priceText: '$1,000',
-      features: ['Быстро', 'Анонимность', 'Гибкость']
+      features: ['Rapide', 'Anonymat', 'Flexibilité']
     },
     { 
       id: 'marshall',
-      name: 'Маршалловы острова',
+      name: 'Îles Marshall',
       flag: '🇲🇭',
       region: 'offshore',
-      time: '3-5 дней',
+      time: '3-5 jours',
       price: 1800,
       priceText: '$1,800',
-      features: ['Оффшор', 'Конфиденциальность', '0% налогов']
+      features: ['Offshore', 'Confidentialité', '0% d\'impôts']
     },
     { 
       id: 'bvi',
-      name: 'Британские Виргинские острова',
+      name: 'Îles Vierges britanniques',
       flag: '🇻🇬',
       region: 'offshore',
-      time: '5-7 дней',
+      time: '5-7 jours',
       price: 2200,
       priceText: '$2,200',
-      features: ['Классический оффшор', 'Конфиденциальность', 'Гибкость']
+      features: ['Offshore classique', 'Confidentialité', 'Flexibilité']
     },
     { 
       id: 'seychelles',
-      name: 'Сейшельские острова',
+      name: 'Seychelles',
       flag: '🇸🇨',
       region: 'offshore',
-      time: '1-2 дня',
+      time: '1-2 jours',
       price: 1500,
       priceText: '$1,500',
-      features: ['Быстрая регистрация', '0% налогов', 'Простота']
+      features: ['Enregistrement rapide', '0% d\'impôts', 'Simplicité']
     },
     { 
       id: 'malta',
-      name: 'Мальта',
+      name: 'Malte',
       flag: '🇲🇹',
       region: 'europe',
-      time: '10-14 дней',
+      time: '10-14 jours',
       price: 5000,
       priceText: '$5,000',
-      features: ['EU компания', 'Игорный бизнес', 'Крипто']
+      features: ['Société UE', 'Jeux d\'argent', 'Crypto']
     },
     { 
       id: 'switzerland',
-      name: 'Швейцария',
+      name: 'Suisse',
       flag: '🇨🇭',
       region: 'europe',
-      time: '14-21 день',
+      time: '14-21 jours',
       price: 7500,
       priceText: '$7,500',
-      features: ['Максимальный престиж', 'Банки', 'Стабильность']
+      features: ['Prestige maximal', 'Banques', 'Stabilité']
     }
   ];
 

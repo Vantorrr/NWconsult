@@ -10,30 +10,6 @@
     <link rel="stylesheet" href="../styles/main.css">
     <link rel="stylesheet" href="../styles/admin.css">
     <link rel="icon" href="../logo.png">
-    <style>
-      /* Фикс для модалки */
-      #country-modal {
-        position: fixed !important;
-        top: 0 !important;
-        left: 0 !important;
-        width: 100% !important;
-        height: 100% !important;
-        background-color: rgba(0, 0, 0, 0.8) !important;
-        z-index: 999999 !important;
-        align-items: center !important;
-        justify-content: center !important;
-      }
-      #country-modal[style*="flex"] {
-        display: flex !important;
-      }
-      #country-modal .modal-content {
-        background: #1a2332 !important;
-        padding: 24px !important;
-        border-radius: 8px !important;
-        max-width: 600px !important;
-        width: 90% !important;
-      }
-    </style>
   </head>
   <body>
     <!-- PIN Login -->
@@ -111,7 +87,7 @@
               <div class="admin-section-header">
                 <h2>Управление странами для регистрации</h2>
                 <div class="admin-actions">
-                  <button id="reg-add-country" class="btn btn--primary" onclick="document.getElementById('country-modal').style.display='flex'; return false;">
+                  <button id="reg-add-country" class="btn btn--primary">
                     <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                       <line x1="12" y1="5" x2="12" y2="19"></line>
                       <line x1="5" y1="12" x2="19" y2="12"></line>
@@ -480,7 +456,7 @@
       <div class="modal-content">
         <div class="modal-header">
           <h3 id="country-modal-title">Добавить страну</h3>
-          <button class="modal-close" onclick="document.getElementById('country-modal').style.display='none'; return false;">&times;</button>
+          <button class="modal-close">&times;</button>
         </div>
         <div class="modal-body">
           <form id="country-form">
@@ -506,15 +482,8 @@
               <input type="text" id="country-time" placeholder="7-10 дней">
             </div>
             <div class="form-group">
-              <label>Цена</label>
-              <div style="display: flex; gap: 10px;">
-                <select id="country-currency" style="width: 100px;">
-                  <option value="$">$ USD</option>
-                  <option value="€">€ EUR</option>
-                  <option value="£">£ GBP</option>
-                </select>
-                <input type="number" id="country-price" min="0" step="100" style="flex: 1;">
-              </div>
+              <label>Цена ($)</label>
+              <input type="number" id="country-price" min="0" step="100">
             </div>
             <div class="form-group">
               <label>Преимущества (по одному на строку)</label>
@@ -656,23 +625,6 @@
       </div>
     </div>
     
-    <script>
-      // Fallback: ensure modal can be opened even if main script hasn't attached yet
-      window.openAddCountryModal = window.openAddCountryModal || function(){
-        var modal = document.getElementById('country-modal');
-        var form = document.getElementById('country-form');
-        var title = document.getElementById('country-modal-title');
-        if (title) title.textContent = 'Добавить страну';
-        if (form) form.reset();
-        if (modal) modal.style.display = 'flex';
-      };
-      
-      // Обработчик формы прямо в HTML - на случай если основной скрипт не работает
-      document.addEventListener('DOMContentLoaded', function() {
-        // Этот обработчик теперь в основном скрипте admin.js
-        console.log('Inline form handler ready as backup');
-      });
-    </script>
-    <script src="../scripts/admin.js?v=999"></script>
+    <script src="../scripts/admin.js"></script>
   </body>
 </html>

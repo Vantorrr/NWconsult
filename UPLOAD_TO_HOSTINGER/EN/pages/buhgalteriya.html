@@ -1,9 +1,9 @@
 <!doctype html>
-<html lang="fr">
+<html lang="en">
   <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>Services comptables — NW Consulting</title>
+    <title>Accounting Services — NW Consulting</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link rel="stylesheet" href="../styles/fonts.css">
@@ -12,6 +12,12 @@
     <link rel="icon" href="../logo.png">
   </head>
   <body>
+    <div class="topbar">
+      <div class="container topbar__inner">
+        <div>Телефон: <a href="tel:+00000000000">+0 000 000-00-00</a></div>
+        <div>Email: <a href="mailto:info@nw.consulting">info@nw.consulting</a></div>
+      </div>
+    </div>
     <header class="site-header">
       <div class="container header-inner">
         <a class="brand" href="../index.html">
@@ -19,16 +25,16 @@
           <span class="brand__name">NW Consulting</span>
         </a>
         <nav class="nav">
-          <button class="nav__toggle" aria-label="Menu">
+          <button class="nav__toggle" aria-label="Меню">
             <span></span><span></span><span></span>
           </button>
           <ul class="nav__list">
-            <li><a href="../index.html">Accueil</a></li>
-            <li><a href="./registratsiya.html">Création de sociétés</a></li>
-            <li><a href="./banki.html">Ouverture de comptes</a></li>
-            <li><a href="./buhgalteriya.html" class="active">Comptabilité</a></li>
+            <li><a href="../index.html">Home</a></li>
+            <li><a href="./registratsiya.html">Company Registration</a></li>
+            <li><a href="./banki.html">Bank Accounts</a></li>
+            <li><a href="./buhgalteriya.html" class="active">Accounting</a></li>
             <li><a href="./audit.html">Audit</a></li>
-            <li><a href="./prochie-uslugi.html">Autres services</a></li>
+            <li><a href="./prochie-uslugi.html">Other Services</a></li>
             <li><a href="./kontakty.html">Contacts</a></li>
           </ul>
         </nav>
@@ -41,15 +47,14 @@
       <div class="container">
         <div class="accounting-hero__content">
           <h1 class="accounting-hero__title">
-            Services comptables<br>
-            <span class="accounting-hero__accent">pour les entreprises internationales</span>
+            Accounting Services<br>
+            <span class="accounting-hero__accent">for international business</span>
           </h1>
           <p class="accounting-hero__desc">
-            Nous tenons la comptabilité des sociétés dans toute juridiction. Nous préparons les rapports, 
-            restaurons la comptabilité et conseillons en fiscalité.
+            We maintain accounting in any jurisdiction. Prepare reports, restore bookkeeping, advise on taxes
           </p>
           <div class="accounting-hero__cta">
-            <a href="#services" class="btn btn--primary">Choisir un service</a>
+            <a href="#services" class="btn btn--primary">Choose service</a>
             <a href="./kontakty.html#form" class="btn btn--ghost">Consultation</a>
           </div>
         </div>
@@ -59,8 +64,8 @@
     <!-- Services Section -->
     <section id="services" class="accounting-services">
       <div class="container">
-        <h2 class="section__title">Nos services</h2>
-        <p class="section__subtitle">Services comptables complets pour votre entreprise</p>
+        <h2 class="section__title">Our Services</h2>
+        <p class="section__subtitle">Comprehensive accounting support for your business</p>
         
         <div class="services-grid">
           <!-- Service 1 -->
@@ -71,18 +76,18 @@
                 <path d="M21 12v7a2 2 0 01-2 2H5a2 2 0 01-2-2V5a2 2 0 012-2h11"/>
               </svg>
             </div>
-            <h3 class="service-card__title">Préparation des calculs pour l'audit</h3>
+            <h3 class="service-card__title">IFRS calculations for audit</h3>
             <p class="service-card__desc">
-              Nous préparerons tous les calculs nécessaires et les documents pour réussir l'audit.
+              We prepare all necessary calculations and documents for successful audit
             </p>
             <ul class="service-card__features">
-              <li>Analyse des documents primaires</li>
-              <li>Préparation des rapports financiers</li>
-              <li>Calcul des obligations fiscales</li>
-              <li>Rapprochement avec les contreparties</li>
+              <li>Primary documents analysis</li>
+              <li>Preparation of financial statements</li>
+              <li>Tax liabilities calculation</li>
+              <li>Reconciliation with counterparties</li>
             </ul>
             <div class="service-card__price">
-              à partir de <span>$500</span> / projet
+              from <span>$500</span> / project
             </div>
             <div class="service-card__actions">
               <a href="./articles/audit-calculations.html" class="service-card__link">
@@ -93,9 +98,9 @@
                   <line x1="16" y1="17" x2="8" y2="17"/>
                   <polyline points="10 9 9 9 8 9"/>
                 </svg>
-                En savoir plus
+                Learn more
               </a>
-              <button onclick="openServiceModal('audit-calculations')" class="btn btn--primary">Commander le service</button>
+              <a href="./kontakty.html#form" class="btn btn--primary">Order service</a>
             </div>
           </div>
           
@@ -106,18 +111,18 @@
                 <path d="M19 21l-7-5-7 5V5a2 2 0 012-2h10a2 2 0 012 2z"/>
               </svg>
             </div>
-            <h3 class="service-card__title">Restauration de la comptabilité</h3>
+            <h3 class="service-card__title">Bookkeeping restoration</h3>
             <p class="service-card__desc">
-              Nous restaurerons la comptabilité pour toute période. Nous remettrons les documents en ordre.
+              We restore bookkeeping for any period. Put documents in order
             </p>
             <ul class="service-card__features">
-              <li>Analyse des documents disponibles</li>
-              <li>Restauration des écritures</li>
-              <li>Correction des erreurs de comptabilité</li>
-              <li>Préparation des rapports</li>
+              <li>Analysis of existing documents</li>
+              <li>Restoration of missing ones</li>
+              <li>Correction of accounting errors</li>
+              <li>Preparation of reports</li>
             </ul>
             <div class="service-card__price">
-              à partir de <span>$800</span> / mois
+              from <span>$800</span> / month
             </div>
             <div class="service-card__actions">
               <a href="./articles/accounting-restore.html" class="service-card__link">
@@ -128,9 +133,9 @@
                   <line x1="16" y1="17" x2="8" y2="17"/>
                   <polyline points="10 9 9 9 8 9"/>
                 </svg>
-                En savoir plus
+                Learn more
               </a>
-              <button onclick="openServiceModal('accounting-restore')" class="btn btn--primary">Commander le service</button>
+              <a href="./kontakty.html#form" class="btn btn--primary">Order service</a>
             </div>
           </div>
           
@@ -145,18 +150,18 @@
                 <polyline points="10 9 9 9 8 9"/>
               </svg>
             </div>
-            <h3 class="service-card__title">Exigences pour les documents</h3>
+            <h3 class="service-card__title">Document requirements</h3>
             <p class="service-card__desc">
-              Consultation sur les exigences relatives aux documents pour la préparation des calculs et des rapports.
+              Consultation on document requirements for calculations and reporting
             </p>
             <ul class="service-card__features">
-              <li>Liste des documents requis</li>
-              <li>Exemples de remplissage</li>
-              <li>Délais de remise</li>
-              <li>Formats des documents</li>
+              <li>List of required documents</li>
+              <li>Filling examples</li>
+              <li>Submission timelines</li>
+              <li>Document formats</li>
             </ul>
             <div class="service-card__price">
-              <span>Gratuit</span>
+              <span>Free</span>
             </div>
             <div class="service-card__actions">
               <a href="./articles/docs-requirements.html" class="service-card__link">
@@ -167,9 +172,9 @@
                   <line x1="16" y1="17" x2="8" y2="17"/>
                   <polyline points="10 9 9 9 8 9"/>
                 </svg>
-                En savoir plus
+                Learn more
               </a>
-              <button onclick="openServiceModal('docs-requirements')" class="btn btn--primary">Obtenir une consultation</button>
+              <a href="./kontakty.html#form" class="btn btn--primary">Get a consultation</a>
             </div>
           </div>
         </div>
@@ -179,7 +184,7 @@
     <!-- Why Choose Us -->
     <section class="why-section">
       <div class="container">
-        <h2 class="section__title">Pourquoi nous choisir</h2>
+        <h2 class="section__title">Why choose us</h2>
         
         <div class="why-grid">
           <div class="why-item">
@@ -189,8 +194,8 @@
                 <path d="M12 6v6l4 2"/>
               </svg>
             </div>
-            <h3>15+ ans d'expérience</h3>
-            <p>Nous travaillons avec des sociétés internationales depuis 2010</p>
+            <h3>15+ years of experience</h3>
+            <p>Working with international companies since 2010</p>
           </div>
           
           <div class="why-item">
@@ -201,8 +206,8 @@
                 <path d="M2 12l10 5 10-5"/>
               </svg>
             </div>
-            <h3>Toutes les juridictions</h3>
-            <p>Nous tenons la comptabilité des sociétés dans n'importe quel pays du monde</p>
+            <h3>All jurisdictions</h3>
+            <p>We maintain accounts for companies in any country</p>
           </div>
           
           <div class="why-item">
@@ -214,8 +219,8 @@
                 <path d="M16 3.13a4 4 0 010 7.75"/>
               </svg>
             </div>
-            <h3>Équipe d'experts</h3>
-            <p>Comptables certifiés et conseillers fiscaux</p>
+            <h3>Expert team</h3>
+            <p>Certified accountants and tax consultants</p>
           </div>
           
           <div class="why-item">
@@ -225,8 +230,8 @@
                 <path d="M7 11V7a5 5 0 0110 0v4"/>
               </svg>
             </div>
-            <h3>Confidentialité</h3>
-            <p>Nous garantissons une protection complète de vos données</p>
+            <h3>Confidentiality</h3>
+            <p>We guarantee complete protection of your data</p>
           </div>
         </div>
       </div>
@@ -237,31 +242,61 @@
       <div class="container">
         <div class="accounting-cta__card">
           <div class="accounting-cta__content">
-            <h2>Besoin d'aide en comptabilité ?</h2>
-            <p>Nous vous conseillerons gratuitement et proposerons la meilleure solution pour votre entreprise.</p>
+            <h2>Need accounting help?</h2>
+            <p>We will advise for free and offer the best solution for your business</p>
             <div class="accounting-cta__buttons">
-              <a href="./kontakty.html#form" class="btn btn--primary btn--large">Obtenir une consultation</a>
+              <a href="./kontakty.html#form" class="btn btn--primary btn--large">Get a consultation</a>
               <a href="tel:+00000000000" class="btn btn--ghost btn--large">
                 <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                   <path d="M22 16.92v3a2 2 0 01-2.18 2 19.79 19.79 0 01-8.63-3.07 19.5 19.5 0 01-6-6 19.79 19.79 0 01-3.07-8.67A2 2 0 014.11 2h3a2 2 0 012 1.72 12.84 12.84 0 00.7 2.81 2 2 0 01-.45 2.11L8.09 9.91a16 16 0 006 6l1.27-1.27a2 2 0 012.11-.45 12.84 12.84 0 002.81.7A2 2 0 0122 16.92z"/>
                 </svg>
-                Appeler
+                Call
               </a>
             </div>
           </div>
           <div class="accounting-cta__image">
             <svg viewBox="0 0 400 300" fill="none" xmlns="http://www.w3.org/2000/svg">
-              <rect x="50" y="50" width="300" height="200" rx="10" fill="url(#grad1)" opacity="0.1"/>
-              <rect x="70" y="70" width="260" height="160" rx="8" stroke="url(#grad1)" stroke-width="2" fill="none"/>
-              <line x1="70" y1="110" x2="330" y2="110" stroke="url(#grad1)" stroke-width="2"/>
-              <line x1="70" y1="150" x2="330" y2="150" stroke="url(#grad1)" stroke-width="2"/>
-              <line x1="70" y1="190" x2="330" y2="190" stroke="url(#grad1)" stroke-width="2"/>
-              <line x1="150" y1="70" x2="150" y2="230" stroke="url(#grad1)" stroke-width="2"/>
-              <line x1="250" y1="70" x2="250" y2="230" stroke="url(#grad1)" stroke-width="2"/>
+              <!-- Calculator -->
+              <rect x="220" y="80" width="120" height="160" rx="10" fill="#1a2332" stroke="#4ADE80" stroke-width="2"/>
+              <rect x="235" y="95" width="90" height="40" rx="5" fill="#0d1117" stroke="#4ADE80" stroke-width="1"/>
+              <text x="280" y="120" text-anchor="middle" fill="#4ADE80" font-family="monospace" font-size="20">12,450</text>
+              
+              <!-- Calculator buttons -->
+              <g opacity="0.8">
+                <rect x="235" y="145" width="25" height="20" rx="3" fill="#4ADE80" opacity="0.2"/>
+                <rect x="265" y="145" width="25" height="20" rx="3" fill="#4ADE80" opacity="0.2"/>
+                <rect x="295" y="145" width="25" height="20" rx="3" fill="#3B82F6" opacity="0.3"/>
+                
+                <rect x="235" y="170" width="25" height="20" rx="3" fill="#4ADE80" opacity="0.2"/>
+                <rect x="265" y="170" width="25" height="20" rx="3" fill="#4ADE80" opacity="0.2"/>
+                <rect x="295" y="170" width="25" height="20" rx="3" fill="#3B82F6" opacity="0.3"/>
+                
+                <rect x="235" y="195" width="25" height="20" rx="3" fill="#4ADE80" opacity="0.2"/>
+                <rect x="265" y="195" width="25" height="20" rx="3" fill="#4ADE80" opacity="0.2"/>
+                <rect x="295" y="195" width="25" height="20" rx="3" fill="#3B82F6" opacity="0.3"/>
+              </g>
+              
+              <!-- Documents -->
+              <rect x="60" y="60" width="140" height="180" rx="5" fill="#1a2332" stroke="#3B82F6" stroke-width="2" transform="rotate(-10 130 150)"/>
+              <line x1="80" y1="90" x2="160" y2="80" stroke="#3B82F6" stroke-width="1" opacity="0.5"/>
+              <line x1="85" y1="110" x2="165" y2="100" stroke="#3B82F6" stroke-width="1" opacity="0.5"/>
+              <line x1="90" y1="130" x2="150" y2="120" stroke="#3B82F6" stroke-width="1" opacity="0.5"/>
+              
+              <!-- Pie chart -->
+              <circle cx="120" cy="180" r="35" fill="none" stroke="#4ADE80" stroke-width="2" opacity="0.8"/>
+              <path d="M120 180 L120 145 A35 35 0 0 1 145 170 Z" fill="#4ADE80" opacity="0.3"/>
+              <path d="M120 180 L145 170 A35 35 0 0 1 130 210 Z" fill="#3B82F6" opacity="0.3"/>
+              
+              <!-- Decorative elements -->
+              <circle cx="320" cy="60" r="3" fill="#4ADE80" opacity="0.6"/>
+              <circle cx="80" cy="240" r="3" fill="#3B82F6" opacity="0.6"/>
+              <circle cx="350" cy="220" r="2" fill="#4ADE80" opacity="0.4"/>
+              <circle cx="40" cy="100" r="2" fill="#3B82F6" opacity="0.4"/>
+              
               <defs>
                 <linearGradient id="grad1" x1="0%" y1="0%" x2="100%" y2="100%">
-                  <stop offset="0%" style="stop-color:#00bfff;stop-opacity:1" />
-                  <stop offset="100%" style="stop-color:#00ff9d;stop-opacity:1" />
+                  <stop offset="0%" style="stop-color:#4ADE80;stop-opacity:1" />
+                  <stop offset="100%" style="stop-color:#3B82F6;stop-opacity:1" />
                 </linearGradient>
               </defs>
             </svg>
@@ -270,110 +305,6 @@
       </div>
     </section>
     
-    <!-- Service Modal -->
-    <style>
-      .modal {
-        position: fixed;
-        top: 0;
-        left: 0;
-        width: 100%;
-        height: 100%;
-        background: rgba(0, 0, 0, 0.5);
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        z-index: 1000;
-      }
-      .modal__content {
-        background: white;
-        padding: 2rem;
-        border-radius: 8px;
-        max-width: 500px;
-        width: 90%;
-        max-height: 90vh;
-        overflow-y: auto;
-        position: relative;
-      }
-      .modal__close {
-        position: absolute;
-        top: 1rem;
-        right: 1rem;
-        background: none;
-        border: none;
-        font-size: 2rem;
-        cursor: pointer;
-        color: #666;
-        line-height: 1;
-      }
-      .modal__close:hover {
-        color: #000;
-      }
-      .modal__header {
-        text-align: center;
-        margin-bottom: 2rem;
-      }
-      .modal__icon {
-        width: 60px;
-        height: 60px;
-        margin: 0 auto 1rem;
-        color: #2563eb;
-      }
-      .modal__title {
-        font-size: 1.5rem;
-        margin: 0 0 0.5rem;
-      }
-      .modal__subtitle {
-        color: #666;
-        margin: 0;
-      }
-    </style>
-    <div id="service-modal" class="modal" style="display:none;">
-      <div class="modal__content">
-        <button class="modal__close" onclick="closeServiceModal()">&times;</button>
-        <div class="modal__header">
-          <div class="modal__icon">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-              <path d="M9 11l3 3L22 4"/>
-              <path d="M21 12v7a2 2 0 01-2 2H5a2 2 0 01-2-2V5a2 2 0 012-2h11"/>
-            </svg>
-          </div>
-          <h2 class="modal__title" id="service-modal-title">Commande de service</h2>
-          <p class="modal__subtitle" id="service-modal-subtitle">Remplissez le formulaire pour commander un service</p>
-        </div>
-        <form class="modal__form" id="service-form">
-          <div class="form-group">
-            <label class="form-label">Nom *</label>
-            <input type="text" name="name" class="form-input" required>
-          </div>
-          <div class="form-group">
-            <label class="form-label">E-mail *</label>
-            <input type="email" name="email" class="form-input" required>
-          </div>
-          <div class="form-group">
-            <label class="form-label">Téléphone *</label>
-            <input type="tel" name="phone" class="form-input" required>
-          </div>
-          <div class="form-group">
-            <label class="form-label">Société</label>
-            <input type="text" name="company" class="form-input">
-          </div>
-          <div class="form-group">
-            <label class="form-label">Commentaire</label>
-            <textarea name="message" class="form-input" rows="4" placeholder="Décrivez vos besoins..."></textarea>
-          </div>
-          <input type="hidden" name="service" id="service-type">
-          <button type="submit" class="btn btn--primary btn--large" style="width: 100%;">Envoyer la demande</button>
-        </form>
-        <div class="form-success" id="service-success" style="display: none;">
-          <div class="form-success__icon">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 11l3 3L22 4"/></svg>
-          </div>
-          <h3>Demande envoyée !</h3>
-          <p>Nous vous contacterons prochainement.</p>
-        </div>
-      </div>
-    </div>
-
     <footer class="site-footer">
       <div class="footer__top">
         <div class="container">
@@ -383,15 +314,15 @@
                 <img src="../logo.png" alt="NW Consulting">
                 <span>NW Consulting</span>
               </div>
-              <p class="footer__desc">Conseil en affaires internationales  2010</p>
+              <p class="footer__desc">International business consulting since 2010</p>
             </div>
             
             <div class="footer__col">
               <h3>Services</h3>
               <ul class="footer__services">
-                <li><a href="./registratsiya.html">Création de sociétés</a></li>
-                <li><a href="./banki.html">Ouverture de comptes</a></li>
-                <li><a href="./buhgalteriya.html">Comptabilité</a></li>
+                <li><a href="./registratsiya.html">Company Registration</a></li>
+                <li><a href="./banki.html">Bank Accounts</a></li>
+                <li><a href="./buhgalteriya.html">Accounting</a></li>
                 <li><a href="./audit.html">Audit</a></li>
               </ul>
             </div>
@@ -416,9 +347,9 @@
             </div>
             
             <div class="footer__col">
-              <h3>Contactez‑nous</h3>
-              <p class="footer__cta">Prêt à commencer? Contactez-nous pour une consultation</p>
-              <a href="./kontakty.html#form" class="footer__btn">Faire une demande</a>
+              <h3>Contact Us</h3>
+              <p class="footer__cta">Ready to start? Contact us for consultation</p>
+              <a href="./kontakty.html#form" class="footer__btn">Submit Request</a>
               
               <div class="footer__socials">
                 <a href="https://t.me/your_username" target="_blank" aria-label="Telegram">
@@ -439,14 +370,74 @@
       
       <div class="footer__bottom">
         <div class="container">
-          <p>© 2025 NW Consulting. Tous droits réservés.</p>
+          <p>© 2025 NW Consulting. All rights reserved.</p>
         </div>
       </div>
     </footer>
     
+    <!-- Service Modals -->
+    <div id="service-modal" class="modal">
+      <div class="modal__content">
+        <button class="modal__close" onclick="closeServiceModal()">&times;</button>
+        <div class="modal__header">
+          <div class="modal__icon">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M9 11l3 3L22 4"/>
+              <path d="M21 12v7a2 2 0 01-2 2H5a2 2 0 01-2-2V5a2 2 0 012-2h11"/>
+            </svg>
+          </div>
+          <h2 class="modal__title" id="service-modal-title">Заказ услуги</h2>
+          <p class="modal__subtitle" id="service-modal-subtitle">Заполните форму для заказа услуги</p>
+        </div>
+        
+        <form class="modal__form" id="service-form">
+          <div class="form-group">
+            <label class="form-label">Имя *</label>
+            <input type="text" name="name" class="form-input" required>
+          </div>
+          
+          <div class="form-group">
+            <label class="form-label">Email *</label>
+            <input type="email" name="email" class="form-input" required>
+          </div>
+          
+          <div class="form-group">
+            <label class="form-label">Телефон *</label>
+            <input type="tel" name="phone" class="form-input" required>
+          </div>
+          
+          <div class="form-group">
+            <label class="form-label">Компания</label>
+            <input type="text" name="company" class="form-input">
+          </div>
+          
+          <div class="form-group">
+            <label class="form-label">Комментарий</label>
+            <textarea name="message" class="form-input" rows="4" placeholder="Расскажите подробнее о ваших потребностях..."></textarea>
+          </div>
+          
+          <input type="hidden" name="service" id="service-type">
+          
+          <button type="submit" class="btn btn--primary btn--large" style="width: 100%;">
+            Отправить заявку
+          </button>
+        </form>
+        
+        <div class="form-success" id="service-success" style="display: none;">
+          <div class="form-success__icon">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M9 11l3 3L22 4"/>
+            </svg>
+          </div>
+          <h3>Заявка отправлена!</h3>
+          <p>Мы свяжемся с вами в ближайшее время</p>
+        </div>
+      </div>
+    </div>
+
     <script src="../scripts/telegram-sender.js"></script>
     <script src="../scripts/main.js"></script>
     <script src="../scripts/animations.js"></script>
-    <script src="../scripts/accounting-forms.js?v=5"></script>
+    <script src="../scripts/accounting-forms.js?v=1"></script>
   </body>
 </html>

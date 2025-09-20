@@ -1,5 +1,5 @@
 // Admin Panel JavaScript
-document.addEventListener('DOMContentLoaded', function() {
+(function() {
   // Default PIN
   const DEFAULT_PIN = '123456';
   
@@ -19,7 +19,6 @@ document.addEventListener('DOMContentLoaded', function() {
   const addCountryBtn = document.getElementById('reg-add-country');
   const exportCountriesBtn = document.getElementById('reg-export');
   const importCountriesBtn = document.getElementById('reg-import');
-  
   
   // Modal
   const countryModal = document.getElementById('country-modal');
@@ -98,29 +97,10 @@ document.addEventListener('DOMContentLoaded', function() {
     });
   });
   
-  // Load countries (with self-heal if storage is empty/corrupted)
+  // Load countries
   function loadCountries() {
-    try {
-      const raw = localStorage.getItem('registrationCountries');
-      if (!raw) {
-        const defaults = getDefaultCountries();
-        localStorage.setItem('registrationCountries', JSON.stringify(defaults));
-        renderCountries(defaults);
-        return;
-      }
-      const parsed = JSON.parse(raw);
-      if (!Array.isArray(parsed) || parsed.length === 0) {
-        const defaults = getDefaultCountries();
-        localStorage.setItem('registrationCountries', JSON.stringify(defaults));
-        renderCountries(defaults);
-        return;
-      }
-      renderCountries(parsed);
-    } catch (e) {
-      const defaults = getDefaultCountries();
-      localStorage.setItem('registrationCountries', JSON.stringify(defaults));
-      renderCountries(defaults);
-    }
+    const countries = JSON.parse(localStorage.getItem('registrationCountries')) || getDefaultCountries();
+    renderCountries(countries);
   }
   
   // Get default countries
@@ -131,50 +111,30 @@ document.addEventListener('DOMContentLoaded', function() {
         name: 'Кипр',
         flag: '🇨🇾',
         region: 'europe',
-        time: '5-10 дней',
-        price: 3900,
-        priceText: '€3,900',
+        time: '7-10 дней',
+        price: 2500,
+        priceText: '$2,500',
         features: ['EU компания', 'Низкие налоги', 'Престиж']
-      },
-      { 
-        id: 'uae',
-        name: 'ОАЭ (Freezone)',
-        flag: '🇦🇪',
-        region: 'asia',
-        time: '5-14 дней',
-        price: 2900,
-        priceText: '$2,900',
-        features: ['0% налог', 'Банковский счет', 'Виза резидента']
-      },
-      { 
-        id: 'hongkong',
-        name: 'Гонконг',
-        flag: '🇭🇰',
-        region: 'asia',
-        time: '5-7 дней',
-        price: 1800,
-        priceText: '$1,800',
-        features: ['Международный центр', 'Простая отчетность', 'Банки']
       },
       { 
         id: 'uk',
         name: 'Великобритания',
         flag: '🇬🇧',
         region: 'europe',
-        time: '1-3 дня',
-        price: 950,
-        priceText: '£950',
+        time: '3-5 дней',
+        price: 1500,
+        priceText: '$1,500',
         features: ['Быстрая регистрация', 'Мировой престиж', 'Банки']
       },
       { 
-        id: 'usa',
-        name: 'США (LLC)',
-        flag: '🇺🇸',
-        region: 'america',
-        time: '2-7 дней',
-        price: 650,
-        priceText: '$650',
-        features: ['LLC структура', 'Банковский счет', 'Международный бизнес']
+        id: 'estonia',
+        name: 'Эстония',
+        flag: '🇪🇪',
+        region: 'europe',
+        time: '1-3 дня',
+        price: 1200,
+        priceText: '$1,200',
+        features: ['E-Residency', 'Онлайн управление', 'EU компания']
       }
     ];
   }
@@ -231,19 +191,13 @@ document.addEventListener('DOMContentLoaded', function() {
     return regions[region] || region;
   }
   
-  // Add country (also expose a global for inline fallback)
-  function openAddModalInternal() {
+  // Add country
+  addCountryBtn?.addEventListener('click', () => {
     editingCountryId = null;
     modalTitle.textContent = 'Добавить страну';
     countryForm.reset();
     showModal();
-  }
-
-  window.openAddCountryModal = () => openAddModalInternal();
-
-  if (addCountryBtn) {
-    addCountryBtn.addEventListener('click', openAddModalInternal);
-  }
+  });
   
   // Edit country
   window.editCountry = (id) => {
@@ -261,17 +215,6 @@ document.addEventListener('DOMContentLoaded', function() {
       document.getElementById('country-time').value = country.time;
       document.getElementById('country-price').value = country.price;
       document.getElementById('country-features').value = (country.features || []).join('\n');
-      
-      // Set currency based on priceText
-      if (document.getElementById('country-currency')) {
-        if (country.priceText.includes('€')) {
-          document.getElementById('country-currency').value = '€';
-        } else if (country.priceText.includes('£')) {
-          document.getElementById('country-currency').value = '£';
-        } else {
-          document.getElementById('country-currency').value = '$';
-        }
-      }
       
       showModal();
     }
@@ -294,82 +237,54 @@ document.addEventListener('DOMContentLoaded', function() {
   
   // Show/hide modal
   function showModal() {
-    if (countryModal) {
-      countryModal.style.display = 'flex';
-    }
+    countryModal.style.display = 'flex';
   }
   
   window.closeCountryModal = () => {
-    const modal = document.getElementById('country-modal');
-    const form = document.getElementById('country-form');
-    if (modal) modal.style.display = 'none';
-    if (form) form.reset();
+    countryModal.style.display = 'none';
+    countryForm.reset();
     editingCountryId = null;
   };
   
-  if (modalClose) {
-    modalClose.addEventListener('click', closeCountryModal);
-  }
+  modalClose?.addEventListener('click', closeCountryModal);
   
   // Country form submit
-  if (countryForm) {
-    console.log('Setting up form submit handler');
-    countryForm.addEventListener('submit', (e) => {
-      console.log('Form submitted!');
-      e.preventDefault();
-      
-      try {
-        const countries = JSON.parse(localStorage.getItem('registrationCountries')) || getDefaultCountries();
-        console.log('Current countries:', countries);
-        
-        const currency = document.getElementById('country-currency')?.value || '$';
-        const price = parseInt(document.getElementById('country-price').value);
-        
-        const countryData = {
-          id: editingCountryId || `country_${Date.now()}`,
-          name: document.getElementById('country-name').value,
-          flag: document.getElementById('country-flag').value || '🏳️',
-          region: document.getElementById('country-region').value,
-          time: document.getElementById('country-time').value,
-          price: price,
-          priceText: `${currency}${price.toLocaleString()}`,
-          features: document.getElementById('country-features').value.split('\n').filter(f => f.trim())
-        };
-        console.log('New country data:', countryData);
-        
-        if (editingCountryId) {
-          // Update existing
-          const index = countries.findIndex(c => c.id === editingCountryId);
-          if (index !== -1) {
-            countries[index] = countryData;
-            console.log('Updated country at index:', index);
-          }
-        } else {
-          // Add new
-          countries.push(countryData);
-          console.log('Added new country');
-        }
-        
-        localStorage.setItem('registrationCountries', JSON.stringify(countries));
-        console.log('Saved to localStorage');
-        
-        loadCountries();
-        closeCountryModal();
-        
-        alert('Страна сохранена!');
-        
-        // Update main page if function exists
-        if (window.setRegistrationCountries) {
-          window.setRegistrationCountries(countries);
-        }
-      } catch (error) {
-        console.error('Error saving country:', error);
-        alert('Ошибка при сохранении: ' + error.message);
+  countryForm?.addEventListener('submit', (e) => {
+    e.preventDefault();
+    
+    const countries = JSON.parse(localStorage.getItem('registrationCountries')) || getDefaultCountries();
+    
+    const countryData = {
+      id: editingCountryId || `country_${Date.now()}`,
+      name: document.getElementById('country-name').value,
+      flag: document.getElementById('country-flag').value || '🏳️',
+      region: document.getElementById('country-region').value,
+      time: document.getElementById('country-time').value,
+      price: parseInt(document.getElementById('country-price').value),
+      priceText: `$${parseInt(document.getElementById('country-price').value).toLocaleString()}`,
+      features: document.getElementById('country-features').value.split('\n').filter(f => f.trim())
+    };
+    
+    if (editingCountryId) {
+      // Update existing
+      const index = countries.findIndex(c => c.id === editingCountryId);
+      if (index !== -1) {
+        countries[index] = countryData;
       }
-    });
-  } else {
-    console.error('Country form not found!');
-  }
+    } else {
+      // Add new
+      countries.push(countryData);
+    }
+    
+    localStorage.setItem('registrationCountries', JSON.stringify(countries));
+    loadCountries();
+    closeCountryModal();
+    
+    // Update main page if function exists
+    if (window.setRegistrationCountries) {
+      window.setRegistrationCountries(countries);
+    }
+  });
   
   // Export countries
   exportCountriesBtn?.addEventListener('click', () => {
@@ -1183,66 +1098,6 @@ document.addEventListener('DOMContentLoaded', function() {
   // Initialize
   checkAuth();
   
-  // Debug info
-  console.log('Admin script loaded');
-  console.log('Country modal:', document.getElementById('country-modal'));
-  console.log('Add button:', document.getElementById('reg-add-country'));
-  console.log('Country form:', document.getElementById('country-form'));
-  
-  // Глобальная функция для добавления страны
-  window.openAddCountryModal = function() {
-    console.log('Opening add country modal...');
-    const modal = document.getElementById('country-modal');
-    const form = document.getElementById('country-form');
-    const title = document.getElementById('country-modal-title');
-    
-    if (modal && form && title) {
-      editingCountryId = null;
-      title.textContent = 'Добавить страну';
-      form.reset();
-      modal.style.display = 'flex';
-      console.log('Modal opened successfully');
-    } else {
-      console.error('Modal elements not found:', {modal, form, title});
-    }
-  };
-  
-  // Глобальная функция для тестирования
-  window.testAddCountry = function() {
-    console.log('Testing add country...');
-    const modal = document.getElementById('country-modal');
-    if (modal) {
-      modal.style.display = 'flex';
-      console.log('Modal should be visible now');
-    } else {
-      console.error('Modal not found!');
-    }
-  };
-  
-  // Тестовая функция для добавления страны напрямую
-  window.testSaveCountry = function() {
-    try {
-      const countries = JSON.parse(localStorage.getItem('registrationCountries')) || getDefaultCountries();
-      const testCountry = {
-        id: `country_${Date.now()}`,
-        name: 'Тестовая страна',
-        flag: '🏳️',
-        region: 'europe',
-        time: '1-2 дня',
-        price: 1000,
-        priceText: '$1,000',
-        features: ['Тест 1', 'Тест 2']
-      };
-      countries.push(testCountry);
-      localStorage.setItem('registrationCountries', JSON.stringify(countries));
-      loadCountries();
-      alert('Тестовая страна добавлена!');
-    } catch (error) {
-      console.error('Error:', error);
-      alert('Ошибка: ' + error.message);
-    }
-  };
-  
   // Load data if on admin page
   if (document.querySelector('#admin-audit-table')) {
     loadAuditCountries();
@@ -1552,4 +1407,4 @@ document.addEventListener('DOMContentLoaded', function() {
     // Update the actual article page if needed
     // This would require additional implementation
   });
-});
+})();

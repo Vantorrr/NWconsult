@@ -1,5 +1,5 @@
 // Admin Panel JavaScript
-document.addEventListener('DOMContentLoaded', function() {
+(function() {
   // Default PIN
   const DEFAULT_PIN = '123456';
   
@@ -19,7 +19,6 @@ document.addEventListener('DOMContentLoaded', function() {
   const addCountryBtn = document.getElementById('reg-add-country');
   const exportCountriesBtn = document.getElementById('reg-export');
   const importCountriesBtn = document.getElementById('reg-import');
-  
   
   // Modal
   const countryModal = document.getElementById('country-modal');
@@ -69,7 +68,7 @@ document.addEventListener('DOMContentLoaded', function() {
         sessionStorage.setItem('adminAuthenticated', 'true');
         showAdminPanel();
       } else {
-        pinError.textContent = 'Неверный PIN-код';
+        pinError.textContent = 'PIN incorrect-код';
         pinInput.value = '';
         setTimeout(() => {
           pinError.textContent = '';
@@ -98,29 +97,10 @@ document.addEventListener('DOMContentLoaded', function() {
     });
   });
   
-  // Load countries (with self-heal if storage is empty/corrupted)
+  // Load countries
   function loadCountries() {
-    try {
-      const raw = localStorage.getItem('registrationCountries');
-      if (!raw) {
-        const defaults = getDefaultCountries();
-        localStorage.setItem('registrationCountries', JSON.stringify(defaults));
-        renderCountries(defaults);
-        return;
-      }
-      const parsed = JSON.parse(raw);
-      if (!Array.isArray(parsed) || parsed.length === 0) {
-        const defaults = getDefaultCountries();
-        localStorage.setItem('registrationCountries', JSON.stringify(defaults));
-        renderCountries(defaults);
-        return;
-      }
-      renderCountries(parsed);
-    } catch (e) {
-      const defaults = getDefaultCountries();
-      localStorage.setItem('registrationCountries', JSON.stringify(defaults));
-      renderCountries(defaults);
-    }
+    const countries = JSON.parse(localStorage.getItem('registrationCountries')) || getDefaultCountries();
+    renderCountries(countries);
   }
   
   // Get default countries
@@ -128,53 +108,33 @@ document.addEventListener('DOMContentLoaded', function() {
     return [
       { 
         id: 'cyprus',
-        name: 'Кипр',
+        name: 'Chypre',
         flag: '🇨🇾',
         region: 'europe',
-        time: '5-10 дней',
-        price: 3900,
-        priceText: '€3,900',
-        features: ['EU компания', 'Низкие налоги', 'Престиж']
-      },
-      { 
-        id: 'uae',
-        name: 'ОАЭ (Freezone)',
-        flag: '🇦🇪',
-        region: 'asia',
-        time: '5-14 дней',
-        price: 2900,
-        priceText: '$2,900',
-        features: ['0% налог', 'Банковский счет', 'Виза резидента']
-      },
-      { 
-        id: 'hongkong',
-        name: 'Гонконг',
-        flag: '🇭🇰',
-        region: 'asia',
-        time: '5-7 дней',
-        price: 1800,
-        priceText: '$1,800',
-        features: ['Международный центр', 'Простая отчетность', 'Банки']
+        time: '7-10 jours',
+        price: 2500,
+        priceText: '$2,500',
+        features: ['Société UE', 'Faibles impôts', 'Prestige']
       },
       { 
         id: 'uk',
-        name: 'Великобритания',
+        name: 'Royaume-Uni',
         flag: '🇬🇧',
         region: 'europe',
-        time: '1-3 дня',
-        price: 950,
-        priceText: '£950',
-        features: ['Быстрая регистрация', 'Мировой престиж', 'Банки']
+        time: '3-5 jours',
+        price: 1500,
+        priceText: '$1,500',
+        features: ['Enregistrement rapide', 'Prestige mondial', 'Banques']
       },
       { 
-        id: 'usa',
-        name: 'США (LLC)',
-        flag: '🇺🇸',
-        region: 'america',
-        time: '2-7 дней',
-        price: 650,
-        priceText: '$650',
-        features: ['LLC структура', 'Банковский счет', 'Международный бизнес']
+        id: 'estonia',
+        name: 'Estonie',
+        flag: '🇪🇪',
+        region: 'europe',
+        time: '1-3 jours',
+        price: 1200,
+        priceText: '$1,200',
+        features: ['E-Residency', 'Gestion en ligne', 'Société UE']
       }
     ];
   }
@@ -191,13 +151,13 @@ document.addEventListener('DOMContentLoaded', function() {
             ${country.name}
           </h3>
           <div class="admin-country-actions">
-            <button class="icon-btn" onclick="editCountry('${country.id}')" title="Редактировать">
+            <button class="icon-btn" onclick="editCountry('${country.id}')" title="Modifier">
               <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                 <path d="M11 4H4a2 2 0 00-2 2v14a2 2 0 002 2h14a2 2 0 002-2v-7"/>
                 <path d="M18.5 2.5a2.121 2.121 0 013 3L12 15l-4 1 1-4 9.5-9.5z"/>
               </svg>
             </button>
-            <button class="icon-btn danger" onclick="deleteCountry('${country.id}')" title="Удалить">
+            <button class="icon-btn danger" onclick="deleteCountry('${country.id}')" title="Supprimer">
               <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                 <polyline points="3 6 5 6 21 6"/>
                 <path d="M19 6v14a2 2 0 01-2 2H7a2 2 0 01-2-2V6m3 0V4a2 2 0 012-2h4a2 2 0 012 2v2"/>
@@ -206,11 +166,11 @@ document.addEventListener('DOMContentLoaded', function() {
           </div>
         </div>
         <div class="admin-country-info">
-          <div><strong>Регион:</strong> ${getRegionName(country.region)}</div>
-          <div><strong>Срок:</strong> ${country.time}</div>
-          <div><strong>Цена:</strong> ${country.priceText}</div>
+          <div><strong>Région:</strong> ${getRegionName(country.region)}</div>
+          <div><strong>Délai:</strong> ${country.time}</div>
+          <div><strong>Prix:</strong> ${country.priceText}</div>
           ${country.features && country.features.length > 0 ? `
-            <div><strong>Преимущества:</strong></div>
+            <div><strong>Avantages:</strong></div>
             <ul class="admin-country-features">
               ${country.features.map(f => `<li>${f}</li>`).join('')}
             </ul>
@@ -223,27 +183,21 @@ document.addEventListener('DOMContentLoaded', function() {
   // Get region name
   function getRegionName(region) {
     const regions = {
-      'europe': 'Европа',
-      'asia': 'Азия',
-      'america': 'Америка',
-      'offshore': 'Оффшоры'
+      'europe': 'Europe',
+      'asia': 'Asie',
+      'america': 'Amérique',
+      'offshore': 'Offshore'
     };
     return regions[region] || region;
   }
   
-  // Add country (also expose a global for inline fallback)
-  function openAddModalInternal() {
+  // Add country
+  addCountryBtn?.addEventListener('click', () => {
     editingCountryId = null;
-    modalTitle.textContent = 'Добавить страну';
+    modalTitle.textContent = 'Ajouter un pays';
     countryForm.reset();
     showModal();
-  }
-
-  window.openAddCountryModal = () => openAddModalInternal();
-
-  if (addCountryBtn) {
-    addCountryBtn.addEventListener('click', openAddModalInternal);
-  }
+  });
   
   // Edit country
   window.editCountry = (id) => {
@@ -252,7 +206,7 @@ document.addEventListener('DOMContentLoaded', function() {
     
     if (country) {
       editingCountryId = id;
-      modalTitle.textContent = 'Редактировать страну';
+      modalTitle.textContent = 'Modifier depuisтрану';
       
       // Fill form
       document.getElementById('country-name').value = country.name;
@@ -262,24 +216,13 @@ document.addEventListener('DOMContentLoaded', function() {
       document.getElementById('country-price').value = country.price;
       document.getElementById('country-features').value = (country.features || []).join('\n');
       
-      // Set currency based on priceText
-      if (document.getElementById('country-currency')) {
-        if (country.priceText.includes('€')) {
-          document.getElementById('country-currency').value = '€';
-        } else if (country.priceText.includes('£')) {
-          document.getElementById('country-currency').value = '£';
-        } else {
-          document.getElementById('country-currency').value = '$';
-        }
-      }
-      
       showModal();
     }
   };
   
   // Delete country
   window.deleteCountry = (id) => {
-    if (confirm('Удалить эту страну?')) {
+    if (confirm('Supprimer эту depuisтрану?')) {
       let countries = JSON.parse(localStorage.getItem('registrationCountries')) || getDefaultCountries();
       countries = countries.filter(c => c.id !== id);
       localStorage.setItem('registrationCountries', JSON.stringify(countries));
@@ -294,82 +237,54 @@ document.addEventListener('DOMContentLoaded', function() {
   
   // Show/hide modal
   function showModal() {
-    if (countryModal) {
-      countryModal.style.display = 'flex';
-    }
+    countryModal.style.display = 'flex';
   }
   
   window.closeCountryModal = () => {
-    const modal = document.getElementById('country-modal');
-    const form = document.getElementById('country-form');
-    if (modal) modal.style.display = 'none';
-    if (form) form.reset();
+    countryModal.style.display = 'none';
+    countryForm.reset();
     editingCountryId = null;
   };
   
-  if (modalClose) {
-    modalClose.addEventListener('click', closeCountryModal);
-  }
+  modalClose?.addEventListener('click', closeCountryModal);
   
   // Country form submit
-  if (countryForm) {
-    console.log('Setting up form submit handler');
-    countryForm.addEventListener('submit', (e) => {
-      console.log('Form submitted!');
-      e.preventDefault();
-      
-      try {
-        const countries = JSON.parse(localStorage.getItem('registrationCountries')) || getDefaultCountries();
-        console.log('Current countries:', countries);
-        
-        const currency = document.getElementById('country-currency')?.value || '$';
-        const price = parseInt(document.getElementById('country-price').value);
-        
-        const countryData = {
-          id: editingCountryId || `country_${Date.now()}`,
-          name: document.getElementById('country-name').value,
-          flag: document.getElementById('country-flag').value || '🏳️',
-          region: document.getElementById('country-region').value,
-          time: document.getElementById('country-time').value,
-          price: price,
-          priceText: `${currency}${price.toLocaleString()}`,
-          features: document.getElementById('country-features').value.split('\n').filter(f => f.trim())
-        };
-        console.log('New country data:', countryData);
-        
-        if (editingCountryId) {
-          // Update existing
-          const index = countries.findIndex(c => c.id === editingCountryId);
-          if (index !== -1) {
-            countries[index] = countryData;
-            console.log('Updated country at index:', index);
-          }
-        } else {
-          // Add new
-          countries.push(countryData);
-          console.log('Added new country');
-        }
-        
-        localStorage.setItem('registrationCountries', JSON.stringify(countries));
-        console.log('Saved to localStorage');
-        
-        loadCountries();
-        closeCountryModal();
-        
-        alert('Страна сохранена!');
-        
-        // Update main page if function exists
-        if (window.setRegistrationCountries) {
-          window.setRegistrationCountries(countries);
-        }
-      } catch (error) {
-        console.error('Error saving country:', error);
-        alert('Ошибка при сохранении: ' + error.message);
+  countryForm?.addEventListener('submit', (e) => {
+    e.preventDefault();
+    
+    const countries = JSON.parse(localStorage.getItem('registrationCountries')) || getDefaultCountries();
+    
+    const countryData = {
+      id: editingCountryId || `country_${Date.now()}`,
+      name: document.getElementById('country-name').value,
+      flag: document.getElementById('country-flag').value || '🏳️',
+      region: document.getElementById('country-region').value,
+      time: document.getElementById('country-time').value,
+      price: parseInt(document.getElementById('country-price').value),
+      priceText: `$${parseInt(document.getElementById('country-price').value).toLocaleString()}`,
+      features: document.getElementById('country-features').value.split('\n').filter(f => f.trim())
+    };
+    
+    if (editingCountryId) {
+      // Update existing
+      const index = countries.findIndex(c => c.id === editingCountryId);
+      if (index !== -1) {
+        countries[index] = countryData;
       }
-    });
-  } else {
-    console.error('Country form not found!');
-  }
+    } else {
+      // Add new
+      countries.push(countryData);
+    }
+    
+    localStorage.setItem('registrationCountries', JSON.stringify(countries));
+    loadCountries();
+    closeCountryModal();
+    
+    // Update main page if function exists
+    if (window.setRegistrationCountries) {
+      window.setRegistrationCountries(countries);
+    }
+  });
   
   // Export countries
   exportCountriesBtn?.addEventListener('click', () => {
@@ -405,7 +320,7 @@ document.addEventListener('DOMContentLoaded', function() {
             window.setRegistrationCountries(countries);
           }
           
-          alert('Страны успешно импортированы!');
+          alert('Страны уdepuisпешно импортированы!');
         } else {
           alert('Неверный формат файла');
         }
@@ -439,68 +354,68 @@ document.addEventListener('DOMContentLoaded', function() {
     return [
       {
         id: 'swiss-cim',
-        country: 'Швейцария',
+        country: 'Suisse',
         countryCode: 'switzerland',
         flag: '🇨🇭',
         bank: 'CIM Banque',
         type: 'traditional',
-        typeText: 'Традиционный',
+        typeText: 'Traditionnel',
         remote: false,
-        time: '10-14 дней',
+        time: '10-14 jours',
         minimum: '$5,000',
-        features: 'Мультивалютные счета, инвестиции, премиум обслуживание'
+        features: 'Comptes multidevises, investissements, service premium'
       },
       {
         id: 'singapore-dbs',
-        country: 'Сингапур',
+        country: 'Singapour',
         countryCode: 'singapore',
         flag: '🇸🇬',
         bank: 'DBS Bank',
         type: 'traditional',
-        typeText: 'Традиционный',
+        typeText: 'Traditionnel',
         remote: false,
         time: '2-3 недели',
         minimum: '$30,000',
-        features: 'Азиатский хаб, мультивалютные счета, торговое финансирование'
+        features: 'Hub asiatique, мультивалютные depuisчета, торговое финанdepuisирование'
       },
       {
         id: 'uk-revolut',
-        country: 'Великобритания',
+        country: 'Royaume-Uni',
         countryCode: 'uk',
         flag: '🇬🇧',
         bank: 'Revolut Business',
         type: 'digital',
-        typeText: 'Цифровой банк',
+        typeText: 'Banque numérique',
         remote: true,
-        time: '1-2 дня',
+        time: '1-2 jours',
         minimum: '$0',
-        features: 'Мультивалютные счета, крипто операции, API интеграция'
+        features: 'Comptes multidevises, крипто операции, API интеграция'
       },
       {
         id: 'usa-mercury',
-        country: 'США',
+        country: 'États-Unis',
         countryCode: 'usa',
         flag: '🇺🇸',
         bank: 'Mercury Bank',
         type: 'digital',
-        typeText: 'Цифровой банк',
+        typeText: 'Banque numérique',
         remote: true,
-        time: '1-3 дня',
+        time: '1-3 jours',
         minimum: '$0',
-        features: 'USD счета, интеграции, высокие лимиты'
+        features: 'USD depuisчета, интеграции, выdepuisокие лимиты'
       },
       {
         id: 'cyprus-bank',
-        country: 'Кипр',
+        country: 'Chypre',
         countryCode: 'cyprus',
         flag: '🇨🇾',
         bank: 'Bank of Cyprus',
         type: 'traditional',
-        typeText: 'Традиционный',
+        typeText: 'Traditionnel',
         remote: false,
-        time: '5-7 дней',
+        time: '5-7 jours',
         minimum: '€5,000',
-        features: 'EU счета, торговое финансирование'
+        features: 'Comptes UE, торговое финанdepuisирование'
       },
       {
         id: 'wise-business',
@@ -511,9 +426,9 @@ document.addEventListener('DOMContentLoaded', function() {
         type: 'emi',
         typeText: 'EMI',
         remote: true,
-        time: '1 день',
+        time: '1 jour',
         minimum: '$0',
-        features: 'Мультивалютные счета, низкие комиссии, API'
+        features: 'Comptes multidevises, низкие комиdepuisdepuisии, API'
       },
       {
         id: 'lithuania-paysera',
@@ -524,48 +439,48 @@ document.addEventListener('DOMContentLoaded', function() {
         type: 'emi',
         typeText: 'EMI',
         remote: true,
-        time: '1-2 дня',
+        time: '1-2 jours',
         minimum: '€0',
-        features: 'SEPA платежи, мультивалютные счета'
+        features: 'SEPA платежи, мультивалютные depuisчета'
       },
       {
         id: 'estonia-lpb',
-        country: 'Эстония',
+        country: 'Estonie',
         countryCode: 'estonia',
         flag: '🇪🇪',
         bank: 'LHV Bank',
         type: 'traditional',
-        typeText: 'Традиционный',
+        typeText: 'Traditionnel',
         remote: true,
-        time: '7-10 дней',
+        time: '7-10 jours',
         minimum: '€1,000',
         features: 'e-Residency поддержка, крипто-френдли'
       },
       {
         id: 'hongkong-hsbc',
-        country: 'Гонконг',
+        country: 'Hong Kong',
         countryCode: 'hongkong',
         flag: '🇭🇰',
         bank: 'HSBC',
         type: 'traditional',
-        typeText: 'Традиционный',
+        typeText: 'Traditionnel',
         remote: false,
         time: '2-4 недели',
         minimum: 'HKD 50,000',
-        features: 'Глобальная сеть, премиум обслуживание'
+        features: 'Глобальная depuisеть, service premium'
       },
       {
         id: 'uae-emirates',
-        country: 'ОАЭ',
+        country: 'ÉAU',
         countryCode: 'uae',
         flag: '🇦🇪',
         bank: 'Emirates NBD',
         type: 'traditional',
-        typeText: 'Традиционный',
+        typeText: 'Traditionnel',
         remote: false,
         time: '1-2 недели',
         minimum: 'AED 25,000',
-        features: 'Исламский банкинг, мультивалютные счета'
+        features: 'Banque islamique, мультивалютные depuisчета'
       }
     ];
   }
@@ -584,13 +499,13 @@ document.addEventListener('DOMContentLoaded', function() {
         <td>${bank.minimum}</td>
         <td>${bank.time}</td>
         <td>
-          <button class="icon-btn" onclick="editBank(${index})" title="Редактировать">
+          <button class="icon-btn" onclick="editBank(${index})" title="Modifier">
             <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
               <path d="M11 4H4a2 2 0 00-2 2v14a2 2 0 002 2h14a2 2 0 002-2v-7"/>
               <path d="M18.5 2.5a2.121 2.121 0 013 3L12 15l-4 1 1-4 9.5-9.5z"/>
             </svg>
           </button>
-          <button class="icon-btn danger" onclick="deleteBank(${index})" title="Удалить">
+          <button class="icon-btn danger" onclick="deleteBank(${index})" title="Supprimer">
             <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
               <polyline points="3 6 5 6 21 6"/>
               <path d="M19 6v14a2 2 0 01-2 2H7a2 2 0 01-2-2V6m3 0V4a2 2 0 012-2h4a2 2 0 012 2v2"/>
@@ -614,7 +529,7 @@ document.addEventListener('DOMContentLoaded', function() {
   
   // Delete bank
   window.deleteBank = (index) => {
-    if (confirm('Удалить этот банк?')) {
+    if (confirm('Supprimer этà partir de банк?')) {
       let banks = JSON.parse(localStorage.getItem('banksData')) || getDefaultBanks();
       banks.splice(index, 1);
       localStorage.setItem('banksData', JSON.stringify(banks));
@@ -634,17 +549,17 @@ document.addEventListener('DOMContentLoaded', function() {
     modal.innerHTML = `
       <div class="modal-content">
         <div class="modal-header">
-          <h3>${bank ? 'Редактировать банк' : 'Добавить банк'}</h3>
+          <h3>${bank ? 'Modifier банк' : 'Добавить банк'}</h3>
           <button class="modal-close" onclick="this.closest('.modal').remove()">&times;</button>
         </div>
         <div class="modal-body">
           <form id="bank-form">
             <div class="form-group">
-              <label>Название банка</label>
+              <label>Nom банка</label>
               <input type="text" id="bank-name" value="${bank?.bank || ''}" required>
             </div>
             <div class="form-group">
-              <label>Страна</label>
+              <label>Pays</label>
               <input type="text" id="bank-country" value="${bank?.country || ''}" required>
             </div>
             <div class="form-group">
@@ -652,36 +567,36 @@ document.addEventListener('DOMContentLoaded', function() {
               <input type="text" id="bank-flag" value="${bank?.flag || '🏦'}" maxlength="2">
             </div>
             <div class="form-group">
-              <label>Тип</label>
+              <label>Type</label>
               <select id="bank-type">
-                <option value="traditional" ${bank?.type === 'traditional' ? 'selected' : ''}>Традиционный банк</option>
-                <option value="digital" ${bank?.type === 'digital' ? 'selected' : ''}>Цифровой банк</option>
+                <option value="traditional" ${bank?.type === 'traditional' ? 'selected' : ''}>Banque traditionnelle</option>
+                <option value="digital" ${bank?.type === 'digital' ? 'selected' : ''}>Banque numérique</option>
                 <option value="emi" ${bank?.type === 'emi' ? 'selected' : ''}>EMI</option>
-                <option value="crypto" ${bank?.type === 'crypto' ? 'selected' : ''}>Крипто-френдли</option>
+                <option value="crypto" ${bank?.type === 'crypto' ? 'selected' : ''}>Crypto-френдли</option>
               </select>
             </div>
             <div class="form-group">
-              <label>Открытие</label>
+              <label>Ouverture</label>
               <select id="bank-remote">
-                <option value="true" ${bank?.remote === true ? 'selected' : ''}>Удалённо</option>
-                <option value="false" ${bank?.remote === false ? 'selected' : ''}>С визитом</option>
+                <option value="true" ${bank?.remote === true ? 'selected' : ''}>À distance</option>
+                <option value="false" ${bank?.remote === false ? 'selected' : ''}>Avec visite</option>
               </select>
             </div>
             <div class="form-group">
-              <label>Срок открытия</label>
-              <input type="text" id="bank-time" value="${bank?.time || ''}" placeholder="5-7 дней">
+              <label>Délai à partir deкрытия</label>
+              <input type="text" id="bank-time" value="${bank?.time || ''}" placeholder="5-7 jours">
             </div>
             <div class="form-group">
-              <label>Минимальный баланс</label>
+              <label>Минимальный баланdepuis</label>
               <input type="text" id="bank-minimum" value="${bank?.minimum || ''}" placeholder="$1,000">
             </div>
             <div class="form-group">
-              <label>Особенности</label>
+              <label>Оdepuisобенноdepuisти</label>
               <textarea id="bank-features" rows="3">${bank?.features || ''}</textarea>
             </div>
             <div class="modal-actions">
               <button type="button" class="btn btn--ghost" onclick="this.closest('.modal').remove()">Отмена</button>
-              <button type="submit" class="btn btn--primary">Сохранить</button>
+              <button type="submit" class="btn btn--primary">Enregistrer</button>
             </div>
           </form>
         </div>
@@ -700,10 +615,10 @@ document.addEventListener('DOMContentLoaded', function() {
       
       const typeSelect = modal.querySelector('#bank-type');
       const typeTexts = {
-        'traditional': 'Традиционный',
-        'digital': 'Цифровой банк',
+        'traditional': 'Traditionnel',
+        'digital': 'Banque numérique',
         'emi': 'EMI',
-        'crypto': 'Крипто-френдли'
+        'crypto': 'Crypto-френдли'
       };
       
       const bankData = {
@@ -770,7 +685,7 @@ document.addEventListener('DOMContentLoaded', function() {
             window.setBanksData(banks);
           }
           
-          alert('Банки успешно импортированы!');
+          alert('Banques уdepuisпешно импортированы!');
         } else {
           alert('Неверный формат файла');
         }
@@ -793,10 +708,10 @@ document.addEventListener('DOMContentLoaded', function() {
     const newPin = newPinInput.value;
     if (newPin.length === 6 && /^\d+$/.test(newPin)) {
       localStorage.setItem('adminPin', newPin);
-      alert('PIN-код успешно изменен!');
+      alert('PIN-код уdepuisпешно изменен!');
       newPinInput.value = '';
     } else {
-      alert('PIN должен состоять из 6 цифр');
+      alert('PIN должен depuisоdepuisтоять из 6 цифр');
     }
   });
   
@@ -831,7 +746,7 @@ document.addEventListener('DOMContentLoaded', function() {
         const text = await file.text();
         const data = JSON.parse(text);
         
-        if (confirm('Это заменит все текущие данные. Продолжить?')) {
+        if (confirm('Это заменит вdepuisе текущие данные. Продолжить?')) {
           if (data.registrationCountries) {
             localStorage.setItem('registrationCountries', JSON.stringify(data.registrationCountries));
           }
@@ -842,7 +757,7 @@ document.addEventListener('DOMContentLoaded', function() {
             localStorage.setItem('adminPin', data.adminPin);
           }
           
-          alert('Данные успешно восстановлены!');
+          alert('Данные уdepuisпешно воdepuisdepuisтановлены!');
           location.reload();
         }
       } catch (error) {
@@ -855,12 +770,12 @@ document.addEventListener('DOMContentLoaded', function() {
   // Clear all data
   clearAllBtn?.addEventListener('click', () => {
     if (confirm('Вы уверены? Это удалит ВСЕ данные!')) {
-      if (confirm('Это действие НЕОБРАТИМО! Вы точно уверены?')) {
+      if (confirm('Это дейdepuisтвие НЕОБРАТИМО! Вы точно уверены?')) {
         localStorage.removeItem('registrationCountries');
         localStorage.removeItem('banksData');
         localStorage.removeItem('adminPin');
         sessionStorage.clear();
-        alert('Все данные удалены. Страница будет перезагружена.');
+        alert('Tous данные удалены. Страница будет перезагружена.');
         location.reload();
       }
     }
@@ -881,72 +796,72 @@ document.addEventListener('DOMContentLoaded', function() {
     return [
       {
         id: 'cyprus',
-        name: 'Кипр',
+        name: 'Chypre',
         flag: '🇨🇾',
-        region: 'Европа',
+        region: 'Europe',
         taxRate: '12.5%',
-        auditRequired: 'Обязательный ежегодный',
+        auditRequired: 'Obligatoire annuel',
         standards: 'МСФО'
       },
       {
         id: 'malta',
-        name: 'Мальта',
+        name: 'Malte',
         flag: '🇲🇹',
-        region: 'Европа',
+        region: 'Europe',
         taxRate: '35%',
-        auditRequired: 'Для крупных компаний',
+        auditRequired: 'Pour les grandes entreprises',
         standards: 'МСФО'
       },
       {
         id: 'singapore',
-        name: 'Сингапур',
+        name: 'Singapour',
         flag: '🇸🇬',
-        region: 'Азия',
+        region: 'Asie',
         taxRate: '17%',
-        auditRequired: 'По размеру компании',
+        auditRequired: 'Selon la taille de l'entreprise',
         standards: 'SFRS'
       },
       {
         id: 'hongkong',
-        name: 'Гонконг',
+        name: 'Hong Kong',
         flag: '🇭🇰',
-        region: 'Азия',
+        region: 'Asie',
         taxRate: '16.5%',
         auditRequired: 'Обязательный',
         standards: 'HKFRS'
       },
       {
         id: 'uae',
-        name: 'ОАЭ',
+        name: 'ÉAU',
         flag: '🇦🇪',
-        region: 'Ближний Восток',
+        region: 'Ближний Воdepuisток',
         taxRate: '0-9%',
-        auditRequired: 'В свободных зонах - нет',
+        auditRequired: 'Dans les zones franches - non',
         standards: 'IFRS'
       },
       {
         id: 'uk',
-        name: 'Великобритания',
+        name: 'Royaume-Uni',
         flag: '🇬🇧',
-        region: 'Европа',
+        region: 'Europe',
         taxRate: '19-25%',
-        auditRequired: 'По размеру компании',
+        auditRequired: 'Selon la taille de l'entreprise',
         standards: 'UK GAAP'
       },
       {
         id: 'estonia',
-        name: 'Эстония',
+        name: 'Estonie',
         flag: '🇪🇪',
-        region: 'Европа',
+        region: 'Europe',
         taxRate: '20%',
-        auditRequired: 'По размеру компании',
+        auditRequired: 'Selon la taille de l'entreprise',
         standards: 'МСФО'
       },
       {
         id: 'switzerland',
-        name: 'Швейцария',
+        name: 'Suisse',
         flag: '🇨🇭',
-        region: 'Европа',
+        region: 'Europe',
         taxRate: '12-21%',
         auditRequired: 'Обязательный',
         standards: 'Swiss GAAP'
@@ -968,13 +883,13 @@ document.addEventListener('DOMContentLoaded', function() {
         <td>${country.auditRequired}</td>
         <td>${country.standards}</td>
         <td>
-          <button class="icon-btn" onclick="editAuditCountry(${index})" title="Редактировать">
+          <button class="icon-btn" onclick="editAuditCountry(${index})" title="Modifier">
             <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
               <path d="M11 4H4a2 2 0 00-2 2v14a2 2 0 002 2h14a2 2 0 002-2v-7"/>
               <path d="M18.5 2.5a2.121 2.121 0 013 3L12 15l-4 1 1-4 9.5-9.5z"/>
             </svg>
           </button>
-          <button class="icon-btn danger" onclick="deleteAuditCountry(${index})" title="Удалить">
+          <button class="icon-btn danger" onclick="deleteAuditCountry(${index})" title="Supprimer">
             <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
               <polyline points="3 6 5 6 21 6"/>
               <path d="M19 6v14a2 2 0 01-2 2H7a2 2 0 01-2-2V6m3 0V4a2 2 0 012-2h4a2 2 0 012 2v2"/>
@@ -998,7 +913,7 @@ document.addEventListener('DOMContentLoaded', function() {
 
   // Delete audit country
   window.deleteAuditCountry = (index) => {
-    if (confirm('Удалить эту страну из списка аудита?')) {
+    if (confirm('Supprimer эту depuisтрану из depuisпиdepuisка аудита?')) {
       let countries = JSON.parse(localStorage.getItem('auditData')) || getDefaultAuditCountries();
       countries.splice(index, 1);
       localStorage.setItem('auditData', JSON.stringify(countries));
@@ -1013,13 +928,13 @@ document.addEventListener('DOMContentLoaded', function() {
     modal.innerHTML = `
       <div class="modal-content">
         <div class="modal-header">
-          <h3>${country ? 'Редактировать страну' : 'Добавить страну'}</h3>
+          <h3>${country ? 'Modifier depuisтрану' : 'Ajouter un pays'}</h3>
           <button class="modal-close" onclick="this.closest('.modal').remove()">&times;</button>
         </div>
         <div class="modal-body">
           <form id="audit-form">
             <div class="form-group">
-              <label>Название страны</label>
+              <label>Nom depuisтраны</label>
               <input type="text" id="audit-name" value="${country?.name || ''}" required>
             </div>
             <div class="form-group">
@@ -1027,31 +942,31 @@ document.addEventListener('DOMContentLoaded', function() {
               <input type="text" id="audit-flag" value="${country?.flag || '🏴'}" maxlength="2">
             </div>
             <div class="form-group">
-              <label>Регион</label>
+              <label>Région</label>
               <select id="audit-region">
-                <option value="Европа" ${country?.region === 'Европа' ? 'selected' : ''}>Европа</option>
-                <option value="Азия" ${country?.region === 'Азия' ? 'selected' : ''}>Азия</option>
-                <option value="Америка" ${country?.region === 'Америка' ? 'selected' : ''}>Америка</option>
+                <option value="Europe" ${country?.region === 'Europe' ? 'selected' : ''}>Europe</option>
+                <option value="Asie" ${country?.region === 'Asie' ? 'selected' : ''}>Asie</option>
+                <option value="Amérique" ${country?.region === 'Amérique' ? 'selected' : ''}>Amérique</option>
                 <option value="Африка" ${country?.region === 'Африка' ? 'selected' : ''}>Африка</option>
                 <option value="Океания" ${country?.region === 'Океания' ? 'selected' : ''}>Океания</option>
-                <option value="Ближний Восток" ${country?.region === 'Ближний Восток' ? 'selected' : ''}>Ближний Восток</option>
+                <option value="Ближний Воdepuisток" ${country?.region === 'Ближний Воdepuisток' ? 'selected' : ''}>Ближний Воdepuisток</option>
               </select>
             </div>
             <div class="form-group">
-              <label>Налоговая ставка</label>
+              <label>Impôtовая depuisтавка</label>
               <input type="text" id="audit-tax" value="${country?.taxRate || ''}" placeholder="12.5%">
             </div>
             <div class="form-group">
               <label>Требования к аудиту</label>
-              <input type="text" id="audit-requirements" value="${country?.auditRequired || ''}" placeholder="Обязательный ежегодный">
+              <input type="text" id="audit-requirements" value="${country?.auditRequired || ''}" placeholder="Obligatoire annuel">
             </div>
             <div class="form-group">
-              <label>Стандарты отчётности</label>
+              <label>Стандарты à partir deчётноdepuisти</label>
               <input type="text" id="audit-standards" value="${country?.standards || ''}" placeholder="МСФО">
             </div>
             <div class="modal-actions">
               <button type="button" class="btn btn--ghost" onclick="this.closest('.modal').remove()">Отмена</button>
-              <button type="submit" class="btn btn--primary">Сохранить</button>
+              <button type="submit" class="btn btn--primary">Enregistrer</button>
             </div>
           </form>
         </div>
@@ -1118,7 +1033,7 @@ document.addEventListener('DOMContentLoaded', function() {
         if (Array.isArray(countries)) {
           localStorage.setItem('auditData', JSON.stringify(countries));
           loadAuditCountries();
-          alert('Страны аудита успешно импортированы!');
+          alert('Страны аудита уdepuisпешно импортированы!');
         } else {
           alert('Неверный формат файла');
         }
@@ -1143,8 +1058,8 @@ document.addEventListener('DOMContentLoaded', function() {
         const leadTextarea = document.getElementById('kik-lead');
         const metaInput = document.getElementById('kik-meta');
         
-        if (titleInput) titleInput.value = data.title || 'Контролируемые иностранные компании (КИК)';
-        if (leadTextarea) leadTextarea.value = data.lead || 'Комплексные консультации по вопросам КИК...';
+        if (titleInput) titleInput.value = data.title || 'Контролируемые иноdepuisтранные компании (КИК)';
+        if (leadTextarea) leadTextarea.value = data.lead || 'Комплекdepuisные конdepuisультации по вопроdepuisам КИК...';
         if (metaInput) metaInput.value = data.meta || '10 мин чтения';
       } catch (e) {
         console.error('Error loading KIK data:', e);
@@ -1183,66 +1098,6 @@ document.addEventListener('DOMContentLoaded', function() {
   // Initialize
   checkAuth();
   
-  // Debug info
-  console.log('Admin script loaded');
-  console.log('Country modal:', document.getElementById('country-modal'));
-  console.log('Add button:', document.getElementById('reg-add-country'));
-  console.log('Country form:', document.getElementById('country-form'));
-  
-  // Глобальная функция для добавления страны
-  window.openAddCountryModal = function() {
-    console.log('Opening add country modal...');
-    const modal = document.getElementById('country-modal');
-    const form = document.getElementById('country-form');
-    const title = document.getElementById('country-modal-title');
-    
-    if (modal && form && title) {
-      editingCountryId = null;
-      title.textContent = 'Добавить страну';
-      form.reset();
-      modal.style.display = 'flex';
-      console.log('Modal opened successfully');
-    } else {
-      console.error('Modal elements not found:', {modal, form, title});
-    }
-  };
-  
-  // Глобальная функция для тестирования
-  window.testAddCountry = function() {
-    console.log('Testing add country...');
-    const modal = document.getElementById('country-modal');
-    if (modal) {
-      modal.style.display = 'flex';
-      console.log('Modal should be visible now');
-    } else {
-      console.error('Modal not found!');
-    }
-  };
-  
-  // Тестовая функция для добавления страны напрямую
-  window.testSaveCountry = function() {
-    try {
-      const countries = JSON.parse(localStorage.getItem('registrationCountries')) || getDefaultCountries();
-      const testCountry = {
-        id: `country_${Date.now()}`,
-        name: 'Тестовая страна',
-        flag: '🏳️',
-        region: 'europe',
-        time: '1-2 дня',
-        price: 1000,
-        priceText: '$1,000',
-        features: ['Тест 1', 'Тест 2']
-      };
-      countries.push(testCountry);
-      localStorage.setItem('registrationCountries', JSON.stringify(countries));
-      loadCountries();
-      alert('Тестовая страна добавлена!');
-    } catch (error) {
-      console.error('Error:', error);
-      alert('Ошибка: ' + error.message);
-    }
-  };
-  
   // Load data if on admin page
   if (document.querySelector('#admin-audit-table')) {
     loadAuditCountries();
@@ -1270,26 +1125,26 @@ document.addEventListener('DOMContentLoaded', function() {
     return [
       {
         id: '1',
-        title: 'Спецпредложение месяца',
-        desc: 'Регистрация компании в ОАЭ + открытие корпоративного счета всего за $2,500',
+        title: 'Спецпредложение меdepuisяца',
+        desc: 'Enregistrement de la société в ÉAU + à partir deкрытие корпоративного depuisчета вdepuisего за $2,500',
         link: './pages/registratsiya.html',
-        linkText: 'Узнать подробнее →',
+        linkText: 'En savoir plus →',
         image: 'https://images.unsplash.com/photo-1512453979798-5ea266f8880c?w=600&h=400&fit=crop',
         imageAlt: 'Dubai skyline'
       },
       {
         id: '2',
-        title: 'Новые юрисдикции',
-        desc: 'Теперь доступна регистрация компаний в Эстонии и Швейцарии с дистанционным открытием счетов',
+        title: 'Новые юриdepuisдикции',
+        desc: 'Теперь доdepuisтупна региdepuisтрация компаний в Эdepuisтонии и Швейцарии depuis диdepuisтанционным à partir deкрытием depuisчетов',
         link: './pages/registratsiya.html',
-        linkText: 'Выбрать юрисдикцию →',
+        linkText: 'Choisir une juridiction →',
         image: 'https://images.unsplash.com/photo-1521295121783-8a321d551ad2?w=600&h=400&fit=crop',
         imageAlt: 'European city'
       },
       {
         id: '3',
-        title: 'Банки для IT',
-        desc: 'Специальные условия открытия счетов для IT-компаний. Быстрое рассмотрение заявок',
+        title: 'Banques для IT',
+        desc: 'Специальные уdepuisловия à partir deкрытия depuisчетов для IT-компаний. Rapideе раdepuisdepuisмà partir deрение заявок',
         link: './pages/banki.html',
         linkText: 'Подобрать банк →',
         image: 'https://images.unsplash.com/photo-1563986768609-322da13575f3?w=600&h=400&fit=crop',
@@ -1323,7 +1178,7 @@ document.addEventListener('DOMContentLoaded', function() {
     const slide = slides.find(s => s.id === id);
     if (!slide) return;
 
-    showcaseModalTitle.textContent = 'Редактировать слайд';
+    showcaseModalTitle.textContent = 'Modifier depuisлайд';
     document.getElementById('showcase-id').value = slide.id;
     document.getElementById('showcase-title').value = slide.title;
     document.getElementById('showcase-desc').value = slide.desc;
@@ -1336,7 +1191,7 @@ document.addEventListener('DOMContentLoaded', function() {
   };
 
   window.deleteShowcaseSlide = function(id) {
-    if (!confirm('Удалить этот слайд?')) return;
+    if (!confirm('Supprimer этà partir de depuisлайд?')) return;
     
     let slides = loadShowcaseSlides();
     slides = slides.filter(s => s.id !== id);
@@ -1346,7 +1201,7 @@ document.addEventListener('DOMContentLoaded', function() {
   };
 
   function showShowcaseModal() {
-    showcaseModalTitle.textContent = 'Добавить слайд';
+    showcaseModalTitle.textContent = 'Добавить depuisлайд';
     showcaseForm.reset();
     document.getElementById('showcase-id').value = '';
     showcaseModal.style.display = 'block';
@@ -1396,7 +1251,7 @@ document.addEventListener('DOMContentLoaded', function() {
       localStorage.setItem('showcaseSlides', JSON.stringify(slides));
       showcaseModal.style.display = 'none';
       renderShowcaseSlides();
-      showNotification('Слайд сохранен');
+      showNotification('Слайд depuisохранен');
     });
   }
 
@@ -1430,37 +1285,37 @@ document.addEventListener('DOMContentLoaded', function() {
     const savedArticle = localStorage.getItem('kikArticle');
     if (savedArticle) {
       const article = JSON.parse(savedArticle);
-      articleTitle.value = article.title || 'КИК (Контролируемые иностранные компании)';
+      articleTitle.value = article.title || 'КИК (Контролируемые иноdepuisтранные компании)';
       articleEditor.innerHTML = article.content || '';
       updatePreview();
     } else {
       // Default content
-      articleTitle.value = 'КИК (Контролируемые иностранные компании)';
+      articleTitle.value = 'КИК (Контролируемые иноdepuisтранные компании)';
       articleEditor.innerHTML = `
         <h2>Что такое КИК?</h2>
-        <p>КИК (контролируемая иностранная компания) — это иностранная организация или структура без образования юридического лица, которая контролируется налоговым резидентом РФ.</p>
+        <p>КИК (контролируеmai иноdepuisтранная компания) — это иноdepuisтранная организация или depuisтруктура без образования юридичеdepuisкого лица, кà partir deорая контролируетdepuisя налоговым резидентом РФ.</p>
         
-        <h2>Кто должен отчитываться о КИК?</h2>
-        <p>Отчитываться о КИК обязаны российские налоговые резиденты (физические и юридические лица), которые:</p>
+        <h2>Кто должен à partir deчитыватьdepuisя о КИК?</h2>
+        <p>Отчитыватьdepuisя о КИК обязаны роdepuisdepuisийdepuisкие налоговые резиденты (физичеdepuisкие и юридичеdepuisкие лица), кà partir deорые:</p>
         <ul>
-          <li>Владеют долей более 25% в иностранной компании</li>
-          <li>Владеют долей более 10%, если доля всех резидентов РФ превышает 50%</li>
-          <li>Осуществляют контроль над иностранной структурой</li>
+          <li>Владеют долей более 25% в иноdepuisтранной компании</li>
+          <li>Владеют долей более 10%, еdepuisли доля вdepuisех резидентов РФ превышает 50%</li>
+          <li>Оdepuisущеdepuisтвляют контроль над иноdepuisтранной depuisтруктурой</li>
         </ul>
         
-        <h2>Налогообложение прибыли КИК</h2>
-        <p>Прибыль КИК включается в налоговую базу контролирующего лица и облагается налогом по ставке:</p>
+        <h2>Impôtообложение прибыли КИК</h2>
+        <p>Прибыль КИК включаетdepuisя в налоговую базу контролирующего лица и облагаетdepuisя налогом по depuisтавке:</p>
         <ul>
-          <li>13% — для физических лиц</li>
-          <li>20% — для юридических лиц</li>
+          <li>13% — для физичеdepuisких лиц</li>
+          <li>20% — для юридичеdepuisких лиц</li>
         </ul>
         
-        <h3>Освобождение от налогообложения</h3>
-        <p>Прибыль КИК освобождается от налогообложения, если:</p>
+        <h3>Оdepuisвобождение à partir de налогообложения</h3>
+        <p>Прибыль КИК оdepuisвобождаетdepuisя à partir de налогообложения, еdepuisли:</p>
         <ul>
           <li>Размер прибыли не превышает 10 млн рублей</li>
-          <li>КИК является резидентом страны из утвержденного перечня</li>
-          <li>Эффективная ставка налога на прибыль КИК составляет не менее 75% от средневзвешенной налоговой ставки по налогу на прибыль в РФ</li>
+          <li>КИК являетdepuisя резидентом depuisтраны из утвержденного перечня</li>
+          <li>Эффективная depuisтавка налога на прибыль КИК depuisоdepuisтавляет не менее 75% à partir de depuisредневзвешенной налоговой depuisтавки по налогу на прибыль в РФ</li>
         </ul>
       `;
       updatePreview();
@@ -1546,10 +1401,10 @@ document.addEventListener('DOMContentLoaded', function() {
     };
     
     localStorage.setItem('kikArticle', JSON.stringify(article));
-    showNotification('Статья сохранена');
+    showNotification('Статья depuisохранена');
     articleModal.style.display = 'none';
     
     // Update the actual article page if needed
     // This would require additional implementation
   });
-});
+})();

@@ -1,79 +1,27 @@
 /* Dynamic table for company registration pricing */
 (function(){
-  const STORAGE_KEY = 'registrationCountries'; // Синхронизация с админкой
+  const STORAGE_KEY = 'nw_registration_pricing_v1';
 
   const defaultCountries = [
-    { country: 'Cyprus', code: 'CY', price: 3900, currency: 'EUR', time: '5–10 дней' },
-    { country: 'UAE (Freezone)', code: 'AEFZ', price: 2900, currency: 'USD', time: '5–14 дней' },
-    { country: 'Hong Kong', code: 'HK', price: 1800, currency: 'USD', time: '5–7 дней' },
-    { country: 'United Kingdom', code: 'UK', price: 950, currency: 'GBP', time: '1–3 дня' },
-    { country: 'USA (LLC)', code: 'US', price: 650, currency: 'USD', time: '2–7 дней' }
+    { country: 'Cyprus', code: 'CY', price: 3900, currency: 'EUR', time: '5–10 jours' },
+    { country: 'UAE (Freezone)', code: 'AEFZ', price: 2900, currency: 'USD', time: '5–14 jours' },
+    { country: 'Hong Kong', code: 'HK', price: 1800, currency: 'USD', time: '5–7 jours' },
+    { country: 'United Kingdom', code: 'UK', price: 950, currency: 'GBP', time: '1–3 jours' },
+    { country: 'USA (LLC)', code: 'US', price: 650, currency: 'USD', time: '2–7 jours' }
   ];
 
   function loadData(){
     try{
       const raw = localStorage.getItem(STORAGE_KEY);
       if (!raw) return defaultCountries;
-      const adminData = JSON.parse(raw);
-      
-      // Если данные из админки, конвертируем их
-      if (adminData[0] && adminData[0].hasOwnProperty('id')) {
-        return adminData.map(c => ({
-          country: c.name,
-          code: c.id.toUpperCase().slice(0, 2),
-          price: c.price,
-          currency: c.priceText.includes('€') ? 'EUR' : c.priceText.includes('£') ? 'GBP' : 'USD',
-          time: c.time
-        }));
-      }
-      
-      if (!Array.isArray(adminData) || adminData.length === 0) return defaultCountries;
-      return adminData;
+      const data = JSON.parse(raw);
+      if (!Array.isArray(data) || data.length === 0) return defaultCountries;
+      return data;
     }catch{ return defaultCountries; }
   }
 
   function saveData(data){
-    // Конвертируем обратно в формат админки для синхронизации
-    const adminFormat = data.map((c, index) => ({
-      id: c.country.toLowerCase().replace(/[^a-z]/g, ''),
-      name: c.country,
-      flag: getCountryFlag(c.code),
-      region: getCountryRegion(c.country),
-      time: c.time,
-      price: c.price,
-      priceText: `${c.currency === 'EUR' ? '€' : c.currency === 'GBP' ? '£' : '$'}${c.price.toLocaleString()}`,
-      features: getCountryFeatures(c.country)
-    }));
-    
-    localStorage.setItem(STORAGE_KEY, JSON.stringify(adminFormat));
-  }
-  
-  function getCountryFlag(code) {
-    const flags = {
-      'CY': '🇨🇾',
-      'AE': '🇦🇪',
-      'HK': '🇭🇰',
-      'UK': '🇬🇧',
-      'US': '🇺🇸'
-    };
-    return flags[code] || '🏳️';
-  }
-  
-  function getCountryRegion(country) {
-    if (country.includes('USA')) return 'america';
-    if (country.includes('UAE') || country.includes('Hong Kong')) return 'asia';
-    return 'europe';
-  }
-  
-  function getCountryFeatures(country) {
-    const features = {
-      'Cyprus': ['EU компания', 'Низкие налоги', 'Престиж'],
-      'UAE (Freezone)': ['0% налог', 'Банковский счет', 'Виза резидента'],
-      'Hong Kong': ['Международный центр', 'Простая отчетность', 'Банки'],
-      'United Kingdom': ['Быстрая регистрация', 'Мировой престиж', 'Банки'],
-      'USA (LLC)': ['LLC структура', 'Банковский счет', 'Международный бизнес']
-    };
-    return features[country] || [];
+    localStorage.setItem(STORAGE_KEY, JSON.stringify(data));
   }
 
   function currencyLabel(c){
@@ -92,20 +40,20 @@
         <td><strong>${row.price.toLocaleString()} ${currencyLabel(row.currency)}</strong></td>
         <td>
           <button class="btn btn--outline" data-edit="${idx}">Изменить</button>
-          <button class="btn" data-remove="${idx}">Удалить</button>
+          <button class="btn" data-remove="${idx}">Supprimer</button>
         </td>`;
       tbody.appendChild(tr);
     });
   }
 
   function openEditDialog(current, onSave){
-    const country = prompt('Страна', current?.country || '');
+    const country = prompt('Pays', current?.country || '');
     if (!country) return;
-    const time = prompt('Сроки', current?.time || '');
-    const priceStr = prompt('Цена (число)', current?.price != null ? String(current.price) : '');
+    const time = prompt('Délaiи', current?.time || '');
+    const priceStr = prompt('Prix (чиdepuisло)', current?.price != null ? String(current.price) : '');
     const currency = prompt('Валюта (USD/EUR/GBP...)', current?.currency || 'USD');
     const price = Number(priceStr?.replace(/\s/g,''));
-    if (Number.isNaN(price)) { alert('Цена должна быть числом'); return; }
+    if (Number.isNaN(price)) { alert('Prix должна быть чиdepuisлом'); return; }
     onSave({ country, time, price, currency });
   }
 

@@ -1,6 +1,6 @@
 /* Dynamic table for company registration pricing */
 (function(){
-  const STORAGE_KEY = 'registrationCountries'; // Синхронизация с админкой
+  const STORAGE_KEY = 'nw_registration_pricing_v1';
 
   const defaultCountries = [
     { country: 'Cyprus', code: 'CY', price: 3900, currency: 'EUR', time: '5–10 дней' },
@@ -14,66 +14,14 @@
     try{
       const raw = localStorage.getItem(STORAGE_KEY);
       if (!raw) return defaultCountries;
-      const adminData = JSON.parse(raw);
-      
-      // Если данные из админки, конвертируем их
-      if (adminData[0] && adminData[0].hasOwnProperty('id')) {
-        return adminData.map(c => ({
-          country: c.name,
-          code: c.id.toUpperCase().slice(0, 2),
-          price: c.price,
-          currency: c.priceText.includes('€') ? 'EUR' : c.priceText.includes('£') ? 'GBP' : 'USD',
-          time: c.time
-        }));
-      }
-      
-      if (!Array.isArray(adminData) || adminData.length === 0) return defaultCountries;
-      return adminData;
+      const data = JSON.parse(raw);
+      if (!Array.isArray(data) || data.length === 0) return defaultCountries;
+      return data;
     }catch{ return defaultCountries; }
   }
 
   function saveData(data){
-    // Конвертируем обратно в формат админки для синхронизации
-    const adminFormat = data.map((c, index) => ({
-      id: c.country.toLowerCase().replace(/[^a-z]/g, ''),
-      name: c.country,
-      flag: getCountryFlag(c.code),
-      region: getCountryRegion(c.country),
-      time: c.time,
-      price: c.price,
-      priceText: `${c.currency === 'EUR' ? '€' : c.currency === 'GBP' ? '£' : '$'}${c.price.toLocaleString()}`,
-      features: getCountryFeatures(c.country)
-    }));
-    
-    localStorage.setItem(STORAGE_KEY, JSON.stringify(adminFormat));
-  }
-  
-  function getCountryFlag(code) {
-    const flags = {
-      'CY': '🇨🇾',
-      'AE': '🇦🇪',
-      'HK': '🇭🇰',
-      'UK': '🇬🇧',
-      'US': '🇺🇸'
-    };
-    return flags[code] || '🏳️';
-  }
-  
-  function getCountryRegion(country) {
-    if (country.includes('USA')) return 'america';
-    if (country.includes('UAE') || country.includes('Hong Kong')) return 'asia';
-    return 'europe';
-  }
-  
-  function getCountryFeatures(country) {
-    const features = {
-      'Cyprus': ['EU компания', 'Низкие налоги', 'Престиж'],
-      'UAE (Freezone)': ['0% налог', 'Банковский счет', 'Виза резидента'],
-      'Hong Kong': ['Международный центр', 'Простая отчетность', 'Банки'],
-      'United Kingdom': ['Быстрая регистрация', 'Мировой престиж', 'Банки'],
-      'USA (LLC)': ['LLC структура', 'Банковский счет', 'Международный бизнес']
-    };
-    return features[country] || [];
+    localStorage.setItem(STORAGE_KEY, JSON.stringify(data));
   }
 
   function currencyLabel(c){

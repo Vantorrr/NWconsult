@@ -143,7 +143,23 @@
 
   // Get countries data from localStorage or use default
   // For EN pages ignore RU data from localStorage
-  let countries = isEnglish ? countriesData : (JSON.parse(localStorage.getItem('registrationCountries')) || countriesData);
+  let countries = countriesData; // Временно используем дефолтные данные
+  
+  try {
+    if (!isEnglish) {
+      const storedData = localStorage.getItem('registrationCountries');
+      if (storedData) {
+        const parsed = JSON.parse(storedData);
+        // Проверяем что данные валидные
+        if (Array.isArray(parsed) && parsed.length > 0 && parsed[0].name && parsed[0].flag) {
+          countries = parsed;
+        }
+      }
+    }
+  } catch (e) {
+    console.error('Error loading countries from localStorage:', e);
+    countries = countriesData;
+  }
   
   // DOM elements
   const countriesGrid = document.getElementById('countries-grid');

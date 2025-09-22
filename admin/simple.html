@@ -388,6 +388,8 @@
                         <option value="europe">Европа</option>
                         <option value="asia">Азия</option>
                         <option value="america">Америка</option>
+                        <option value="oceania">Австралия и Океания</option>
+                        <option value="africa">Африка</option>
                         <option value="offshore">Оффшоры</option>
                     </select>
                 </div>
@@ -409,6 +411,10 @@
                 <div class="form-group">
                     <label>Преимущества (по одному на строку)</label>
                     <textarea id="new-country-features" rows="3" placeholder="EU компания&#10;Низкие налоги&#10;Престиж"></textarea>
+                </div>
+                <div class="form-group">
+                    <label>Ссылка на статью (необязательно)</label>
+                    <input type="text" id="new-country-article" placeholder="/pages/articles/cyprus.html">
                 </div>
                 <div class="form-actions">
                     <button class="btn btn-success" onclick="addCountry()">💾 Сохранить страну</button>
@@ -738,6 +744,8 @@
                 'europe': 'Европа',
                 'asia': 'Азия',
                 'america': 'Америка',
+                'oceania': 'Австралия и Океания',
+                'africa': 'Африка',
                 'offshore': 'Оффшоры'
             };
             return regions[region] || region;
@@ -760,6 +768,7 @@
                     <p><strong>Регион:</strong> ${getRegionName(c.region)}</p>
                     <p><strong>Срок:</strong> ${c.time}</p>
                     <p><strong>Цена:</strong> ${c.priceText || '$' + c.price.toLocaleString()}</p>
+                    ${c.articleUrl ? `<p><strong>Статья:</strong> <a href="${c.articleUrl}" target="_blank" style="color: #3498db;">Открыть статью →</a></p>` : ''}
                     ${c.features && c.features.length > 0 ? `
                         <div style="margin: 10px 0;">
                             <strong>Преимущества:</strong>
@@ -794,7 +803,8 @@
                 time: document.getElementById('new-country-time').value,
                 price: price,
                 priceText: `${currency}${price.toLocaleString()}`,
-                features: document.getElementById('new-country-features').value.split('\n').filter(f => f.trim())
+                features: document.getElementById('new-country-features').value.split('\n').filter(f => f.trim()),
+                articleUrl: document.getElementById('new-country-article').value || ''
             };
             
             countries.push(newCountry);
@@ -808,6 +818,7 @@
             document.getElementById('new-country-time').value = '';
             document.getElementById('new-country-price').value = '';
             document.getElementById('new-country-features').value = '';
+            document.getElementById('new-country-article').value = '';
             
             alert(t('messages.saved'));
         }

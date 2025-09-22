@@ -60,8 +60,24 @@
   }
   
   function getCountryRegion(country) {
-    if (country.includes('USA')) return 'america';
-    if (country.includes('UAE') || country.includes('Hong Kong')) return 'asia';
+    // Америка
+    if (country.includes('USA') || country.includes('Canada') || country.includes('Mexico')) return 'america';
+    
+    // Азия
+    if (country.includes('UAE') || country.includes('Hong Kong') || country.includes('Singapore') || 
+        country.includes('Japan') || country.includes('China')) return 'asia';
+    
+    // Оффшоры
+    if (country.includes('BVI') || country.includes('Cayman') || country.includes('Seychelles') || 
+        country.includes('Belize') || country.includes('Panama')) return 'offshore';
+    
+    // Африка
+    if (country.includes('Mauritius') || country.includes('South Africa') || country.includes('Egypt')) return 'africa';
+    
+    // Океания
+    if (country.includes('Australia') || country.includes('New Zealand') || country.includes('Fiji')) return 'oceania';
+    
+    // По умолчанию - Европа
     return 'europe';
   }
   

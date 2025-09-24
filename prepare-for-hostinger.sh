@@ -37,3 +37,4 @@ rm -f hostinger-upload/fr/sitemap.xml
 echo "✅ Готово! Файлы подготовлены в папке hostinger-upload/"
 echo "📁 Теперь загрузи содержимое папки hostinger-upload в public_html на Hostinger"
 
+

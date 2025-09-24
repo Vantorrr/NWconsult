@@ -1,0 +1,30 @@
+🔥 ФАЙЛЫ ДЛЯ ОБНОВЛЕНИЯ НА ХОСТИНГЕРЕ 🔥
+
+=== ДЛЯ РУССКОГО САЙТА ===
+1. /scripts/registration-new-fixed.js
+2. /scripts/sync-dropdown.js
+3. /pages/registratsiya.html
+4. /index.html
+5. /admin/simple.html
+6. /pages/articles/cyprus-registration.html (новый файл)
+
+=== ДЛЯ АНГЛИЙСКОГО САЙТА ===
+1. /scripts/registration-new-fixed.js
+2. /scripts/sync-dropdown.js  
+3. /pages/registratsiya.html
+4. /index.html
+5. /admin/simple.html
+
+=== ДЛЯ ФРАНЦУЗСКОГО САЙТА ===
+1. /scripts/registration-new-fixed.js
+2. /scripts/sync-dropdown.js
+3. /pages/registratsiya.html
+4. /index.html
+5. /admin/simple.html
+
+=== ВАЖНО ===
+- НЕ загружай ВСЁ подряд!
+- Загружай только эти файлы
+- Они заменят старые версии
+- После загрузки сделай hard refresh (Ctrl+F5)
+

@@ -309,4 +309,3 @@
   // Для отладки - выводим количество загруженных стран
   console.log('Registration page loaded. Countries:', countries.length);
 })();
-

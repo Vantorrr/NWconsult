@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Админка - NW Consulting</title>
+    <title>Админка v2 - NW Consulting</title>
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap');
         
@@ -498,48 +498,48 @@
         <div id="articles" class="tab-content">
             <div class="section-header">
                 <h2>📚 Управление статьями</h2>
+                <button class="btn btn-success" onclick="showAddArticleForm()">➕ Добавить статью</button>
             </div>
             
-            <div class="form-card">
-                <h3>Статьи для бухгалтерских услуг</h3>
-                <p style="color: #8899a6; margin-bottom: 20px;">Статьи находятся в папке /pages/articles/. Для редактирования используйте редактор кода.</p>
-                
-                <table>
-                    <thead>
-                        <tr>
-                            <th>Название</th>
-                            <th>Файл</th>
-                            <th>Услуга</th>
-                            <th>Действия</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <tr>
-                            <td>Составление расчётов для прохождения аудита</td>
-                            <td><code>audit-calculations.html</code></td>
-                            <td>Бухгалтерия</td>
-                            <td><a href="../pages/articles/audit-calculations.html" target="_blank" class="btn btn-sm">👁️ Просмотр</a></td>
-                        </tr>
-                        <tr>
-                            <td>Восстановление бухучёта</td>
-                            <td><code>accounting-restore.html</code></td>
-                            <td>Бухгалтерия</td>
-                            <td><a href="../pages/articles/accounting-restore.html" target="_blank" class="btn btn-sm">👁️ Просмотр</a></td>
-                        </tr>
-                        <tr>
-                            <td>Требования к документам</td>
-                            <td><code>docs-requirements.html</code></td>
-                            <td>Бухгалтерия</td>
-                            <td><a href="../pages/articles/docs-requirements.html" target="_blank" class="btn btn-sm">👁️ Просмотр</a></td>
-                        </tr>
-                        <tr>
-                            <td>КИК (Контролируемые иностранные компании)</td>
-                            <td><code>ru-kik.html</code></td>
-                            <td>Прочие услуги</td>
-                            <td><a href="../pages/articles/ru-kik.html" target="_blank" class="btn btn-sm">👁️ Просмотр</a></td>
-                        </tr>
-                    </tbody>
-                </table>
+            <div id="articles-list"></div>
+            
+            <div id="add-article-form" class="form-card" style="display:none;">
+                <h3>Добавить новую статью</h3>
+                <div class="form-group">
+                    <label>Название статьи</label>
+                    <input type="text" id="new-article-title" placeholder="Например: Регистрация компании на Кипре">
+                </div>
+                <div class="form-group">
+                    <label>Категория</label>
+                    <select id="new-article-category">
+                        <option value="registration">Регистрация компаний</option>
+                        <option value="accounting">Бухгалтерия</option>
+                        <option value="audit">Аудит</option>
+                        <option value="banks">Банки</option>
+                        <option value="other">Прочие услуги</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label>Краткое описание</label>
+                    <textarea id="new-article-description" rows="3" placeholder="Краткое описание статьи для превью"></textarea>
+                </div>
+                <div class="form-group">
+                    <label>Время чтения</label>
+                    <input type="text" id="new-article-time" placeholder="5 мин чтения">
+                </div>
+                <div class="form-group">
+                    <label>Содержание статьи</label>
+                    <textarea id="new-article-content" rows="10" placeholder="Полное содержание статьи (можно использовать HTML)"></textarea>
+                </div>
+                <div class="form-group">
+                    <label>URL файла (необязательно)</label>
+                    <input type="text" id="new-article-url" placeholder="/pages/articles/cyprus.html">
+                    <small style="color: #8899a6;">Если оставить пустым, статья будет создана автоматически</small>
+                </div>
+                <div class="form-actions">
+                    <button class="btn btn-success" onclick="addArticle()">💾 Сохранить статью</button>
+                    <button class="btn" onclick="hideAddArticleForm()">❌ Отмена</button>
+                </div>
             </div>
         </div>
         
@@ -612,6 +612,7 @@
             loadAudit();
             loadKik();
             loadSlides();
+            loadArticles();
             updateUILanguage();
         }
         
@@ -1024,6 +1025,163 @@
                 slides = slides.filter(s => s.id !== id);
                 localStorage.setItem(getStorageKey('showcaseSlides'), JSON.stringify(slides));
                 loadSlides();
+            }
+        }
+        
+        // СТАТЬИ
+        function loadArticles() {
+            const articles = JSON.parse(localStorage.getItem(getStorageKey('articles'))) || [
+                { 
+                    id: 1, 
+                    title: 'Составление расчётов для прохождения аудита', 
+                    category: 'accounting',
+                    description: 'Поможем подготовить все необходимые расчёты и документы для успешного прохождения аудита',
+                    time: '7 мин чтения',
+                    url: '/pages/articles/audit-calculations.html'
+                },
+                { 
+                    id: 2, 
+                    title: 'Восстановление бухучёта', 
+                    category: 'accounting',
+                    description: 'Восстановим бухгалтерский учёт с нуля или исправим ошибки предыдущих периодов',
+                    time: '5 мин чтения',
+                    url: '/pages/articles/accounting-restore.html'
+                },
+                { 
+                    id: 3, 
+                    title: 'Требования к документам', 
+                    category: 'accounting',
+                    description: 'Полный список документов, необходимых для ведения бухгалтерского учёта',
+                    time: '10 мин чтения',
+                    url: '/pages/articles/docs-requirements.html'
+                },
+                { 
+                    id: 4, 
+                    title: 'КИК (Контролируемые иностранные компании)', 
+                    category: 'other',
+                    description: 'Комплексные консультации по вопросам КИК',
+                    time: '10 мин чтения',
+                    url: '/pages/articles/ru-kik.html'
+                }
+            ];
+            
+            const categoryNames = {
+                'registration': 'Регистрация компаний',
+                'accounting': 'Бухгалтерия',
+                'audit': 'Аудит',
+                'banks': 'Банки',
+                'other': 'Прочие услуги'
+            };
+            
+            const list = document.getElementById('articles-list');
+            
+            // Группируем статьи по категориям
+            const groupedArticles = {};
+            articles.forEach(article => {
+                if (!groupedArticles[article.category]) {
+                    groupedArticles[article.category] = [];
+                }
+                groupedArticles[article.category].push(article);
+            });
+            
+            // Выводим статьи по категориям
+            let html = '';
+            for (const [category, categoryArticles] of Object.entries(groupedArticles)) {
+                html += `
+                    <div class="form-card">
+                        <h3>${categoryNames[category] || category}</h3>
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th>Название</th>
+                                    <th>Описание</th>
+                                    <th>Время чтения</th>
+                                    <th>Действия</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                `;
+                
+                categoryArticles.forEach(article => {
+                    html += `
+                        <tr>
+                            <td>${article.title}</td>
+                            <td style="max-width: 300px; color: #8899a6;">${article.description}</td>
+                            <td>${article.time}</td>
+                            <td>
+                                ${article.url ? `<a href="${article.url}" target="_blank" class="btn btn-sm">👁️ Просмотр</a>` : ''}
+                                <button class="btn btn-danger btn-sm" onclick="deleteArticle(${article.id})">🗑️ Удалить</button>
+                            </td>
+                        </tr>
+                    `;
+                });
+                
+                html += `
+                            </tbody>
+                        </table>
+                    </div>
+                `;
+            }
+            
+            if (articles.length === 0) {
+                html = '<div class="form-card"><p style="text-align: center; color: #8899a6;">Статей пока нет. Нажмите "Добавить статью" чтобы создать первую.</p></div>';
+            }
+            
+            list.innerHTML = html;
+        }
+        
+        function showAddArticleForm() {
+            document.getElementById('add-article-form').style.display = 'block';
+        }
+        
+        function hideAddArticleForm() {
+            document.getElementById('add-article-form').style.display = 'none';
+        }
+        
+        function addArticle() {
+            const articles = JSON.parse(localStorage.getItem(getStorageKey('articles'))) || [];
+            
+            const newArticle = {
+                id: Date.now(),
+                title: document.getElementById('new-article-title').value,
+                category: document.getElementById('new-article-category').value,
+                description: document.getElementById('new-article-description').value,
+                time: document.getElementById('new-article-time').value || '5 мин чтения',
+                content: document.getElementById('new-article-content').value,
+                url: document.getElementById('new-article-url').value
+            };
+            
+            if (!newArticle.title) {
+                alert('Введите название статьи!');
+                return;
+            }
+            
+            articles.push(newArticle);
+            localStorage.setItem(getStorageKey('articles'), JSON.stringify(articles));
+            loadArticles();
+            hideAddArticleForm();
+            
+            // Очистить форму
+            document.getElementById('new-article-title').value = '';
+            document.getElementById('new-article-description').value = '';
+            document.getElementById('new-article-time').value = '';
+            document.getElementById('new-article-content').value = '';
+            document.getElementById('new-article-url').value = '';
+            
+            alert(t('messages.saved'));
+            
+            // Если контент был предоставлен, но не URL, можно предложить создать файл
+            if (newArticle.content && !newArticle.url) {
+                alert('Статья сохранена в базе данных. Для создания HTML файла обратитесь к разработчику.');
+            }
+        }
+        
+        function deleteArticle(id) {
+            if (confirm(t('messages.confirmDelete'))) {
+                let articles = JSON.parse(localStorage.getItem(getStorageKey('articles'))) || [];
+                articles = articles.filter(a => a.id !== id);
+                localStorage.setItem(getStorageKey('articles'), JSON.stringify(articles));
+                loadArticles();
             }
         }
         

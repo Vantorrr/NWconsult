@@ -28,24 +28,24 @@
     <script>
       (function() {
         function getParam(name) { return new URLSearchParams(location.search).get(name); }
-        function getArticles() {
-          const keys = ['articles_fr', 'articles', 'articles_en'];
-          for (const k of keys) {
-            try { const v = localStorage.getItem(k); if (v) { const p = JSON.parse(v); if (Array.isArray(p)) return p; } } catch(e){}
-          }
+        async function getArticles() {
+          try { const res = await fetch('/api/admin-data?lang=fr', { cache: 'no-store' }); if (res.ok) { const d = await res.json(); if (Array.isArray(d.articles)) return d.articles; } } catch(e){}
+          try { const v = localStorage.getItem('articles_fr'); if (v) { const p = JSON.parse(v); if (Array.isArray(p)) return p; } } catch(e){}
           return [];
         }
         const slug = getParam('slug');
-        const articles = getArticles();
-        let article = slug ? (articles.find(a => a.slug === slug) || articles.find(a => (a.url||'').includes(slug))) : null;
-        if (!article) {
-          document.getElementById('title').textContent = 'Article introuvable';
-          document.getElementById('content').innerHTML = '<p>Vérifiez le lien ou revenez en arrière.</p>';
-          return;
-        }
-        document.getElementById('title').textContent = article.title || 'Article';
-        document.getElementById('meta').textContent = article.time || '';
-        document.getElementById('content').innerHTML = article.content || '<p>Le contenu de cet article n\'est pas encore disponible.</p>';
+        (async () => {
+          const articles = await getArticles();
+          let article = slug ? (articles.find(a => a.slug === slug) || articles.find(a => (a.url||'').includes(slug))) : null;
+          if (!article) {
+            document.getElementById('title').textContent = 'Article introuvable';
+            document.getElementById('content').innerHTML = '<p>Vérifiez le lien ou revenez en arrière.</p>';
+            return;
+          }
+          document.getElementById('title').textContent = article.title || 'Article';
+          document.getElementById('meta').textContent = article.time || '';
+          document.getElementById('content').innerHTML = article.content || '<p>Le contenu de cet article n\'est pas encore disponible.</p>';
+        })();
       })();
     </script>
   </body>

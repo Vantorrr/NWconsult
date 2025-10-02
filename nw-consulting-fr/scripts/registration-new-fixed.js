@@ -240,6 +240,18 @@
 
   // Initial render
   renderCountries();
+  // Hydrate from server for language
+  (async function hydrateFromServer() {
+    try {
+      const res = await fetch('/api/admin-data?lang=' + (isEnglish ? 'en' : 'fr'), { cache: 'no-store' });
+      if (!res.ok) return;
+      const data = await res.json();
+      if (data && Array.isArray(data.registrationCountries) && data.registrationCountries.length) {
+        countries = data.registrationCountries;
+        renderCountries();
+      }
+    } catch (e) {}
+  })();
   
   // Modal functionality
   const modal = document.getElementById('registration-modal');

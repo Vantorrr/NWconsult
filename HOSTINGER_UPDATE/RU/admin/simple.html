@@ -606,6 +606,23 @@
             return currentLang === 'ru' ? key : `${key}_${currentLang}`;
         }
         
+        // Преобразование строки в slug (латиница, тире)
+        function slugify(text) {
+            const map = {
+                'а':'a','б':'b','в':'v','г':'g','д':'d','е':'e','ё':'e','ж':'zh','з':'z','и':'i','й':'y','к':'k','л':'l','м':'m','н':'n','о':'o','п':'p','р':'r','с':'s','т':'t','у':'u','ф':'f','х':'h','ц':'c','ч':'ch','ш':'sh','щ':'sch','ъ':'','ы':'y','ь':'','э':'e','ю':'yu','я':'ya',
+                'А':'a','Б':'b','В':'v','Г':'g','Д':'d','Е':'e','Ё':'e','Ж':'zh','З':'z','И':'i','Й':'y','К':'k','Л':'l','М':'m','Н':'n','О':'o','П':'p','Р':'r','С':'s','Т':'t','У':'u','Ф':'f','Х':'h','Ц':'c','Ч':'ch','Ш':'sh','Щ':'sch','Ъ':'','Ы':'y','Ь':'','Э':'e','Ю':'yu','Я':'ya'
+            };
+            return String(text)
+                .split('')
+                .map(ch => map[ch] !== undefined ? map[ch] : ch)
+                .join('')
+                .toLowerCase()
+                .replace(/[^a-z0-9\s-]/g, '')
+                .trim()
+                .replace(/\s+/g, '-')
+                .replace(/-+/g, '-');
+        }
+        
         function loadAllData() {
             loadCountries();
             loadBanks();
@@ -778,6 +795,7 @@
                             </ul>
                         </div>
                     ` : ''}
+                    <button class="btn btn-sm" onclick="editCountry(${c.id})">✏️ Редактировать</button>
                     <button class="btn btn-danger btn-sm" onclick="deleteCountry(${c.id})">🗑️ Удалить</button>
                 </div>
             `).join('');
@@ -789,6 +807,20 @@
         
         function hideAddCountryForm() {
             document.getElementById('add-country-form').style.display = 'none';
+            
+            // Очищаем форму
+            document.getElementById('new-country-name').value = '';
+            document.getElementById('new-country-flag').value = '';
+            document.getElementById('new-country-time').value = '';
+            document.getElementById('new-country-price').value = '';
+            document.getElementById('new-country-features').value = '';
+            document.getElementById('new-country-article').value = '';
+            
+            // Восстанавливаем заголовок и кнопку для добавления
+            document.querySelector('#add-country-form h3').textContent = 'Добавить новую страну';
+            document.querySelector('#add-country-form .btn-success').onclick = function() {
+                addCountry();
+            };
         }
         
         function addCountry() {
@@ -820,6 +852,72 @@
             document.getElementById('new-country-price').value = '';
             document.getElementById('new-country-features').value = '';
             document.getElementById('new-country-article').value = '';
+            
+            alert(t('messages.saved'));
+        }
+        
+        function editCountry(id) {
+            const countries = JSON.parse(localStorage.getItem(getStorageKey('registrationCountries'))) || [];
+            const country = countries.find(c => c.id === id);
+            if (!country) return;
+            
+            // Заполняем форму данными страны
+            document.getElementById('new-country-name').value = country.name;
+            document.getElementById('new-country-flag').value = country.flag;
+            document.getElementById('new-country-region').value = country.region;
+            document.getElementById('new-country-time').value = country.time;
+            
+            // Разбираем цену
+            const priceMatch = country.priceText ? country.priceText.match(/([€$£])(\d+(?:,\d+)*)/) : null;
+            if (priceMatch) {
+                document.getElementById('new-country-currency').value = priceMatch[1];
+                document.getElementById('new-country-price').value = priceMatch[2].replace(/,/g, '');
+            } else {
+                document.getElementById('new-country-price').value = country.price || '';
+            }
+            
+            document.getElementById('new-country-features').value = country.features ? country.features.join('\n') : '';
+            document.getElementById('new-country-article').value = country.articleUrl || '';
+            
+            // Показываем форму и меняем заголовок
+            document.getElementById('add-country-form').style.display = 'block';
+            document.querySelector('#add-country-form h3').textContent = 'Редактировать страну';
+            
+            // Меняем функцию сохранения
+            document.querySelector('#add-country-form .btn-success').onclick = function() {
+                updateCountry(id);
+            };
+        }
+        
+        function updateCountry(id) {
+            let countries = JSON.parse(localStorage.getItem(getStorageKey('registrationCountries'))) || [];
+            const index = countries.findIndex(c => c.id === id);
+            if (index === -1) return;
+            
+            const currency = document.getElementById('new-country-currency').value;
+            const price = parseInt(document.getElementById('new-country-price').value);
+            
+            countries[index] = {
+                ...countries[index],
+                name: document.getElementById('new-country-name').value,
+                flag: document.getElementById('new-country-flag').value || '🏳️',
+                region: document.getElementById('new-country-region').value,
+                time: document.getElementById('new-country-time').value,
+                price: price,
+                priceText: `${currency}${price.toLocaleString()}`,
+                features: document.getElementById('new-country-features').value.split('\n').filter(f => f.trim()),
+                articleUrl: document.getElementById('new-country-article').value || ''
+            };
+            
+            localStorage.setItem(getStorageKey('registrationCountries'), JSON.stringify(countries));
+            loadCountries();
+            hideAddCountryForm();
+            
+            // Восстанавливаем форму для добавления
+            document.querySelector('#add-country-form h3').textContent = 'Добавить новую страну';
+            document.querySelector('#add-country-form .btn-success').onclick = function() {
+                addCountry();
+            };
             
             alert(t('messages.saved'));
         }
@@ -1141,20 +1239,34 @@
         function addArticle() {
             const articles = JSON.parse(localStorage.getItem(getStorageKey('articles'))) || [];
             
-            const newArticle = {
-                id: Date.now(),
-                title: document.getElementById('new-article-title').value,
-                category: document.getElementById('new-article-category').value,
-                description: document.getElementById('new-article-description').value,
-                time: document.getElementById('new-article-time').value || '5 мин чтения',
-                content: document.getElementById('new-article-content').value,
-                url: document.getElementById('new-article-url').value
-            };
-            
-            if (!newArticle.title) {
+            const title = document.getElementById('new-article-title').value;
+            const category = document.getElementById('new-article-category').value;
+            const description = document.getElementById('new-article-description').value;
+            const time = document.getElementById('new-article-time').value || '5 мин чтения';
+            const content = document.getElementById('new-article-content').value;
+            let url = document.getElementById('new-article-url').value.trim();
+
+            if (!title) {
                 alert('Введите название статьи!');
                 return;
             }
+
+            // Автоматическая генерация URL и slug, если URL не указан
+            const slug = slugify(title);
+            if (!url) {
+                url = `/pages/articles/view.html?slug=${slug}`;
+            }
+
+            const newArticle = {
+                id: Date.now(),
+                title,
+                category,
+                description,
+                time,
+                content,
+                url,
+                slug
+            };
             
             articles.push(newArticle);
             localStorage.setItem(getStorageKey('articles'), JSON.stringify(articles));
@@ -1168,12 +1280,7 @@
             document.getElementById('new-article-content').value = '';
             document.getElementById('new-article-url').value = '';
             
-            alert(t('messages.saved'));
-            
-            // Если контент был предоставлен, но не URL, можно предложить создать файл
-            if (newArticle.content && !newArticle.url) {
-                alert('Статья сохранена в базе данных. Для создания HTML файла обратитесь к разработчику.');
-            }
+            alert(`Сохранено! Ссылка: ${url}`);
         }
         
         function deleteArticle(id) {
@@ -1192,3 +1299,5 @@
     </script>
 </body>
 </html>
+
+

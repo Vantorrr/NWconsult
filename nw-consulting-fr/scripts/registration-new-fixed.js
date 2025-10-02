@@ -1,6 +1,7 @@
 // Registration page functionality - FIXED VERSION
 (function() {
-  const isEnglish = (document.documentElement.getAttribute('lang') || '').toLowerCase() === 'en';
+  const lang = (document.documentElement.getAttribute('lang') || '').toLowerCase();
+  const isEnglish = lang === 'en';
   
   // Default countries data
   const defaultCountries = [
@@ -79,14 +80,22 @@
   // Загружаем данные
   let countries = [];
   
+  function getStorageKey(base) {
+    return lang === 'ru' ? base : `${base}_${lang}`;
+  }
+
+  function slugify(text) {
+    const map = {
+      'а':'a','б':'b','в':'v','г':'g','д':'d','е':'e','ё':'e','ж':'zh','з':'z','и':'i','й':'y','к':'k','л':'l','м':'m','н':'n','о':'o','п':'p','р':'r','с':'s','т':'t','у':'u','ф':'f','х':'h','ц':'c','ч':'ch','ш':'sh','щ':'sch','ъ':'','ы':'y','ь':'','э':'e','ю':'yu','я':'ya',
+      'А':'a','Б':'b','В':'v','Г':'g','Д':'d','Е':'e','Ё':'e','Ж':'zh','З':'z','И':'i','Й':'y','К':'k','Л':'l','М':'m','Н':'n','О':'o','П':'p','Р':'r','С':'s','Т':'t','У':'u','Ф':'f','Х':'h','Ц':'c','Ч':'ch','Ш':'sh','Щ':'sch','Ъ':'','Ы':'y','Ь':'','Э':'e','Ю':'yu','Я':'ya'
+    };
+    return String(text).split('').map(ch => map[ch] ?? ch).join('').toLowerCase().replace(/[^a-z0-9\s-]/g,'').trim().replace(/\s+/g,'-').replace(/-+/g,'-');
+  }
+
   function loadCountriesData() {
     try {
-      if (isEnglish) {
-        // Для английской версии используем дефолтные данные
-        countries = defaultCountries;
-      } else {
-        // Для других версий пробуем загрузить из localStorage
-        const storedData = localStorage.getItem('registrationCountries');
+      // Пробуем загрузить из локального хранилища по ключу языка
+      const storedData = localStorage.getItem(getStorageKey('registrationCountries')) || localStorage.getItem('registrationCountries');
         
         if (storedData) {
           const parsed = JSON.parse(storedData);
@@ -110,7 +119,6 @@
             countries = defaultCountries;
           }
         } else {
-          // Нет данных в localStorage - используем дефолтные
           countries = defaultCountries;
         }
       }
@@ -161,6 +169,14 @@
       const priceText = display.priceText || country.priceText || (country.price ? `$${country.price}` : 'Contact us');
       const features = display.features || country.features || [];
       
+      const articleBtn = (() => {
+        const url = country.articleUrl || '';
+        if (!url) return '';
+        const safeName = (country.name || '').replace(/'/g,'');
+        const safeUrl = url.replace(/'/g,'');
+        return `<button class=\"country-cta\" style=\"background:#2c3e50;\" onclick=\"openCountryArticle('${safeUrl}','${safeName}')\">${isEnglish ? 'Open article' : 'Открыть статью'}</button>`;
+      })();
+
       return `
       <div class="country-card" data-country-id="${countryId}" style="animation-delay: ${index * 0.1}s">
         <div class="country-flag">${flag}</div>
@@ -186,6 +202,7 @@
         <button class="country-cta" onclick="openRegistrationModal('${countryId}')">
           ${isEnglish ? 'Order registration' : 'Заказать регистрацию'}
         </button>
+        ${articleBtn}
       </div>
     `}).join('');
   }
@@ -308,4 +325,19 @@
 
   // Для отладки - выводим количество загруженных стран
   console.log('Registration page loaded. Countries:', countries.length);
+
+  // Article open fallback
+  async function urlExists(url) {
+    try { const res = await fetch(url, { method: 'HEAD' }); return res.ok; } catch(e){ return false; }
+  }
+  window.openCountryArticle = async (rawUrl, countryName) => {
+    const url = (rawUrl || '').trim();
+    if (url) {
+      const final = url.endsWith('.html') || url.includes('?') ? url : `${url}.html`;
+      if (await urlExists(final)) { window.open(final, '_blank'); return; }
+    }
+    const slug = slugify(countryName || 'article');
+    const viewer = '/nw-consulting-fr/pages/articles/view.html?slug=' + encodeURIComponent(slug);
+    window.open(viewer, '_blank');
+  };
 })();

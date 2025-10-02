@@ -1,0 +1,76 @@
+<!doctype html>
+<html lang="ru">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Статья — NW Consulting</title>
+    <link rel="stylesheet" href="../../styles/article.css">
+    <link rel="icon" href="../../logo.png">
+    <style>
+      body { background:#0f1419; color:#e1e8ed; font-family: Inter, system-ui, -apple-system, sans-serif; }
+      .container { max-width: 900px; margin: 40px auto; padding: 0 16px; }
+      .back { color:#3498db; text-decoration:none; }
+      .card { background:#1a2332; border:1px solid #2c3e50; border-radius:12px; padding:24px; }
+      h1 { margin:0 0 10px; font-size:28px; }
+      .meta { color:#8899a6; margin-bottom:16px; }
+      .content { line-height:1.7; }
+    </style>
+  </head>
+  <body>
+    <div class="container">
+      <a class="back" href="../../index.html">← На главную</a>
+      <div class="card">
+        <h1 id="title">Статья</h1>
+        <div class="meta" id="meta"></div>
+        <div class="content" id="content"></div>
+      </div>
+    </div>
+    <script>
+      (function() {
+        function getParam(name) {
+          const params = new URLSearchParams(location.search);
+          return params.get(name);
+        }
+        function getArticles() {
+          // пробуем RU/EN/FR ключи
+          const keys = ['articles', 'articles_en', 'articles_fr'];
+          for (const k of keys) {
+            try {
+              const v = localStorage.getItem(k);
+              if (v) {
+                const p = JSON.parse(v);
+                if (Array.isArray(p)) return p;
+              }
+            } catch (e) {}
+          }
+          return [];
+        }
+
+        const slug = getParam('slug');
+        const articles = getArticles();
+        let article = null;
+        if (slug) {
+          article = articles.find(a => a.slug === slug) || articles.find(a => (a.url||'').includes(slug));
+        }
+        if (!article) {
+          document.getElementById('title').textContent = 'Статья не найдена';
+          document.getElementById('content').innerHTML = '<p>Проверьте ссылку или вернитесь назад.</p>';
+          return;
+        }
+        document.getElementById('title').textContent = article.title || 'Статья';
+        document.getElementById('meta').textContent = article.time ? article.time : '';
+        if (article.content) {
+          document.getElementById('content').innerHTML = article.content;
+        } else {
+          document.getElementById('content').innerHTML = '<p>Содержимое этой статьи пока недоступно.</p>';
+        }
+      })();
+    </script>
+  </body>
+  </html>
+
+
+
+
+
+

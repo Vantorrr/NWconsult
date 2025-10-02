@@ -1,128 +1,36 @@
-// Registration page functionality - FIXED VERSION
+// Registration page functionality - FIXED VERSION (RU)
 (function() {
   const isEnglish = (document.documentElement.getAttribute('lang') || '').toLowerCase() === 'en';
-  
-  // Default countries data
+
+  // Default countries data (fallback)
   const defaultCountries = [
-    { 
-      id: 'cyprus',
-      name: 'Кипр',
-      flag: '🇨🇾',
-      region: 'europe',
-      time: '7-10 дней',
-      price: 2500,
-      priceText: '$2,500',
-      features: ['EU компания', 'Низкие налоги', 'Престиж']
-    },
-    { 
-      id: 'uk',
-      name: 'Великобритания',
-      flag: '🇬🇧',
-      region: 'europe',
-      time: '3-5 дней',
-      price: 1500,
-      priceText: '$1,500',
-      features: ['Быстрая регистрация', 'Мировой престиж', 'Банки']
-    },
-    { 
-      id: 'estonia',
-      name: 'Эстония',
-      flag: '🇪🇪',
-      region: 'europe',
-      time: '1-3 дня',
-      price: 1200,
-      priceText: '$1,200',
-      features: ['E-Residency', 'Онлайн управление', 'EU компания']
-    },
-    { 
-      id: 'singapore',
-      name: 'Сингапур',
-      flag: '🇸🇬',
-      region: 'asia',
-      time: '5-7 дней',
-      price: 3000,
-      priceText: '$3,000',
-      features: ['Азиатский хаб', 'Стабильность', 'Банки']
-    },
-    { 
-      id: 'hongkong',
-      name: 'Гонконг',
-      flag: '🇭🇰',
-      region: 'asia',
-      time: '7-14 дней',
-      price: 3500,
-      priceText: '$3,500',
-      features: ['Доступ к Китаю', 'Низкие налоги', 'Престиж']
-    },
-    { 
-      id: 'uae',
-      name: 'ОАЭ',
-      flag: '🇦🇪',
-      region: 'asia',
-      time: '7-10 дней',
-      price: 4000,
-      priceText: '$4,000',
-      features: ['0% налогов', 'Резидентская виза', 'Банки']
-    }
+    { id: 'cyprus', name: 'Кипр', flag: '🇨🇾', region: 'europe', time: '7-10 дней', price: 2500, priceText: '$2,500', features: ['EU компания', 'Низкие налоги', 'Престиж'] },
+    { id: 'uk', name: 'Великобритания', flag: '🇬🇧', region: 'europe', time: '3-5 дней', price: 1500, priceText: '$1,500', features: ['Быстрая регистрация', 'Мировой престиж', 'Банки'] },
+    { id: 'estonia', name: 'Эстония', flag: '🇪🇪', region: 'europe', time: '1-3 дня', price: 1200, priceText: '$1,200', features: ['E-Residency', 'Онлайн управление', 'EU компания'] },
+    { id: 'singapore', name: 'Сингапур', flag: '🇸🇬', region: 'asia', time: '5-7 дней', price: 3000, priceText: '$3,000', features: ['Азиатский хаб', 'Стабильность', 'Банки'] },
+    { id: 'hongkong', name: 'Гонконг', flag: '🇭🇰', region: 'asia', time: '7-14 дней', price: 3500, priceText: '$3,500', features: ['Доступ к Китаю', 'Низкие налоги', 'Престиж'] },
+    { id: 'uae', name: 'ОАЭ', flag: '🇦🇪', region: 'asia', time: '7-10 дней', price: 4000, priceText: '$4,000', features: ['0% налогов', 'Резидентская виза', 'Банки'] }
   ];
 
-  // English translations
-  const enT = {
-    cyprus: { name: 'Cyprus', time: '7-10 days', features: ['EU company', 'Low taxes', 'Prestige'] },
-    uk: { name: 'United Kingdom', time: '3-5 days', features: ['Fast registration', 'World prestige', 'Banks'] },
-    estonia: { name: 'Estonia', time: '1-3 days', features: ['E-Residency', 'Online management', 'EU company'] },
-    singapore: { name: 'Singapore', time: '5-7 days', features: ['Asian hub', 'Stability', 'Banks'] },
-    hongkong: { name: 'Hong Kong', time: '7-14 days', features: ['Access to China', 'Low taxes', 'Prestige'] },
-    uae: { name: 'UAE', time: '7-10 days', features: ['0% taxes', 'Residency visa', 'Banks'] }
-  };
-
-  // Загружаем данные
+  // Load countries from localStorage (RU), otherwise fallback
   let countries = [];
-  
-  function loadCountriesData() {
-    try {
-      if (isEnglish) {
-        // Для английской версии используем дефолтные данные
-        countries = defaultCountries;
+  try {
+    const stored = localStorage.getItem('registrationCountries');
+    if (stored) {
+      const parsed = JSON.parse(stored);
+      if (Array.isArray(parsed) && parsed.length > 0 && parsed[0].name) {
+        countries = parsed;
       } else {
-        // Для других версий пробуем загрузить из localStorage
-        const storedData = localStorage.getItem('registrationCountries');
-        
-        if (storedData) {
-          const parsed = JSON.parse(storedData);
-          
-          // Проверяем валидность данных
-          if (Array.isArray(parsed) && parsed.length > 0) {
-            // Проверяем структуру первого элемента
-            const isValid = parsed[0].name && 
-                          (parsed[0].flag || parsed[0].flag === '') && 
-                          (parsed[0].region || parsed[0].region === '');
-            
-            if (isValid) {
-              countries = parsed;
-              console.log('Loaded', countries.length, 'countries from localStorage');
-            } else {
-              console.warn('Invalid data structure in localStorage, using defaults');
-              countries = defaultCountries;
-            }
-          } else {
-            console.warn('Empty or invalid data in localStorage, using defaults');
-            countries = defaultCountries;
-          }
-        } else {
-          // Нет данных в localStorage - используем дефолтные
-          countries = defaultCountries;
-        }
+        countries = defaultCountries;
       }
-    } catch (e) {
-      console.error('Error loading countries:', e);
+    } else {
       countries = defaultCountries;
     }
+  } catch (e) {
+    console.warn('registrationCountries corrupted, using defaults', e);
+    countries = defaultCountries;
   }
 
-  // Загружаем данные при старте
-  loadCountriesData();
-  
   // DOM elements
   const countriesGrid = document.getElementById('countries-grid');
   const searchInput = document.getElementById('country-search');
@@ -132,98 +40,65 @@
   // Render countries
   function renderCountries(data = countries) {
     if (!countriesGrid) {
-      console.error('Countries grid not found');
       return;
     }
-    
-    // Проверяем что есть данные
+
     if (!data || !Array.isArray(data) || data.length === 0) {
-      countriesGrid.innerHTML = '<p style="text-align: center; color: #666; padding: 40px;">Нет стран для отображения. Пожалуйста, добавьте страны в админ панели.</p>';
+      countriesGrid.innerHTML = '<p style="text-align:center;color:#8899a6;padding:40px;">Нет стран для отображения. Добавьте страны в админ-панели.</p>';
       return;
     }
-    
-    // Фильтруем невалидные записи и рендерим
-    const validCountries = data.filter(country => country && country.name);
-    
-    if (validCountries.length === 0) {
-      countriesGrid.innerHTML = '<p style="text-align: center; color: #666; padding: 40px;">Нет валидных данных для отображения.</p>';
-      return;
-    }
-    
-    countriesGrid.innerHTML = validCountries.map((country, index) => {
-      const display = isEnglish && enT[country.id] ? { ...country, ...enT[country.id] } : country;
-      
-      // Безопасное получение данных
-      const countryId = country.id || `country-${index}`;
-      const flag = country.flag || '🏳️';
-      const name = display.name || 'Unnamed';
-      const time = display.time || 'N/A';
-      const priceText = display.priceText || country.priceText || (country.price ? `$${country.price}` : 'Contact us');
-      const features = display.features || country.features || [];
-      
+
+    const valid = data.filter(c => c && c.name);
+    countriesGrid.innerHTML = valid.map((country, index) => {
+      const priceText = country.priceText || (country.price ? `$${country.price}` : 'По запросу');
+      const hasArticle = !!country.articleUrl;
       return `
-      <div class="country-card" data-country-id="${countryId}" style="animation-delay: ${index * 0.1}s">
-        <div class="country-flag">${flag}</div>
-        <h3 class="country-name">${name}</h3>
-        
+      <div class="country-card" data-country-id="${country.id || `country-${index}`}" style="animation-delay: ${index * 0.1}s">
+        <div class="country-flag">${country.flag || '🏳️'}</div>
+        <h3 class="country-name">${country.name}</h3>
         <div class="country-info">
           <div class="country-info-item">
-            <span class="country-info-label">${isEnglish ? 'Registration time:' : 'Срок регистрации:'}</span>
-            <span class="country-info-value">${time}</span>
+            <span class="country-info-label">Срок регистрации:</span>
+            <span class="country-info-value">${country.time || '—'}</span>
           </div>
-          ${features.length > 0 ? `
+          ${country.features && country.features.length ? `
             <div class="country-info-item">
-              <span class="country-info-label">${isEnglish ? 'Advantages:' : 'Преимущества:'}</span>
+              <span class="country-info-label">Преимущества:</span>
             </div>
-            <ul style="margin: 8px 0 0 0; padding-left: 20px; color: rgba(255,255,255,0.8); font-size: 14px;">
-              ${features.map(f => `<li>${f}</li>`).join('')}
+            <ul style="margin:8px 0 0 0;padding-left:20px;color:rgba(255,255,255,0.8);font-size:14px;">
+              ${country.features.map(f => `<li>${f}</li>`).join('')}
             </ul>
           ` : ''}
         </div>
-        
-        <div class="country-price">${isEnglish ? 'from ' : 'от '} ${priceText}</div>
-        
-        <button class="country-cta" onclick="openRegistrationModal('${countryId}')">
-          ${isEnglish ? 'Order registration' : 'Заказать регистрацию'}
-        </button>
-      </div>
-    `}).join('');
+        <div class="country-price">от ${priceText}</div>
+        <div style="display:flex;gap:10px;flex-wrap:wrap;">
+          <button class="country-cta" onclick="openRegistrationModal('${country.id || `country-${index}`}')">Заказать регистрацию</button>
+          ${hasArticle ? `<button class=\"country-cta\" style=\"background:#2c3e50;\" onclick=\"openCountryArticle('${(country.articleUrl || '').replace(/'/g, '')}', '${(country.name || '').replace(/'/g, '')}')\">Открыть статью</button>` : ''}
+        </div>
+      </div>`;
+    }).join('');
   }
 
-  // Filter countries
+  // Filter
   function filterCountries() {
     let filtered = [...countries];
-    
-    // Search filter
-    const searchTerm = searchInput?.value.toLowerCase() || '';
-    if (searchTerm) {
-      filtered = filtered.filter(c => 
-        c.name && c.name.toLowerCase().includes(searchTerm)
-      );
-    }
-    
-    // Region filter
+    const term = (searchInput?.value || '').toLowerCase();
+    if (term) filtered = filtered.filter(c => (c.name || '').toLowerCase().includes(term));
     const region = regionFilter?.value || '';
-    if (region) {
-      filtered = filtered.filter(c => c.region === region);
-    }
-    
+    if (region) filtered = filtered.filter(c => c.region === region);
     renderCountries(filtered);
   }
 
-  // Event listeners
   searchInput?.addEventListener('input', filterCountries);
   regionFilter?.addEventListener('change', filterCountries);
-  
   resetBtn?.addEventListener('click', () => {
     if (searchInput) searchInput.value = '';
     if (regionFilter) regionFilter.value = '';
     renderCountries();
   });
 
-  // Initial render
   renderCountries();
-  
+
   // Modal functionality
   const modal = document.getElementById('registration-modal');
   const modalClose = document.getElementById('modal-close');
@@ -235,46 +110,22 @@
   const registrationForm = document.getElementById('registration-form');
   const formSuccess = document.getElementById('form-success');
 
-  // Open modal function
   window.openRegistrationModal = (countryId) => {
     const country = countries.find(c => (c.id || `country-${countries.indexOf(c)}`) === countryId);
-    if (!country) {
-      console.error('Country not found:', countryId);
-      return;
-    }
-
-    if (!modal) {
-      console.error('Modal not found!');
-      return;
-    }
-
+    if (!country || !modal) return;
     modalFlag.textContent = country.flag || '🏳️';
-    const displayName = isEnglish && enT[country.id]?.name ? enT[country.id].name : country.name;
-    
-    if (isEnglish) {
-      modalTitle.textContent = `Company registration in ${displayName}`;
-      modalSubtitle.textContent = `Fill the form to get a consultation on registering in ${displayName}`;
-      formSubject.value = `Company registration request in ${displayName}`;
-    } else {
-      modalTitle.textContent = `Регистрация компании в ${displayName}`;
-      modalSubtitle.textContent = `Заполните форму и получите консультацию по регистрации в ${displayName}`;
-      formSubject.value = `Заказ регистрации компании в ${displayName}`;
-    }
-    
-    countryInput.value = displayName;
+    modalTitle.textContent = `Регистрация компании в ${country.name}`;
+    modalSubtitle.textContent = `Заполните форму и получите консультацию по регистрации в ${country.name}`;
+    formSubject.value = `Заказ регистрации компании в ${country.name}`;
+    countryInput.value = country.name;
     modal.classList.add('active');
   };
 
-  // Close modal
   modalClose?.addEventListener('click', () => modal.classList.remove('active'));
-  modal?.addEventListener('click', (e) => {
-    if (e.target === modal) modal.classList.remove('active');
-  });
+  modal?.addEventListener('click', (e) => { if (e.target === modal) modal.classList.remove('active'); });
 
-  // Form submission
   registrationForm?.addEventListener('submit', async (e) => {
     e.preventDefault();
-    
     const formData = new FormData(registrationForm);
     const data = {
       service: 'registration',
@@ -284,28 +135,60 @@
       phone: formData.get('phone'),
       message: formData.get('message')
     };
-
     try {
-      await sendToTelegram(data);
-      
+      await sendToTelegram(`Регистрация: ${data.country}\nИмя: ${data.name}\nEmail: ${data.email}\nТелефон: ${data.phone}${data.message ? `\nСообщение: ${data.message}` : ''}`);
       registrationForm.style.display = 'none';
       formSuccess.style.display = 'block';
-      formSuccess.innerHTML = isEnglish ? 
-        '<p>✅ Thank you! We will contact you within 15 minutes.</p>' :
-        '<p>✅ Спасибо! Мы свяжемся с вами в течение 15 минут.</p>';
-      
+      formSuccess.innerHTML = '<p>✅ Спасибо! Мы свяжемся с вами в течение 15 минут.</p>';
       setTimeout(() => {
         modal.classList.remove('active');
         registrationForm.style.display = 'block';
         formSuccess.style.display = 'none';
         registrationForm.reset();
       }, 3000);
-    } catch (error) {
-      console.error('Error:', error);
-      alert(isEnglish ? 'Error sending form. Please try again.' : 'Ошибка отправки формы. Попробуйте еще раз.');
+    } catch (err) {
+      alert('Ошибка отправки формы. Попробуйте еще раз.');
     }
   });
 
-  // Для отладки - выводим количество загруженных стран
-  console.log('Registration page loaded. Countries:', countries.length);
+  // Открытие статьи с проверкой существования URL и запасным вариантом через viewer
+  function slugify(text) {
+    const map = {
+      'а':'a','б':'b','в':'v','г':'g','д':'d','е':'e','ё':'e','ж':'zh','з':'z','и':'i','й':'y','к':'k','л':'l','м':'m','н':'n','о':'o','п':'p','р':'r','с':'s','т':'t','у':'u','ф':'f','х':'h','ц':'c','ч':'ch','ш':'sh','щ':'sch','ъ':'','ы':'y','ь':'','э':'e','ю':'yu','я':'ya',
+      'А':'a','Б':'b','В':'v','Г':'g','Д':'d','Е':'e','Ё':'e','Ж':'zh','З':'z','И':'i','Й':'y','К':'k','Л':'l','М':'m','Н':'n','О':'o','П':'p','Р':'r','С':'s','Т':'t','У':'u','Ф':'f','Х':'h','Ц':'c','Ч':'ch','Ш':'sh','Щ':'sch','Ъ':'','Ы':'y','Ь':'','Э':'e','Ю':'yu','Я':'ya'
+    };
+    return String(text)
+      .split('')
+      .map(ch => map[ch] !== undefined ? map[ch] : ch)
+      .join('')
+      .toLowerCase()
+      .replace(/[^a-z0-9\s-]/g, '')
+      .trim()
+      .replace(/\s+/g, '-')
+      .replace(/-+/g, '-');
+  }
+
+  async function urlExists(url) {
+    try {
+      const res = await fetch(url, { method: 'HEAD' });
+      return res.ok;
+    } catch (e) {
+      return false;
+    }
+  }
+
+  window.openCountryArticle = async (rawUrl, countryName) => {
+    const url = (rawUrl || '').trim();
+    if (url) {
+      const ok = await urlExists(url.endsWith('.html') || url.includes('?') ? url : `${url}.html`);
+      if (ok) {
+        window.open(url.endsWith('.html') || url.includes('?') ? url : `${url}.html`, '_blank');
+        return;
+      }
+    }
+    const slug = slugify(countryName || 'article');
+    const viewer = '/pages/articles/view.html?slug=' + encodeURIComponent(slug);
+    window.open(viewer, '_blank');
+  };
 })();
+

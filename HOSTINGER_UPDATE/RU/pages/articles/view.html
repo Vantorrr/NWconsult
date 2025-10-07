@@ -27,43 +27,40 @@
     </div>
     <script>
       (function() {
-        function getParam(name) {
-          const params = new URLSearchParams(location.search);
-          return params.get(name);
-        }
-        function getArticles() {
-          // пробуем RU/EN/FR ключи
+        function getParam(name) { return new URLSearchParams(location.search).get(name); }
+        async function getArticles() {
+          // 1) пробуем сервер (если сайт на Vercel)
+          try {
+            const r = await fetch('/api/admin-data?lang=ru', { cache: 'no-store' });
+            if (r.ok) {
+              const data = await r.json();
+              if (data && Array.isArray(data.articles)) return data.articles;
+            }
+          } catch (e) {}
+          // 2) fallback localStorage (Hostinger)
           const keys = ['articles', 'articles_en', 'articles_fr'];
           for (const k of keys) {
-            try {
-              const v = localStorage.getItem(k);
-              if (v) {
-                const p = JSON.parse(v);
-                if (Array.isArray(p)) return p;
-              }
-            } catch (e) {}
+            try { const v = localStorage.getItem(k); if (v) { const p = JSON.parse(v); if (Array.isArray(p)) return p; } } catch(e){}
           }
           return [];
         }
 
-        const slug = getParam('slug');
-        const articles = getArticles();
-        let article = null;
-        if (slug) {
-          article = articles.find(a => a.slug === slug) || articles.find(a => (a.url||'').includes(slug));
-        }
-        if (!article) {
-          document.getElementById('title').textContent = 'Статья не найдена';
-          document.getElementById('content').innerHTML = '<p>Проверьте ссылку или вернитесь назад.</p>';
-          return;
-        }
-        document.getElementById('title').textContent = article.title || 'Статья';
-        document.getElementById('meta').textContent = article.time ? article.time : '';
-        if (article.content) {
-          document.getElementById('content').innerHTML = article.content;
-        } else {
-          document.getElementById('content').innerHTML = '<p>Содержимое этой статьи пока недоступно.</p>';
-        }
+        (async () => {
+          const slug = getParam('slug');
+          const articles = await getArticles();
+          let article = null;
+          if (slug) {
+            article = articles.find(a => a.slug === slug) || articles.find(a => (a.url||'').includes(slug));
+          }
+          if (!article) {
+            document.getElementById('title').textContent = 'Статья не найдена';
+            document.getElementById('content').innerHTML = '<p>Проверьте ссылку или вернитесь назад.</p>';
+            return;
+          }
+          document.getElementById('title').textContent = article.title || 'Статья';
+          document.getElementById('meta').textContent = article.time ? article.time : '';
+          document.getElementById('content').innerHTML = article.content || '<p>Содержимое этой статьи пока недоступно.</p>';
+        })();
       })();
     </script>
   </body>

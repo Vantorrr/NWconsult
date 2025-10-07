@@ -459,8 +459,7 @@
                         <th>Страна</th>
                         <th>Регион</th>
                         <th>Налог</th>
-                        <th>Требования</th>
-                        <th>Стандарты</th>
+                        <th>Подробная информация</th>
                         <th>Действия</th>
                     </tr>
                 </thead>
@@ -1104,8 +1103,8 @@
         // АУДИТ
         function loadAudit() {
             const audits = JSON.parse(localStorage.getItem(getStorageKey('auditCountries'))) || [
-                { id: 1, country: 'Кипр', region: 'Европа', tax: '12.5%', requirements: 'Обязательный', standards: 'IFRS' },
-                { id: 2, country: 'ОАЭ', region: 'Азия', tax: '0-9%', requirements: 'По требованию', standards: 'IFRS' }
+                { id: 1, country: 'Кипр', region: 'Европа', tax: '12.5%', infoUrl: '/pages/articles/audit-cyprus.html' },
+                { id: 2, country: 'ОАЭ', region: 'Азия', tax: '0–9%', infoUrl: '/pages/articles/audit-uae.html' }
             ];
             
             const list = document.getElementById('audit-list');
@@ -1114,26 +1113,21 @@
                     <td>${a.country}</td>
                     <td>${a.region}</td>
                     <td>${a.tax}</td>
-                    <td>${a.requirements}</td>
-                    <td>${a.standards}</td>
+                    <td>${a.infoUrl ? `<a href="${a.infoUrl}" target="_blank" class=\"btn btn-sm\">👁️ Просмотр</a>` : ''}</td>
                     <td><button class="btn btn-danger btn-sm" onclick="deleteAudit(${a.id})">🗑️ Удалить</button></td>
                 </tr>
             `).join('');
         }
         
         function addAuditCountry() {
-            const name = prompt('Название страны:');
-            if (!name) return;
+            const country = prompt('Название страны:');
+            if (!country) return;
+            const region = prompt('Регион:', 'Европа') || 'Европа';
+            const tax = prompt('Налог (диапазон допустим):', '0–12.5%') || '0%';
+            const infoUrl = prompt('Ссылка на подробную информацию (статью):', '/pages/articles/audit-template.html') || '';
             
             const audits = JSON.parse(localStorage.getItem(getStorageKey('auditCountries'))) || [];
-            audits.push({
-                id: Date.now(),
-                country: name,
-                region: 'Регион',
-                tax: '0%',
-                requirements: 'По требованию',
-                standards: 'IFRS'
-            });
+            audits.push({ id: Date.now(), country, region, tax, infoUrl });
             
             localStorage.setItem(getStorageKey('auditCountries'), JSON.stringify(audits));
             loadAudit();

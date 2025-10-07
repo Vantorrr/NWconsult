@@ -623,7 +623,59 @@
                 .replace(/-+/g, '-');
         }
         
-        function loadAllData() {
+        // Серверная синхронизация (API + Blob)
+        async function hydrateFromServer() {
+            try {
+                const res = await fetch(`/api/admin-data?lang=${currentLang}`, { cache: 'no-store' });
+                if (!res.ok) return;
+                const data = await res.json();
+                if (!data || typeof data !== 'object') return;
+                const keys = ['registrationCountries','banksData','auditCountries','kikArticle','showcaseSlides','articles'];
+                keys.forEach(k => {
+                    if (k in data) {
+                        localStorage.setItem(getStorageKey(k), JSON.stringify(data[k]));
+                    }
+                });
+            } catch (e) {
+                console.warn('hydrateFromServer failed', e);
+            }
+        }
+
+        function getAllDataSnapshot() {
+            function read(key, fallback) {
+                try { return JSON.parse(localStorage.getItem(getStorageKey(key))) || fallback; } catch(e){ return fallback; }
+            }
+            return {
+                registrationCountries: read('registrationCountries', []),
+                banksData: read('banksData', []),
+                auditCountries: read('auditCountries', []),
+                kikArticle: read('kikArticle', {}),
+                showcaseSlides: read('showcaseSlides', []),
+                articles: read('articles', [])
+            };
+        }
+
+        let __saveTimer;
+        function saveAllToServerDebounced() {
+            clearTimeout(__saveTimer);
+            __saveTimer = setTimeout(saveAllToServer, 300);
+        }
+
+        async function saveAllToServer() {
+            try {
+                const body = getAllDataSnapshot();
+                await fetch(`/api/admin-data?lang=${currentLang}`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(body)
+                });
+            } catch (e) {
+                console.warn('saveAllToServer failed', e);
+            }
+        }
+
+        async function loadAllData() {
+            await hydrateFromServer();
             loadCountries();
             loadBanks();
             loadAudit();
@@ -744,8 +796,21 @@
                     tab.textContent = t(`tabs.${tabNames[index]}`);
                 }
             });
-            
-            // Обновить остальные элементы позже добавим
+            // Локализовать опции региона
+            const regionSelect = document.getElementById('new-country-region');
+            if (regionSelect) {
+                const options = [
+                    { value: 'europe', label: getRegionName('europe') },
+                    { value: 'asia', label: getRegionName('asia') },
+                    { value: 'america', label: getRegionName('america') },
+                    { value: 'oceania', label: getRegionName('oceania') },
+                    { value: 'africa', label: getRegionName('africa') },
+                    { value: 'offshore', label: getRegionName('offshore') }
+                ];
+                const current = regionSelect.value;
+                regionSelect.innerHTML = options.map(o => `<option value="${o.value}">${o.label}</option>`).join('');
+                if (current) regionSelect.value = current;
+            }
         }
         
         // ТАБЫ
@@ -758,15 +823,34 @@
         
         // Получить название региона
         function getRegionName(region) {
-            const regions = {
-                'europe': 'Европа',
-                'asia': 'Азия',
-                'america': 'Америка',
-                'oceania': 'Австралия и Океания',
-                'africa': 'Африка',
-                'offshore': 'Оффшоры'
+            const dict = {
+                ru: {
+                    europe: 'Европа',
+                    asia: 'Азия',
+                    america: 'Америка',
+                    oceania: 'Австралия и Океания',
+                    africa: 'Африка',
+                    offshore: 'Оффшоры'
+                },
+                en: {
+                    europe: 'Europe',
+                    asia: 'Asia',
+                    america: 'Americas',
+                    oceania: 'Australia & Oceania',
+                    africa: 'Africa',
+                    offshore: 'Offshore'
+                },
+                fr: {
+                    europe: 'Europe',
+                    asia: 'Asie',
+                    america: 'Amériques',
+                    oceania: 'Australie et Océanie',
+                    africa: 'Afrique',
+                    offshore: 'Offshore'
+                }
             };
-            return regions[region] || region;
+            const map = dict[currentLang] || dict.ru;
+            return map[region] || region;
         }
         
         // СТРАНЫ ДЛЯ РЕГИСТРАЦИИ
@@ -844,6 +928,7 @@
             localStorage.setItem(getStorageKey('registrationCountries'), JSON.stringify(countries));
             loadCountries();
             hideAddCountryForm();
+            saveAllToServerDebounced();
             
             // Очистить форму
             document.getElementById('new-country-name').value = '';
@@ -912,6 +997,7 @@
             localStorage.setItem(getStorageKey('registrationCountries'), JSON.stringify(countries));
             loadCountries();
             hideAddCountryForm();
+            saveAllToServerDebounced();
             
             // Восстанавливаем форму для добавления
             document.querySelector('#add-country-form h3').textContent = 'Добавить новую страну';
@@ -928,6 +1014,7 @@
                 countries = countries.filter(c => c.id !== id);
                 localStorage.setItem(getStorageKey('registrationCountries'), JSON.stringify(countries));
                 loadCountries();
+                saveAllToServerDebounced();
             }
         }
         
@@ -967,6 +1054,7 @@
             
             localStorage.setItem(getStorageKey('banksData'), JSON.stringify(banks));
             loadBanks();
+            saveAllToServerDebounced();
         }
         
         function deleteBank(id) {
@@ -975,6 +1063,7 @@
                 banks = banks.filter(b => b.id !== id);
                 localStorage.setItem(getStorageKey('banksData'), JSON.stringify(banks));
                 loadBanks();
+                saveAllToServerDebounced();
             }
         }
         
@@ -1014,6 +1103,7 @@
             
             localStorage.setItem(getStorageKey('auditCountries'), JSON.stringify(audits));
             loadAudit();
+            saveAllToServerDebounced();
         }
         
         function deleteAudit(id) {
@@ -1022,6 +1112,7 @@
                 audits = audits.filter(a => a.id !== id);
                 localStorage.setItem(getStorageKey('auditCountries'), JSON.stringify(audits));
                 loadAudit();
+                saveAllToServerDebounced();
             }
         }
         
@@ -1105,6 +1196,7 @@
             slides.push(newSlide);
             localStorage.setItem(getStorageKey('showcaseSlides'), JSON.stringify(slides));
             loadSlides();
+            saveAllToServerDebounced();
             hideAddSlideForm();
             
             // Очистить форму
@@ -1123,6 +1215,7 @@
                 slides = slides.filter(s => s.id !== id);
                 localStorage.setItem(getStorageKey('showcaseSlides'), JSON.stringify(slides));
                 loadSlides();
+                saveAllToServerDebounced();
             }
         }
         
@@ -1272,6 +1365,7 @@
             localStorage.setItem(getStorageKey('articles'), JSON.stringify(articles));
             loadArticles();
             hideAddArticleForm();
+            saveAllToServerDebounced();
             
             // Очистить форму
             document.getElementById('new-article-title').value = '';
@@ -1289,6 +1383,7 @@
                 articles = articles.filter(a => a.id !== id);
                 localStorage.setItem(getStorageKey('articles'), JSON.stringify(articles));
                 loadArticles();
+                saveAllToServerDebounced();
             }
         }
         

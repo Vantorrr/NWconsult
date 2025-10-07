@@ -822,8 +822,21 @@
                     tab.textContent = t(`tabs.${tabNames[index]}`);
                 }
             });
-            
-            // Обновить остальные элементы позже добавим
+            // Локализовать опции региона
+            const regionSelect = document.getElementById('new-country-region');
+            if (regionSelect) {
+                const options = [
+                    { value: 'europe', label: getRegionName('europe') },
+                    { value: 'asia', label: getRegionName('asia') },
+                    { value: 'america', label: getRegionName('america') },
+                    { value: 'oceania', label: getRegionName('oceania') },
+                    { value: 'africa', label: getRegionName('africa') },
+                    { value: 'offshore', label: getRegionName('offshore') }
+                ];
+                const current = regionSelect.value;
+                regionSelect.innerHTML = options.map(o => `<option value="${o.value}">${o.label}</option>`).join('');
+                if (current) regionSelect.value = current;
+            }
         }
         
         // ТАБЫ
@@ -836,26 +849,53 @@
         
         // Получить название региона
         function getRegionName(region) {
-            const regions = {
-                'europe': 'Европа',
-                'asia': 'Азия',
-                'america': 'Америка',
-                'oceania': 'Австралия и Океания',
-                'africa': 'Африка',
-                'offshore': 'Оффшоры'
+            const dict = {
+                ru: {
+                    europe: 'Европа',
+                    asia: 'Азия',
+                    america: 'Америка',
+                    oceania: 'Австралия и Океания',
+                    africa: 'Африка',
+                    offshore: 'Оффшоры'
+                },
+                en: {
+                    europe: 'Europe',
+                    asia: 'Asia',
+                    america: 'Americas',
+                    oceania: 'Australia & Oceania',
+                    africa: 'Africa',
+                    offshore: 'Offshore'
+                },
+                fr: {
+                    europe: 'Europe',
+                    asia: 'Asie',
+                    america: 'Amériques',
+                    oceania: 'Australie et Océanie',
+                    africa: 'Afrique',
+                    offshore: 'Offshore'
+                }
             };
-            return regions[region] || region;
+            const map = dict[currentLang] || dict.ru;
+            return map[region] || region;
         }
         
         // СТРАНЫ ДЛЯ РЕГИСТРАЦИИ
         function loadCountries() {
-            const countries = JSON.parse(localStorage.getItem(getStorageKey('registrationCountries'))) || [
+            const defaults = [
                 { id: 1, name: 'Кипр', flag: '🇨🇾', region: 'europe', time: '5-10 дней', price: 3900 },
                 { id: 2, name: 'ОАЭ', flag: '🇦🇪', region: 'asia', time: '5-14 дней', price: 2900 },
                 { id: 3, name: 'Гонконг', flag: '🇭🇰', region: 'asia', time: '5-7 дней', price: 1800 },
                 { id: 4, name: 'Великобритания', flag: '🇬🇧', region: 'europe', time: '1-3 дня', price: 950 },
                 { id: 5, name: 'США', flag: '🇺🇸', region: 'america', time: '2-7 дней', price: 650 }
             ];
+            let countries;
+            try {
+                countries = JSON.parse(localStorage.getItem(getStorageKey('registrationCountries')));
+            } catch (e) { countries = null; }
+            if (!Array.isArray(countries)) {
+                countries = defaults;
+                try { localStorage.setItem(getStorageKey('registrationCountries'), JSON.stringify(countries)); } catch (e) {}
+            }
             
             const list = document.getElementById('countries-list');
             list.innerHTML = countries.map(c => `
@@ -931,7 +971,6 @@
             document.getElementById('new-country-features').value = '';
             document.getElementById('new-country-article').value = '';
             
-            saveAllToServerDebounced();
             saveAllToServerDebounced();
             alert(t('messages.saved'));
         }
@@ -1049,6 +1088,7 @@
             
             localStorage.setItem(getStorageKey('banksData'), JSON.stringify(banks));
             loadBanks();
+            saveAllToServerDebounced();
         }
         
         function deleteBank(id) {
@@ -1057,6 +1097,7 @@
                 banks = banks.filter(b => b.id !== id);
                 localStorage.setItem(getStorageKey('banksData'), JSON.stringify(banks));
                 loadBanks();
+                saveAllToServerDebounced();
             }
         }
         
@@ -1096,6 +1137,7 @@
             
             localStorage.setItem(getStorageKey('auditCountries'), JSON.stringify(audits));
             loadAudit();
+            saveAllToServerDebounced();
         }
         
         function deleteAudit(id) {
@@ -1104,6 +1146,7 @@
                 audits = audits.filter(a => a.id !== id);
                 localStorage.setItem(getStorageKey('auditCountries'), JSON.stringify(audits));
                 loadAudit();
+                saveAllToServerDebounced();
             }
         }
         
@@ -1207,6 +1250,7 @@
                 slides = slides.filter(s => s.id !== id);
                 localStorage.setItem(getStorageKey('showcaseSlides'), JSON.stringify(slides));
                 loadSlides();
+                saveAllToServerDebounced();
             }
         }
         
@@ -1364,6 +1408,7 @@
             document.getElementById('new-article-content').value = '';
             document.getElementById('new-article-url').value = '';
             
+            saveAllToServerDebounced();
             alert(`Сохранено! Ссылка: ${url}`);
         }
         
@@ -1373,6 +1418,7 @@
                 articles = articles.filter(a => a.id !== id);
                 localStorage.setItem(getStorageKey('articles'), JSON.stringify(articles));
                 loadArticles();
+                saveAllToServerDebounced();
             }
         }
 
@@ -1405,6 +1451,7 @@
             users.push({ id: Date.now(), name, email, role });
             localStorage.setItem(getStorageKey('adminUsers'), JSON.stringify(users));
             loadUsers();
+            saveAllToServerDebounced();
             alert(t('messages.saved'));
         }
 
@@ -1414,6 +1461,7 @@
             users = users.filter(u => u.id !== id);
             localStorage.setItem(getStorageKey('adminUsers'), JSON.stringify(users));
             loadUsers();
+            saveAllToServerDebounced();
         }
         
         // ЗАГРУЗКА ПРИ СТАРТЕ
@@ -1423,6 +1471,7 @@
     </script>
 </body>
 </html>
+
 
 
 

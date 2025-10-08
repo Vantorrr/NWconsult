@@ -1007,7 +1007,7 @@
             };
         }
         
-        function updateCountry(id) {
+        async function updateCountry(id) {
             let countries = JSON.parse(localStorage.getItem(getStorageKey('registrationCountries'))) || [];
             const index = countries.findIndex(c => c.id === id);
             if (index === -1) return;
@@ -1037,18 +1037,18 @@
                 addCountry();
             };
             
-            saveAllToServerDebounced();
+            await saveAllToServer(); // мгновенное сохранение
             alert(t('messages.saved'));
         }
         
-        function deleteCountry(id) {
-            if (confirm(t('messages.confirmDelete'))) {
-                let countries = JSON.parse(localStorage.getItem(getStorageKey('registrationCountries'))) || [];
-                countries = countries.filter(c => c.id !== id);
-                localStorage.setItem(getStorageKey('registrationCountries'), JSON.stringify(countries));
-                loadCountries();
-                saveAllToServerDebounced();
-            }
+        async function deleteCountry(id) {
+            if (!confirm(t('messages.confirmDelete'))) return;
+            let countries = JSON.parse(localStorage.getItem(getStorageKey('registrationCountries'))) || [];
+            countries = countries.filter(c => c.id !== id);
+            localStorage.setItem(getStorageKey('registrationCountries'), JSON.stringify(countries));
+            loadCountries();
+            await saveAllToServer(); // мгновенное сохранение
+            alert(t('messages.deleted'));
         }
         
         // БАНКИ
@@ -1465,6 +1465,7 @@
     </script>
 </body>
 </html>
+
 
 
 

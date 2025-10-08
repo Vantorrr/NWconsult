@@ -361,6 +361,7 @@
             <div class="tab" onclick="showTab('other')">Прочие услуги</div>
             <div class="tab" onclick="showTab('articles')">Статьи</div>
             <div class="tab" onclick="showTab('slider')">Слайдер</div>
+            <div class="tab" onclick="showTab('users')">Пользователи</div>
         </div>
         
         <!-- РЕГИСТРАЦИЯ КОМПАНИЙ -->
@@ -458,8 +459,7 @@
                         <th>Страна</th>
                         <th>Регион</th>
                         <th>Налог</th>
-                        <th>Требования</th>
-                        <th>Стандарты</th>
+                        <th>Подробная информация</th>
                         <th>Действия</th>
                     </tr>
                 </thead>
@@ -580,6 +580,26 @@
                 </div>
             </div>
         </div>
+
+        <!-- ПОЛЬЗОВАТЕЛИ -->
+        <div id="users" class="tab-content">
+            <div class="section-header">
+                <h2>👤 Пользователи</h2>
+                <button class="btn btn-success" onclick="addUser()">➕ Добавить пользователя</button>
+            </div>
+
+            <table>
+                <thead>
+                    <tr>
+                        <th>Имя</th>
+                        <th>Email</th>
+                        <th>Роль</th>
+                        <th>Действия</th>
+                    </tr>
+                </thead>
+                <tbody id="users-list"></tbody>
+            </table>
+        </div>
     </div>
     
     <script>
@@ -606,14 +626,31 @@
             return currentLang === 'ru' ? key : `${key}_${currentLang}`;
         }
         
-        // Server sync (API + Blob)
+        // Преобразование строки в slug (латиница, тире)
+        function slugify(text) {
+            const map = {
+                'а':'a','б':'b','в':'v','г':'g','д':'d','е':'e','ё':'e','ж':'zh','з':'z','и':'i','й':'y','к':'k','л':'l','м':'m','н':'n','о':'o','п':'p','р':'r','с':'s','т':'t','у':'u','ф':'f','х':'h','ц':'c','ч':'ch','ш':'sh','щ':'sch','ъ':'','ы':'y','ь':'','э':'e','ю':'yu','я':'ya',
+                'А':'a','Б':'b','В':'v','Г':'g','Д':'d','Е':'e','Ё':'e','Ж':'zh','З':'z','И':'i','Й':'y','К':'k','Л':'l','М':'m','Н':'n','О':'o','П':'p','Р':'r','С':'s','Т':'t','У':'u','Ф':'f','Х':'h','Ц':'c','Ч':'ch','Ш':'sh','Щ':'sch','Ъ':'','Ы':'y','Ь':'','Э':'e','Ю':'yu','Я':'ya'
+            };
+            return String(text)
+                .split('')
+                .map(ch => map[ch] !== undefined ? map[ch] : ch)
+                .join('')
+                .toLowerCase()
+                .replace(/[^a-z0-9\s-]/g, '')
+                .trim()
+                .replace(/\s+/g, '-')
+                .replace(/-+/g, '-');
+        }
+        
+        // СЕРВЕРНОЕ ХРАНЕНИЕ (Vercel API + Blob)
         async function hydrateFromServer() {
             try {
                 const res = await fetch(`/api/admin-data?lang=${currentLang}`, { cache: 'no-store' });
                 if (!res.ok) return;
                 const data = await res.json();
                 if (!data || typeof data !== 'object') return;
-                const keys = ['registrationCountries','banksData','auditCountries','kikArticle','showcaseSlides','articles'];
+                const keys = ['registrationCountries','banksData','auditCountries','kikArticle','showcaseSlides','articles','adminUsers'];
                 keys.forEach(k => {
                     if (k in data) {
                         localStorage.setItem(getStorageKey(k), JSON.stringify(data[k]));
@@ -634,7 +671,8 @@
                 auditCountries: read('auditCountries', []),
                 kikArticle: read('kikArticle', {}),
                 showcaseSlides: read('showcaseSlides', []),
-                articles: read('articles', [])
+                articles: read('articles', []),
+                adminUsers: read('adminUsers', [])
             };
         }
 
@@ -656,7 +694,7 @@
                 console.warn('saveAllToServer failed', e);
             }
         }
-
+        
         async function loadAllData() {
             await hydrateFromServer();
             loadCountries();
@@ -665,6 +703,7 @@
             loadKik();
             loadSlides();
             loadArticles();
+            loadUsers();
             updateUILanguage();
         }
         
@@ -677,7 +716,8 @@
                     audit: 'Аудит',
                     other: 'Прочие услуги',
                     articles: 'Статьи',
-                    slider: 'Слайдер'
+                    slider: 'Слайдер',
+                    users: 'Пользователи'
                 },
                 buttons: {
                     addCountry: '➕ Добавить страну',
@@ -707,7 +747,8 @@
                     audit: 'Audit',
                     other: 'Other Services',
                     articles: 'Articles',
-                    slider: 'Slider'
+                    slider: 'Slider',
+                    users: 'Users'
                 },
                 buttons: {
                     addCountry: '➕ Add Country',
@@ -737,7 +778,8 @@
                     audit: 'Audit',
                     other: 'Autres services',
                     articles: 'Articles',
-                    slider: 'Diaporama'
+                    slider: 'Diaporama',
+                    users: 'Utilisateurs'
                 },
                 buttons: {
                     addCountry: '➕ Ajouter un pays',
@@ -774,12 +816,12 @@
         function updateUILanguage() {
             // Обновить табы
             document.querySelectorAll('.tab').forEach((tab, index) => {
-                const tabNames = ['countries', 'banks', 'audit', 'other', 'articles', 'slider'];
+                const tabNames = ['countries', 'banks', 'audit', 'other', 'articles', 'slider', 'users'];
                 if (index < tabNames.length) {
                     tab.textContent = t(`tabs.${tabNames[index]}`);
                 }
             });
-            // Localize region select
+            // Локализовать опции региона
             const regionSelect = document.getElementById('new-country-region');
             if (regionSelect) {
                 const options = [
@@ -808,28 +850,51 @@
         function getRegionName(region) {
             const dict = {
                 ru: {
-                    europe: 'Европа', asia: 'Азия', america: 'Америка', oceania: 'Австралия и Океания', africa: 'Африка', offshore: 'Оффшоры'
+                    europe: 'Европа',
+                    asia: 'Азия',
+                    america: 'Америка',
+                    oceania: 'Австралия и Океания',
+                    africa: 'Африка',
+                    offshore: 'Оффшоры'
                 },
                 en: {
-                    europe: 'Europe', asia: 'Asia', america: 'Americas', oceania: 'Australia & Oceania', africa: 'Africa', offshore: 'Offshore'
+                    europe: 'Europe',
+                    asia: 'Asia',
+                    america: 'Americas',
+                    oceania: 'Australia & Oceania',
+                    africa: 'Africa',
+                    offshore: 'Offshore'
                 },
                 fr: {
-                    europe: 'Europe', asia: 'Asie', america: 'Amériques', oceania: 'Australie et Océanie', africa: 'Afrique', offshore: 'Offshore'
+                    europe: 'Europe',
+                    asia: 'Asie',
+                    america: 'Amériques',
+                    oceania: 'Australie et Océanie',
+                    africa: 'Afrique',
+                    offshore: 'Offshore'
                 }
             };
-            const map = dict[currentLang] || dict.en;
+            const map = dict[currentLang] || dict.ru;
             return map[region] || region;
         }
         
         // СТРАНЫ ДЛЯ РЕГИСТРАЦИИ
         function loadCountries() {
-            const countries = JSON.parse(localStorage.getItem(getStorageKey('registrationCountries'))) || [
+            const defaults = [
                 { id: 1, name: 'Кипр', flag: '🇨🇾', region: 'europe', time: '5-10 дней', price: 3900 },
                 { id: 2, name: 'ОАЭ', flag: '🇦🇪', region: 'asia', time: '5-14 дней', price: 2900 },
                 { id: 3, name: 'Гонконг', flag: '🇭🇰', region: 'asia', time: '5-7 дней', price: 1800 },
                 { id: 4, name: 'Великобритания', flag: '🇬🇧', region: 'europe', time: '1-3 дня', price: 950 },
                 { id: 5, name: 'США', flag: '🇺🇸', region: 'america', time: '2-7 дней', price: 650 }
             ];
+            let countries;
+            try {
+                countries = JSON.parse(localStorage.getItem(getStorageKey('registrationCountries')));
+            } catch (e) { countries = null; }
+            if (!Array.isArray(countries)) {
+                countries = defaults;
+                try { localStorage.setItem(getStorageKey('registrationCountries'), JSON.stringify(countries)); } catch (e) {}
+            }
             
             const list = document.getElementById('countries-list');
             list.innerHTML = countries.map(c => `
@@ -896,7 +961,6 @@
             localStorage.setItem(getStorageKey('registrationCountries'), JSON.stringify(countries));
             loadCountries();
             hideAddCountryForm();
-            saveAllToServerDebounced();
             
             // Очистить форму
             document.getElementById('new-country-name').value = '';
@@ -906,6 +970,7 @@
             document.getElementById('new-country-features').value = '';
             document.getElementById('new-country-article').value = '';
             
+            saveAllToServerDebounced();
             alert(t('messages.saved'));
         }
         
@@ -942,7 +1007,7 @@
             };
         }
         
-        function updateCountry(id) {
+        async function updateCountry(id) {
             let countries = JSON.parse(localStorage.getItem(getStorageKey('registrationCountries'))) || [];
             const index = countries.findIndex(c => c.id === id);
             if (index === -1) return;
@@ -965,7 +1030,6 @@
             localStorage.setItem(getStorageKey('registrationCountries'), JSON.stringify(countries));
             loadCountries();
             hideAddCountryForm();
-            saveAllToServerDebounced();
             
             // Восстанавливаем форму для добавления
             document.querySelector('#add-country-form h3').textContent = 'Добавить новую страну';
@@ -973,17 +1037,18 @@
                 addCountry();
             };
             
+            await saveAllToServer(); // мгновенное сохранение
             alert(t('messages.saved'));
         }
         
-        function deleteCountry(id) {
-            if (confirm(t('messages.confirmDelete'))) {
-                let countries = JSON.parse(localStorage.getItem(getStorageKey('registrationCountries'))) || [];
-                countries = countries.filter(c => c.id !== id);
-                localStorage.setItem(getStorageKey('registrationCountries'), JSON.stringify(countries));
-                loadCountries();
-                saveAllToServerDebounced();
-            }
+        async function deleteCountry(id) {
+            if (!confirm(t('messages.confirmDelete'))) return;
+            let countries = JSON.parse(localStorage.getItem(getStorageKey('registrationCountries'))) || [];
+            countries = countries.filter(c => c.id !== id);
+            localStorage.setItem(getStorageKey('registrationCountries'), JSON.stringify(countries));
+            loadCountries();
+            await saveAllToServer(); // мгновенное сохранение
+            alert(t('messages.deleted'));
         }
         
         // БАНКИ
@@ -1038,8 +1103,8 @@
         // АУДИТ
         function loadAudit() {
             const audits = JSON.parse(localStorage.getItem(getStorageKey('auditCountries'))) || [
-                { id: 1, country: 'Кипр', region: 'Европа', tax: '12.5%', requirements: 'Обязательный', standards: 'IFRS' },
-                { id: 2, country: 'ОАЭ', region: 'Азия', tax: '0-9%', requirements: 'По требованию', standards: 'IFRS' }
+                { id: 1, country: 'Кипр', region: 'Европа', tax: '12.5%', infoUrl: '/pages/articles/audit-cyprus.html' },
+                { id: 2, country: 'ОАЭ', region: 'Азия', tax: '0–9%', infoUrl: '/pages/articles/audit-uae.html' }
             ];
             
             const list = document.getElementById('audit-list');
@@ -1048,26 +1113,21 @@
                     <td>${a.country}</td>
                     <td>${a.region}</td>
                     <td>${a.tax}</td>
-                    <td>${a.requirements}</td>
-                    <td>${a.standards}</td>
+                    <td>${a.infoUrl ? `<a href="${a.infoUrl}" target="_blank" class=\"btn btn-sm\">👁️ Просмотр</a>` : ''}</td>
                     <td><button class="btn btn-danger btn-sm" onclick="deleteAudit(${a.id})">🗑️ Удалить</button></td>
                 </tr>
             `).join('');
         }
         
         function addAuditCountry() {
-            const name = prompt('Название страны:');
-            if (!name) return;
+            const country = prompt('Название страны:');
+            if (!country) return;
+            const region = prompt('Регион:', 'Европа') || 'Европа';
+            const tax = prompt('Налог (диапазон допустим):', '0–12.5%') || '0%';
+            const infoUrl = prompt('Ссылка на подробную информацию (статью):', '/pages/articles/audit-template.html') || '';
             
             const audits = JSON.parse(localStorage.getItem(getStorageKey('auditCountries'))) || [];
-            audits.push({
-                id: Date.now(),
-                country: name,
-                region: 'Регион',
-                tax: '0%',
-                requirements: 'По требованию',
-                standards: 'IFRS'
-            });
+            audits.push({ id: Date.now(), country, region, tax, infoUrl });
             
             localStorage.setItem(getStorageKey('auditCountries'), JSON.stringify(audits));
             loadAudit();
@@ -1105,6 +1165,7 @@
             };
             
             localStorage.setItem(getStorageKey('kikArticle'), JSON.stringify(kikData));
+            saveAllToServerDebounced();
             alert(t('messages.saved'));
         }
         
@@ -1164,7 +1225,6 @@
             slides.push(newSlide);
             localStorage.setItem(getStorageKey('showcaseSlides'), JSON.stringify(slides));
             loadSlides();
-            saveAllToServerDebounced();
             hideAddSlideForm();
             
             // Очистить форму
@@ -1174,6 +1234,7 @@
             document.getElementById('new-slide-link-text').value = '';
             document.getElementById('new-slide-image').value = '';
             
+            saveAllToServerDebounced();
             alert(t('messages.saved'));
         }
         
@@ -1300,26 +1361,39 @@
         function addArticle() {
             const articles = JSON.parse(localStorage.getItem(getStorageKey('articles'))) || [];
             
-            const newArticle = {
-                id: Date.now(),
-                title: document.getElementById('new-article-title').value,
-                category: document.getElementById('new-article-category').value,
-                description: document.getElementById('new-article-description').value,
-                time: document.getElementById('new-article-time').value || '5 мин чтения',
-                content: document.getElementById('new-article-content').value,
-                url: document.getElementById('new-article-url').value
-            };
-            
-            if (!newArticle.title) {
+            const title = document.getElementById('new-article-title').value;
+            const category = document.getElementById('new-article-category').value;
+            const description = document.getElementById('new-article-description').value;
+            const time = document.getElementById('new-article-time').value || '5 мин чтения';
+            const content = document.getElementById('new-article-content').value;
+            let url = document.getElementById('new-article-url').value.trim();
+
+            if (!title) {
                 alert('Введите название статьи!');
                 return;
             }
+
+            // Автоматическая генерация URL и slug, если URL не указан
+            const slug = slugify(title);
+            if (!url) {
+                url = `/pages/articles/view.html?slug=${slug}`;
+            }
+
+            const newArticle = {
+                id: Date.now(),
+                title,
+                category,
+                description,
+                time,
+                content,
+                url,
+                slug
+            };
             
             articles.push(newArticle);
             localStorage.setItem(getStorageKey('articles'), JSON.stringify(articles));
             loadArticles();
             hideAddArticleForm();
-            saveAllToServerDebounced();
             
             // Очистить форму
             document.getElementById('new-article-title').value = '';
@@ -1328,12 +1402,8 @@
             document.getElementById('new-article-content').value = '';
             document.getElementById('new-article-url').value = '';
             
-            alert(t('messages.saved'));
-            
-            // Если контент был предоставлен, но не URL, можно предложить создать файл
-            if (newArticle.content && !newArticle.url) {
-                alert('Статья сохранена в базе данных. Для создания HTML файла обратитесь к разработчику.');
-            }
+            saveAllToServerDebounced();
+            alert(`Сохранено! Ссылка: ${url}`);
         }
         
         function deleteArticle(id) {
@@ -1345,6 +1415,48 @@
                 saveAllToServerDebounced();
             }
         }
+
+        // ПОЛЬЗОВАТЕЛИ
+        function loadUsers() {
+            const users = JSON.parse(localStorage.getItem(getStorageKey('adminUsers'))) || [
+                { id: 1, name: 'Администратор', email: 'admin@nw.consulting', role: 'admin' }
+            ];
+            const list = document.getElementById('users-list');
+            if (!list) return;
+            list.innerHTML = users.map(u => `
+                <tr>
+                    <td>${u.name}</td>
+                    <td>${u.email}</td>
+                    <td>${u.role}</td>
+                    <td>
+                        <button class="btn btn-danger btn-sm" onclick="deleteUser(${u.id})">🗑️ Удалить</button>
+                    </td>
+                </tr>
+            `).join('');
+        }
+
+        function addUser() {
+            const name = prompt('Имя пользователя:');
+            if (!name) return;
+            const email = prompt('Email:');
+            if (!email) return;
+            const role = prompt('Роль (admin/editor/viewer):', 'editor') || 'editor';
+            const users = JSON.parse(localStorage.getItem(getStorageKey('adminUsers'))) || [];
+            users.push({ id: Date.now(), name, email, role });
+            localStorage.setItem(getStorageKey('adminUsers'), JSON.stringify(users));
+            loadUsers();
+            saveAllToServerDebounced();
+            alert(t('messages.saved'));
+        }
+
+        function deleteUser(id) {
+            if (!confirm(t('messages.confirmDelete'))) return;
+            let users = JSON.parse(localStorage.getItem(getStorageKey('adminUsers'))) || [];
+            users = users.filter(u => u.id !== id);
+            localStorage.setItem(getStorageKey('adminUsers'), JSON.stringify(users));
+            loadUsers();
+            saveAllToServerDebounced();
+        }
         
         // ЗАГРУЗКА ПРИ СТАРТЕ
         document.addEventListener('DOMContentLoaded', function() {
@@ -1353,3 +1465,10 @@
     </script>
 </body>
 </html>
+
+
+
+
+
+
+

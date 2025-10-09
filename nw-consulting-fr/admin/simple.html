@@ -1007,7 +1007,7 @@
             };
         }
         
-        async function updateCountry(id) {
+        function updateCountry(id) {
             let countries = JSON.parse(localStorage.getItem(getStorageKey('registrationCountries'))) || [];
             const index = countries.findIndex(c => c.id === id);
             if (index === -1) return;
@@ -1037,17 +1037,17 @@
                 addCountry();
             };
             
-            await saveAllToServer(); // мгновенное сохранение
+            saveAllToServer(); // async в фоне
             alert(t('messages.saved'));
         }
         
-        async function deleteCountry(id) {
+        function deleteCountry(id) {
             if (!confirm(t('messages.confirmDelete'))) return;
             let countries = JSON.parse(localStorage.getItem(getStorageKey('registrationCountries'))) || [];
             countries = countries.filter(c => c.id !== id);
             localStorage.setItem(getStorageKey('registrationCountries'), JSON.stringify(countries));
             loadCountries();
-            await saveAllToServer(); // мгновенное сохранение
+            saveAllToServer(); // async в фоне
             alert(t('messages.deleted'));
         }
         
@@ -1465,6 +1465,7 @@
     </script>
 </body>
 </html>
+
 
 
 

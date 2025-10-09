@@ -368,7 +368,11 @@
         <div id="countries" class="tab-content active">
             <div class="section-header">
                 <h2>🌍 Управление странами для регистрации</h2>
-                <button class="btn btn-success" onclick="showAddCountryForm()">➕ Добавить страну</button>
+                <div style="display: flex; gap: 10px;">
+                    <button class="btn btn-success" onclick="showAddCountryForm()">➕ Добавить страну</button>
+                    <button class="btn" onclick="forceSyncNow()" style="background: #f39c12;">🔄 Сохранить на сервер</button>
+                    <button class="btn btn-danger" onclick="clearServerData()">🗑️ Очистить сервер</button>
+                </div>
             </div>
             
             <div id="countries-list" class="countries-grid"></div>
@@ -647,17 +651,26 @@
         async function hydrateFromServer() {
             try {
                 const res = await fetch(`/api/admin-data?lang=${currentLang}`, { cache: 'no-store' });
-                if (!res.ok) return;
+                if (!res.ok) {
+                    console.warn('Server returned', res.status);
+                    return;
+                }
                 const data = await res.json();
                 if (!data || typeof data !== 'object') return;
+                
+                // Сервер - источник истины. Загружаем данные с сервера, если они не пустые
                 const keys = ['registrationCountries','banksData','auditCountries','kikArticle','showcaseSlides','articles','adminUsers'];
                 keys.forEach(k => {
-                    if (k in data) {
-                        localStorage.setItem(getStorageKey(k), JSON.stringify(data[k]));
+                    if (k in data && data[k]) {
+                        // Проверяем что данные не пустые
+                        if ((Array.isArray(data[k]) && data[k].length > 0) || (!Array.isArray(data[k]) && Object.keys(data[k]).length > 0)) {
+                            localStorage.setItem(getStorageKey(k), JSON.stringify(data[k]));
+                        }
                     }
                 });
+                console.log('Loaded from server:', currentLang);
             } catch (e) {
-                console.warn('hydrateFromServer failed', e);
+                console.error('hydrateFromServer failed', e);
             }
         }
 
@@ -685,13 +698,33 @@
         async function saveAllToServer() {
             try {
                 const body = getAllDataSnapshot();
-                await fetch(`/api/admin-data?lang=${currentLang}`, {
+                const res = await fetch(`/api/admin-data?lang=${currentLang}`, {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify(body)
                 });
+                console.log('Saved to server:', currentLang, res.ok);
             } catch (e) {
-                console.warn('saveAllToServer failed', e);
+                console.error('saveAllToServer failed', e);
+            }
+        }
+        
+        async function forceSyncNow() {
+            await saveAllToServer();
+            alert('Данные сохранены на сервер!');
+        }
+        
+        async function clearServerData() {
+            if (!confirm('Удалить ВСЕ данные с сервера? Это действие необратимо!')) return;
+            try {
+                await fetch(`/api/admin-data?lang=${currentLang}`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({})
+                });
+                alert('Серверные данные очищены! Обновите страницу.');
+            } catch (e) {
+                alert('Ошибка: ' + e.message);
             }
         }
         
@@ -1465,6 +1498,7 @@
     </script>
 </body>
 </html>
+
 
 
 

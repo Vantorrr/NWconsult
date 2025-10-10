@@ -650,7 +650,7 @@
         // СЕРВЕРНОЕ ХРАНЕНИЕ (Vercel API + Blob)
         async function hydrateFromServer() {
             try {
-                const res = await fetch(`/api/admin-data?lang=${currentLang}`, { cache: 'no-store' });
+                const res = await fetch(`/api/save-data?lang=${currentLang}`, { cache: 'no-store' });
                 if (!res.ok) {
                     console.warn('Server returned', res.status);
                     return;
@@ -698,7 +698,7 @@
         async function saveAllToServer() {
             try {
                 const body = getAllDataSnapshot();
-                const res = await fetch(`/api/admin-data?lang=${currentLang}`, {
+                const res = await fetch(`/api/save-data?lang=${currentLang}`, {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify(body)
@@ -717,7 +717,7 @@
         async function clearServerData() {
             if (!confirm('Удалить ВСЕ данные с сервера? Это действие необратимо!')) return;
             try {
-                await fetch(`/api/admin-data?lang=${currentLang}`, {
+                await fetch(`/api/save-data?lang=${currentLang}`, {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify({})
@@ -1498,6 +1498,7 @@
     </script>
 </body>
 </html>
+
 
 
 

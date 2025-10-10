@@ -172,7 +172,15 @@
       "features": "Исламский банкинг, мультивалютные счета"
     }
   ],
-  "auditCountries": [],
+  "auditCountries": [
+    {
+      "id": 1760117926193,
+      "country": "щушкоаука",
+      "region": "уауак",
+      "tax": "1",
+      "infoUrl": "/pages/articles/audit-template.html"
+    }
+  ],
   "kikArticle": {},
   "showcaseSlides": [],
   "articles": [],

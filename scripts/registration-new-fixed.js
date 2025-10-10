@@ -101,7 +101,7 @@
   // Hydrate from server so all visitors see the same data
   (async function hydrateFromServer() {
     try {
-      const res = await fetch('/api/admin-data?lang=ru', { cache: 'no-store' });
+      const res = await fetch('/api/save-data?lang=ru', { cache: 'no-store' });
       if (!res.ok) return;
       const data = await res.json();
       if (data && Array.isArray(data.registrationCountries) && data.registrationCountries.length) {

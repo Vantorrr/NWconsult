@@ -1,5 +1,18 @@
 // Audit page functionality
 
+// Load audit data from server
+(async function() {
+  try {
+    const res = await fetch('/api/save-data?lang=ru', { cache: 'no-store' });
+    if (res.ok) {
+      const data = await res.json();
+      if (data && Array.isArray(data.auditCountries)) {
+        localStorage.setItem('auditData', JSON.stringify(data.auditCountries));
+      }
+    }
+  } catch (e) {}
+})();
+
 // Simple dropdown functionality
 document.addEventListener('DOMContentLoaded', function() {
   const countrySelect = document.getElementById('country-select');
@@ -30,91 +43,91 @@ function getCountriesData() {
   return [
     {
       id: 'cyprus',
-      name: 'Chypre',
+      name: 'Кипр',
       flag: '🇨🇾',
       region: 'europe',
-      regionText: 'Europe',
+      regionText: 'Европа',
       taxRate: '12.5%',
-      auditRequired: 'Obligatoire annuel',
+      auditRequired: 'Обязательный ежегодный',
       reportingStandards: 'МСФО',
-      specialFeatures: 'Impôtовые льгà partir deы для холдингов'
+      specialFeatures: 'Налоговые льготы для холдингов'
     },
     {
       id: 'malta',
-      name: 'Malte',
+      name: 'Мальта',
       flag: '🇲🇹',
       region: 'europe',
-      regionText: 'Europe',
+      regionText: 'Европа',
       taxRate: '35%',
-      auditRequired: 'Pour les grandes entreprises',
+      auditRequired: 'Для крупных компаний',
       reportingStandards: 'МСФО',
       specialFeatures: 'Возврат налогов акционерам'
     },
     {
       id: 'singapore',
-      name: 'Singapour',
+      name: 'Сингапур',
       flag: '🇸🇬',
       region: 'asia',
-      regionText: 'Asie',
+      regionText: 'Азия',
       taxRate: '17%',
-      auditRequired: 'Selon la taille de l'entreprise',
+      auditRequired: 'По размеру компании',
       reportingStandards: 'SFRS',
-      specialFeatures: 'Территориальная depuisиdepuisтема налогообложения'
+      specialFeatures: 'Территориальная система налогообложения'
     },
     {
       id: 'hongkong',
-      name: 'Hong Kong',
+      name: 'Гонконг',
       flag: '🇭🇰',
       region: 'asia',
-      regionText: 'Asie',
+      regionText: 'Азия',
       taxRate: '16.5%',
       auditRequired: 'Обязательный',
       reportingStandards: 'HKFRS',
-      specialFeatures: 'Impôt только на меdepuisтный доход'
+      specialFeatures: 'Налог только на местный доход'
     },
     {
       id: 'uae',
-      name: 'ÉAU',
+      name: 'ОАЭ',
       flag: '🇦🇪',
       region: 'asia',
-      regionText: 'Ближний Воdepuisток',
+      regionText: 'Ближний Восток',
       taxRate: '0-9%',
-      auditRequired: 'Dans les zones franches - non',
+      auditRequired: 'В свободных зонах - нет',
       reportingStandards: 'IFRS',
-      specialFeatures: 'Корпоративный налог depuis 2023'
+      specialFeatures: 'Корпоративный налог с 2023'
     },
     {
       id: 'uk',
-      name: 'Royaume-Uni',
+      name: 'Великобритания',
       flag: '🇬🇧',
       region: 'europe',
-      regionText: 'Europe',
+      regionText: 'Европа',
       taxRate: '19-25%',
-      auditRequired: 'Selon la taille de l'entreprise',
+      auditRequired: 'По размеру компании',
       reportingStandards: 'UK GAAP',
-      specialFeatures: 'Прозрачная юриdepuisдикция'
+      specialFeatures: 'Прозрачная юрисдикция'
     },
     {
       id: 'estonia',
-      name: 'Estonie',
+      name: 'Эстония',
       flag: '🇪🇪',
       region: 'europe',
-      regionText: 'Europe',
+      regionText: 'Европа',
       taxRate: '20%',
-      auditRequired: 'Selon la taille de l'entreprise',
+      auditRequired: 'По размеру компании',
       reportingStandards: 'МСФО',
-      specialFeatures: 'Impôt только при выводе прибыли'
+      specialFeatures: 'Налог только при выводе прибыли'
     },
     {
       id: 'switzerland',
-      name: 'Suisse',
+      name: 'Швейцария',
       flag: '🇨🇭',
       region: 'europe',
-      regionText: 'Europe',
+      regionText: 'Европа',
       taxRate: '12-21%',
       auditRequired: 'Обязательный',
       reportingStandards: 'Swiss GAAP',
-      specialFeatures: 'Кантональные льгà partir deы'
+      specialFeatures: 'Кантональные льготы'
     }
   ];
 }
@@ -132,7 +145,7 @@ function renderCountries(countries) {
   
   if (!countries || countries.length === 0) {
     console.error('No countries to render!');
-    grid.innerHTML = '<p style="color: #fff; text-align: center;">Нет доdepuisтупных depuisтран для à partir deображения</p>';
+    grid.innerHTML = '<p style="color: #fff; text-align: center;">Нет доступных стран для отображения</p>';
     return;
   }
   
@@ -153,25 +166,25 @@ function renderCountries(countries) {
             <circle cx="12" cy="12" r="10"/>
             <path d="M12 6v6l4 2"/>
           </svg>
-          <span>Impôt: ${country.taxRate || country.tax || 'По запроdepuisу'}</span>
+          <span>Налог: ${country.taxRate || country.tax || 'По запросу'}</span>
         </div>
         <div class="country-card__detail">
           <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
             <path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"/>
             <polyline points="14 2 14 8 20 8"/>
           </svg>
-          <span>${country.auditRequired || 'Audit обязателен'}</span>
+          <span>${country.auditRequired || 'Аудит обязателен'}</span>
         </div>
         <div class="country-card__detail">
           <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
             <path d="M9 11l3 3L22 4"/>
             <path d="M21 12v7a2 2 0 01-2 2H5a2 2 0 01-2-2V5a2 2 0 012-2h11"/>
           </svg>
-          <span>${country.standards || country.reportingStandards || 'Международные depuisтандарты'}</span>
+          <span>${country.standards || country.reportingStandards || 'Международные стандарты'}</span>
         </div>
       </div>
       <div class="country-card__cta">
-        <span>En savoir plus об аудите</span>
+        <span>Подробнее об аудите</span>
         <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
           <line x1="5" y1="12" x2="19" y2="12"/>
           <polyline points="12 5 19 12 12 19"/>

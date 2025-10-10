@@ -1,5 +1,18 @@
 // Audit page functionality
 
+// Load audit data from server
+(async function() {
+  try {
+    const res = await fetch('/api/save-data?lang=ru', { cache: 'no-store' });
+    if (res.ok) {
+      const data = await res.json();
+      if (data && Array.isArray(data.auditCountries)) {
+        localStorage.setItem('auditData', JSON.stringify(data.auditCountries));
+      }
+    }
+  } catch (e) {}
+})();
+
 // Simple dropdown functionality
 document.addEventListener('DOMContentLoaded', function() {
   const countrySelect = document.getElementById('country-select');

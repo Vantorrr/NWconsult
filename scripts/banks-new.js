@@ -1,6 +1,20 @@
 // Banks page functionality
 (function() {
   const isEnglish = (document.documentElement.getAttribute('lang') || '').toLowerCase() === 'en';
+  
+  // Load banks from server
+  (async function() {
+    try {
+      const res = await fetch('/api/save-data?lang=ru', { cache: 'no-store' });
+      if (res.ok) {
+        const data = await res.json();
+        if (data && Array.isArray(data.banksData) && data.banksData.length > 0) {
+          localStorage.setItem('banksData', JSON.stringify(data.banksData));
+        }
+      }
+    } catch (e) {}
+  })();
+  
   // Banks data
   const banksData = [
     {

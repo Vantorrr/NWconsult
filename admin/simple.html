@@ -945,8 +945,8 @@
                             </ul>
                         </div>
                     ` : ''}
-                    <button class="btn btn-sm" onclick="editCountry(${c.id})">✏️ Редактировать</button>
-                    <button class="btn btn-danger btn-sm" onclick="deleteCountry(${c.id})">🗑️ Удалить</button>
+                    <button class="btn btn-sm" onclick="editCountry('${c.id}')">✏️ Редактировать</button>
+                    <button class="btn btn-danger btn-sm" onclick="deleteCountry('${c.id}')">🗑️ Удалить</button>
                 </div>
             `).join('');
         }
@@ -1099,7 +1099,10 @@
                     <td>${b.type}</td>
                     <td>${b.balance}</td>
                     <td>${b.time}</td>
-                    <td><button class="btn btn-danger btn-sm" onclick="deleteBank(${b.id})">🗑️ Удалить</button></td>
+                    <td>
+                        <button class="btn btn-sm" onclick="editBank('${b.id}')">✏️ Редактировать</button>
+                        <button class="btn btn-danger btn-sm" onclick="deleteBank('${b.id}')">🗑️ Удалить</button>
+                    </td>
                 </tr>
             `).join('');
         }
@@ -1123,14 +1126,34 @@
             saveAllToServerDebounced();
         }
         
+        function editBank(id) {
+            const banks = JSON.parse(localStorage.getItem(getStorageKey('banksData'))) || [];
+            const bank = banks.find(b => b.id == id);
+            if (!bank) return;
+            
+            const name = prompt('Название банка:', bank.bank);
+            if (!name) return;
+            const country = prompt('Страна:', bank.country) || bank.country;
+            const type = prompt('Тип счета:', bank.type) || bank.type;
+            const balance = prompt('Мин. баланс:', bank.balance) || bank.balance;
+            const time = prompt('Срок:', bank.time) || bank.time;
+            
+            const index = banks.findIndex(b => b.id == id);
+            banks[index] = { ...banks[index], bank: name, country, type, balance, time };
+            
+            localStorage.setItem(getStorageKey('banksData'), JSON.stringify(banks));
+            loadBanks();
+            saveAllToServer();
+            alert(t('messages.saved'));
+        }
+        
         function deleteBank(id) {
-            if (confirm(t('messages.confirmDelete'))) {
-                let banks = JSON.parse(localStorage.getItem(getStorageKey('banksData'))) || [];
-                banks = banks.filter(b => b.id !== id);
-                localStorage.setItem(getStorageKey('banksData'), JSON.stringify(banks));
-                loadBanks();
-                saveAllToServerDebounced();
-            }
+            if (!confirm(t('messages.confirmDelete'))) return;
+            let banks = JSON.parse(localStorage.getItem(getStorageKey('banksData'))) || [];
+            banks = banks.filter(b => b.id != id);
+            localStorage.setItem(getStorageKey('banksData'), JSON.stringify(banks));
+            loadBanks();
+            saveAllToServer();
         }
         
         // АУДИТ
@@ -1147,7 +1170,10 @@
                     <td>${a.region}</td>
                     <td>${a.tax}</td>
                     <td>${a.infoUrl ? `<a href="${a.infoUrl}" target="_blank" class=\"btn btn-sm\">👁️ Просмотр</a>` : ''}</td>
-                    <td><button class="btn btn-danger btn-sm" onclick="deleteAudit(${a.id})">🗑️ Удалить</button></td>
+                    <td>
+                        <button class="btn btn-sm" onclick="editAudit('${a.id}')">✏️ Редактировать</button>
+                        <button class="btn btn-danger btn-sm" onclick="deleteAudit('${a.id}')">🗑️ Удалить</button>
+                    </td>
                 </tr>
             `).join('');
         }
@@ -1167,14 +1193,33 @@
             saveAllToServerDebounced();
         }
         
+        function editAudit(id) {
+            const audits = JSON.parse(localStorage.getItem(getStorageKey('auditCountries'))) || [];
+            const audit = audits.find(a => a.id == id);
+            if (!audit) return;
+            
+            const country = prompt('Название страны:', audit.country);
+            if (!country) return;
+            const region = prompt('Регион:', audit.region) || audit.region;
+            const tax = prompt('Налог (диапазон допустим):', audit.tax) || audit.tax;
+            const infoUrl = prompt('Ссылка на подробную информацию:', audit.infoUrl || '') || '';
+            
+            const index = audits.findIndex(a => a.id == id);
+            audits[index] = { ...audits[index], country, region, tax, infoUrl };
+            
+            localStorage.setItem(getStorageKey('auditCountries'), JSON.stringify(audits));
+            loadAudit();
+            saveAllToServer();
+            alert(t('messages.saved'));
+        }
+        
         function deleteAudit(id) {
-            if (confirm(t('messages.confirmDelete'))) {
-                let audits = JSON.parse(localStorage.getItem(getStorageKey('auditCountries'))) || [];
-                audits = audits.filter(a => a.id !== id);
-                localStorage.setItem(getStorageKey('auditCountries'), JSON.stringify(audits));
-                loadAudit();
-                saveAllToServerDebounced();
-            }
+            if (!confirm(t('messages.confirmDelete'))) return;
+            let audits = JSON.parse(localStorage.getItem(getStorageKey('auditCountries'))) || [];
+            audits = audits.filter(a => a.id != id);
+            localStorage.setItem(getStorageKey('auditCountries'), JSON.stringify(audits));
+            loadAudit();
+            saveAllToServer();
         }
         
         // КИК

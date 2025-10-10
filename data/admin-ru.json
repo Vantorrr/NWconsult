@@ -42,19 +42,6 @@
   ],
   "banksData": [
     {
-      "id": "swiss-cim",
-      "country": "Швейцария",
-      "countryCode": "switzerland",
-      "flag": "🇨🇭",
-      "bank": "CIM Banque",
-      "type": "traditional",
-      "typeText": "Традиционный",
-      "remote": false,
-      "time": "10-14 дней",
-      "minimum": "$5,000",
-      "features": "Мультивалютные счета, инвестиции, премиум обслуживание"
-    },
-    {
       "id": "singapore-dbs",
       "country": "Сингапур",
       "countryCode": "singapore",

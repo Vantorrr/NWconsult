@@ -1,13 +1,17 @@
 // Audit page functionality
 
 // Load audit data from server
-(async function() {
+(async function loadFromServer() {
   try {
     const res = await fetch('/api/save-data?lang=ru', { cache: 'no-store' });
     if (res.ok) {
       const data = await res.json();
       if (data && Array.isArray(data.auditCountries)) {
         localStorage.setItem('auditData', JSON.stringify(data.auditCountries));
+        // Перерендерить если страница уже загружена
+        if (typeof renderCountriesGrid === 'function') {
+          renderCountriesGrid();
+        }
       }
     }
   } catch (e) {}

@@ -29,7 +29,7 @@
       (function() {
         function getParam(name) { return new URLSearchParams(location.search).get(name); }
         async function getArticles() {
-          try { const res = await fetch('/api/admin-data?lang=fr', { cache: 'no-store' }); if (res.ok) { const d = await res.json(); if (Array.isArray(d.articles)) return d.articles; } } catch(e){}
+          try { const res = await fetch('/api/save-data?lang=fr', { cache: 'no-store' }); if (res.ok) { const d = await res.json(); if (Array.isArray(d.articles)) return d.articles; } } catch(e){}
           try { const v = localStorage.getItem('articles_fr'); if (v) { const p = JSON.parse(v); if (Array.isArray(p)) return p; } } catch(e){}
           return [];
         }

@@ -30,19 +30,6 @@
   ],
   "banksData": [
     {
-      "id": "usa-mercury",
-      "country": "США",
-      "countryCode": "usa",
-      "flag": "🇺🇸",
-      "bank": "Mercury Bank",
-      "type": "digital",
-      "typeText": "Цифровой банк",
-      "remote": true,
-      "time": "1-3 дня",
-      "minimum": "$0",
-      "features": "USD счета, интеграции, высокие лимиты"
-    },
-    {
       "id": "cyprus-bank",
       "country": "Кипр",
       "countryCode": "cyprus",

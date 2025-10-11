@@ -30,19 +30,6 @@
   ],
   "banksData": [
     {
-      "id": "uk-revolut",
-      "country": "Великобритания",
-      "countryCode": "uk",
-      "flag": "🇬🇧",
-      "bank": "Revolut Business",
-      "type": "digital",
-      "typeText": "Цифровой банк",
-      "remote": true,
-      "time": "1-2 дня",
-      "minimum": "$0",
-      "features": "Мультивалютные счета, крипто операции, API интеграция"
-    },
-    {
       "id": "usa-mercury",
       "country": "США",
       "countryCode": "usa",

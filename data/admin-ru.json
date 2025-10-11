@@ -84,9 +84,9 @@
     {
       "id": 1760186592217,
       "bank": "Citadel",
-      "country": "Страна",
-      "type": "Корпоративный",
-      "balance": "$1,000",
+      "country": "Spain",
+      "type": "Traditional",
+      "balance": "undefined",
       "time": "1-2 недели"
     }
   ],

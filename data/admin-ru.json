@@ -30,19 +30,6 @@
   ],
   "banksData": [
     {
-      "id": "singapore-dbs",
-      "country": "Сингапур",
-      "countryCode": "singapore",
-      "flag": "🇸🇬",
-      "bank": "DBS Bank",
-      "type": "traditional",
-      "typeText": "Традиционный",
-      "remote": false,
-      "time": "2-3 недели",
-      "minimum": "$30,000",
-      "features": "Азиатский хаб, мультивалютные счета, торговое финансирование"
-    },
-    {
       "id": "uk-revolut",
       "country": "Великобритания",
       "countryCode": "uk",

@@ -69,19 +69,6 @@
       "features": "SEPA платежи, мультивалютные счета"
     },
     {
-      "id": "estonia-lpb",
-      "country": "Эстония",
-      "countryCode": "estonia",
-      "flag": "🇪🇪",
-      "bank": "LHV Bank",
-      "type": "traditional",
-      "typeText": "Традиционный",
-      "remote": true,
-      "time": "7-10 дней",
-      "minimum": "€1,000",
-      "features": "e-Residency поддержка, крипто-френдли"
-    },
-    {
       "id": "hongkong-hsbc",
       "country": "Гонконг",
       "countryCode": "hongkong",

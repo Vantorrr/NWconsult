@@ -69,19 +69,6 @@
       "features": "SEPA платежи, мультивалютные счета"
     },
     {
-      "id": "hongkong-hsbc",
-      "country": "Гонконг",
-      "countryCode": "hongkong",
-      "flag": "🇭🇰",
-      "bank": "HSBC",
-      "type": "traditional",
-      "typeText": "Традиционный",
-      "remote": false,
-      "time": "2-4 недели",
-      "minimum": "HKD 50,000",
-      "features": "Глобальная сеть, премиум обслуживание"
-    },
-    {
       "id": "uae-emirates",
       "country": "ОАЭ",
       "countryCode": "uae",

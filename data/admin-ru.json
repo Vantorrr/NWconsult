@@ -90,7 +90,15 @@
       "time": "1-2 недели"
     }
   ],
-  "auditCountries": [],
+  "auditCountries": [
+    {
+      "id": 1760186763208,
+      "country": "Кипр",
+      "region": "Европа",
+      "tax": "0–12.5%",
+      "infoUrl": "/pages/articles/audit-template.html"
+    }
+  ],
   "kikArticle": {},
   "showcaseSlides": [],
   "articles": [],

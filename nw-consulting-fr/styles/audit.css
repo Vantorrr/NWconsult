@@ -272,25 +272,47 @@
   flex-shrink: 0;
 }
 
-.country-card__cta {
-  margin-top: 20px;
+.country-card__actions {
+  margin-top: 24px;
   display: flex;
   align-items: center;
-  gap: 8px;
+  justify-content: space-between;
+  gap: 12px;
+  flex-wrap: wrap;
+}
+
+.country-card__link {
   color: var(--brand-light);
   font-weight: 600;
-  font-size: 16px;
+  text-decoration: none;
+  transition: color 0.3s ease;
 }
 
-.country-card__cta svg {
-  width: 20px;
-  height: 20px;
-  stroke: var(--brand-light);
-  transition: transform 0.3s ease;
+.country-card__link:hover {
+  color: #ffffff;
 }
 
-.country-card:hover .country-card__cta svg {
-  transform: translateX(4px);
+.country-card__button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 12px 24px;
+  min-width: 140px;
+  height: auto;
+  border-radius: 10px;
+  border: none;
+  background: linear-gradient(135deg, #00bfff 0%, #0099ff 100%);
+  color: #fff;
+  font-weight: 600;
+  font-size: 14px;
+  cursor: pointer;
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+  box-shadow: 0 6px 24px rgba(0, 191, 255, 0.35);
+}
+
+.country-card__button:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 12px 28px rgba(0, 191, 255, 0.45);
 }
 
 /* Process Section */

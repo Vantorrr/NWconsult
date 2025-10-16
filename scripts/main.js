@@ -254,7 +254,14 @@ document.addEventListener('DOMContentLoaded', () => {
   function loadShowcaseSlides() {
     const slides = localStorage.getItem('showcaseSlides');
     if (slides) {
-      return JSON.parse(slides);
+      try {
+        const parsed = JSON.parse(slides);
+        if (Array.isArray(parsed) && parsed.length > 0) {
+          return parsed;
+        }
+      } catch (e) {
+        console.warn('Не удалось прочитать сохранённые слайды, используем дефолтные.', e);
+      }
     }
     // Default slides
     return [

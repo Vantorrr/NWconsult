@@ -154,7 +154,8 @@
                       <th>Банк</th>
                       <th>Страна</th>
                       <th>Тип счета</th>
-                      <th>Мин. баланс</th>
+                      <th>Открытие</th>
+                      <th>Стоимость</th>
                       <th>Срок</th>
                       <th>Действия</th>
                     </tr>
@@ -199,22 +200,10 @@
                 </div>
               </div>
               
-              <div class="admin-table-wrapper">
-                <table class="admin-table" id="admin-audit-table">
-                  <thead>
-                    <tr>
-                      <th>Страна</th>
-                      <th>Регион</th>
-                      <th>Налог</th>
-                      <th>Требования к аудиту</th>
-                      <th>Стандарты</th>
-                      <th>Действия</th>
-                    </tr>
-                  </thead>
-                  <tbody>
-                    <!-- Countries will be loaded dynamically -->
-                  </tbody>
-                </table>
+              <div class="admin-countries-grid" id="admin-audit-grid">
+                <div class="admin-country-card admin-country-card--placeholder">
+                  <p class="muted">Добавьте первую юрисдикцию аудита, чтобы она появилась здесь.</p>
+                </div>
               </div>
             </div>
           </div>
@@ -276,16 +265,35 @@
               </div>
               
               <div class="admin-other-services">
-                <h3>Дополнительные услуги</h3>
-                <p>В будущем здесь можно будет добавлять другие услуги помимо КИК</p>
-                <div class="admin-actions">
-                  <button class="btn" disabled>
-                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                      <line x1="12" y1="5" x2="12" y2="19"/>
-                      <line x1="5" y1="12" x2="19" y2="12"/>
-                    </svg>
-                    Добавить услугу (скоро)
-                  </button>
+                <div class="admin-section-header">
+                  <h3>Дополнительные услуги</h3>
+                  <div class="admin-actions">
+                    <button id="other-service-add" class="btn btn--primary">
+                      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <line x1="12" y1="5" x2="12" y2="19"/>
+                        <line x1="5" y1="12" x2="19" y2="12"/>
+                      </svg>
+                      Добавить услугу
+                    </button>
+                  </div>
+                </div>
+                <p class="muted">Редактируйте карточки дополнительных услуг без ручного изменения файлов.</p>
+                <div class="admin-table-container">
+                  <table class="admin-table">
+                    <thead>
+                      <tr>
+                        <th>Название</th>
+                        <th>Описание</th>
+                        <th>Ссылка</th>
+                        <th>Действия</th>
+                      </tr>
+                    </thead>
+                    <tbody id="other-services-body">
+                      <tr class="table-placeholder">
+                        <td colspan="4" style="text-align: center; color: #8899a6;">Добавьте первую услугу, чтобы она появилась здесь</td>
+                      </tr>
+                    </tbody>
+                  </table>
                 </div>
               </div>
             </div>
@@ -303,47 +311,26 @@
               
               <div class="admin-articles-list">
                 <h3>Текущие статьи:</h3>
+                <div class="admin-actions" style="margin-bottom: 16px;">
+                  <button id="article-add" class="btn btn--primary">
+                    <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2">
+                      <path d="M12 5v14M5 12h14"/>
+                    </svg>
+                    Добавить статью
+                  </button>
+                </div>
                 <table class="admin-table">
                   <thead>
                     <tr>
                       <th>Название</th>
-                      <th>Файл</th>
-                      <th>Услуга</th>
+                      <th>Slug</th>
+                      <th>Раздел</th>
                       <th>Действия</th>
                     </tr>
                   </thead>
-                  <tbody>
-                    <tr>
-                      <td>Составление расчётов для прохождения аудита</td>
-                      <td><code>audit-calculations.html</code></td>
-                      <td>Бухгалтерия</td>
-                      <td>
-                        <a href="../pages/articles/audit-calculations.html" target="_blank" class="btn btn--sm">Просмотр</a>
-                      </td>
-                    </tr>
-                    <tr>
-                      <td>Восстановление бухучёта</td>
-                      <td><code>accounting-restore.html</code></td>
-                      <td>Бухгалтерия</td>
-                      <td>
-                        <a href="../pages/articles/accounting-restore.html" target="_blank" class="btn btn--sm">Просмотр</a>
-                      </td>
-                    </tr>
-                    <tr>
-                      <td>Требования к документам</td>
-                      <td><code>docs-requirements.html</code></td>
-                      <td>Бухгалтерия</td>
-                      <td>
-                        <a href="../pages/articles/docs-requirements.html" target="_blank" class="btn btn--sm">Просмотр</a>
-                      </td>
-                    </tr>
-                    <tr>
-                      <td>КИК (Контролируемые иностранные компании)</td>
-                      <td><code>ru-kik.html</code></td>
-                      <td>Прочие услуги</td>
-                      <td>
-                        <a href="../pages/articles/ru-kik.html" target="_blank" class="btn btn--sm">Просмотр</a>
-                      </td>
+                  <tbody id="articles-table-body">
+                    <tr class="table-placeholder">
+                      <td colspan="4" style="text-align: center; color: #8899a6;">Пока нет статей. Нажмите «Добавить статью», чтобы создать первую.</td>
                     </tr>
                   </tbody>
                 </table>
@@ -555,9 +542,12 @@
             <input type="text" id="showcase-link-text" placeholder="Узнать подробнее →" required>
           </div>
           <div class="form-group">
-            <label for="showcase-image">URL изображения *</label>
-            <input type="text" id="showcase-image" placeholder="https://example.com/image.jpg" required>
-            <small>Рекомендуемый размер: 600x400px</small>
+            <label>Изображение *</label>
+            <input type="hidden" id="showcase-image" required>
+            <input type="file" id="showcase-image-upload" accept="image/*" style="display:none">
+            <button type="button" class="btn" id="showcase-upload-trigger">Загрузить изображение</button>
+            <div class="muted" id="showcase-image-status">Файл не выбран</div>
+            <small>Рекомендуемый размер: 600x400px. Изображение будет сохранено в админ-панели.</small>
           </div>
           <div class="form-group">
             <label for="showcase-image-alt">Описание изображения</label>
@@ -565,6 +555,35 @@
           </div>
           <div class="modal-actions">
             <button type="button" class="btn btn--ghost" id="showcase-modal-cancel">Отмена</button>
+            <button type="submit" class="btn btn--primary">Сохранить</button>
+          </div>
+        </form>
+      </div>
+    </div>
+    
+    <!-- Other Service Modal -->
+    <div id="other-service-modal" class="modal" style="display: none;">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h3 id="other-service-modal-title">Добавить услугу</h3>
+          <button type="button" class="modal-close" id="other-service-modal-close">&times;</button>
+        </div>
+        <form id="other-service-form">
+          <input type="hidden" id="other-service-id">
+          <div class="form-group">
+            <label for="other-service-title">Название *</label>
+            <input type="text" id="other-service-title" required>
+          </div>
+          <div class="form-group">
+            <label for="other-service-desc">Краткое описание *</label>
+            <textarea id="other-service-desc" rows="3" placeholder="Опишите услугу" required></textarea>
+          </div>
+          <div class="form-group">
+            <label for="other-service-link">Ссылка</label>
+            <input type="text" id="other-service-link" placeholder="/pages/prochie-uslugi.html">
+          </div>
+          <div class="modal-actions">
+            <button type="button" class="btn btn--ghost" id="other-service-modal-cancel">Отмена</button>
             <button type="submit" class="btn btn--primary">Сохранить</button>
           </div>
         </form>
@@ -584,6 +603,21 @@
               <label for="article-title">Заголовок статьи</label>
               <input type="text" id="article-title" class="form-control" required>
             </div>
+            <div class="form-group form-group--double">
+              <div>
+                <label for="article-slug">Slug (латиница, для ссылки)</label>
+                <input type="text" id="article-slug" class="form-control" placeholder="audit-australia" required>
+              </div>
+              <div>
+                <label for="article-time">Время чтения</label>
+                <input type="text" id="article-time" class="form-control" placeholder="5 мин чтения">
+              </div>
+            </div>
+            <div class="form-group">
+              <label for="article-category">Раздел</label>
+              <input type="text" id="article-category" class="form-control" placeholder="Аудит">
+            </div>
+            <input type="hidden" id="article-id">
             
             <div class="form-group">
               <label for="article-content">Содержание статьи</label>

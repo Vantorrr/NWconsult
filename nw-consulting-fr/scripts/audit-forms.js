@@ -1,61 +1,97 @@
-// Данные depuisтран для аудита
-const auditCountries = {
+const lang = (document.documentElement.getAttribute('lang') || 'ru').toLowerCase();
+const isEnglish = lang.startsWith('en');
+const isFrench = lang.startsWith('fr');
+
+let auditCountries = {
     'cyprus': {
-        name: 'Chypre',
+        name: isEnglish ? 'Cyprus' : isFrench ? 'Chypre' : 'Кипр',
         flag: '🇨🇾',
-        title: 'Audit на Chypreе'
+        title: isEnglish ? 'Audit in Cyprus' : isFrench ? 'Audit à Chypre' : 'Аудит на Кипре'
     },
     'malta': {
-        name: 'Malte',
+        name: isEnglish ? 'Malta' : isFrench ? 'Malte' : 'Мальта',
         flag: '🇲🇹',
-        title: 'Audit в Мальте'
+        title: isEnglish ? 'Audit in Malta' : isFrench ? 'Audit à Malte' : 'Аудит в Мальте'
     },
     'singapore': {
-        name: 'Singapour',
+        name: isEnglish ? 'Singapore' : isFrench ? 'Singapour' : 'Сингапур',
         flag: '🇸🇬',
-        title: 'Audit в Singapourе'
+        title: isEnglish ? 'Audit in Singapore' : isFrench ? 'Audit à Singapour' : 'Аудит в Сингапуре'
     },
     'hongkong': {
-        name: 'Hong Kong',
+        name: isEnglish ? 'Hong Kong' : isFrench ? 'Hong Kong' : 'Гонконг',
         flag: '🇭🇰',
-        title: 'Audit в Hong Kongе'
+        title: isEnglish ? 'Audit in Hong Kong' : isFrench ? 'Audit à Hong Kong' : 'Аудит в Гонконге'
     },
     'uae': {
-        name: 'ÉAU',
+        name: isEnglish ? 'UAE' : isFrench ? 'EAU' : 'ОАЭ',
         flag: '🇦🇪',
-        title: 'Audit в ÉAU'
+        title: isEnglish ? 'Audit in the UAE' : isFrench ? 'Audit aux EAU' : 'Аудит в ОАЭ'
     },
     'uk': {
-        name: 'Royaume-Uni',
+        name: isEnglish ? 'United Kingdom' : isFrench ? 'Royaume-Uni' : 'Великобритания',
         flag: '🇬🇧',
-        title: 'Audit в Великобритании'
+        title: isEnglish ? 'Audit in the UK' : isFrench ? 'Audit au Royaume-Uni' : 'Аудит в Великобритании'
     },
     'estonia': {
-        name: 'Estonie',
+        name: isEnglish ? 'Estonia' : isFrench ? 'Estonie' : 'Эстония',
         flag: '🇪🇪',
-        title: 'Audit в Эdepuisтонии'
+        title: isEnglish ? 'Audit in Estonia' : isFrench ? 'Audit en Estonie' : 'Аудит в Эстонии'
     },
     'switzerland': {
-        name: 'Suisse',
+        name: isEnglish ? 'Switzerland' : isFrench ? 'Suisse' : 'Швейцария',
         flag: '🇨🇭',
-        title: 'Audit в Швейцарии'
+        title: isEnglish ? 'Audit in Switzerland' : isFrench ? 'Audit en Suisse' : 'Аудит в Швейцарии'
     }
 };
 
-// Ouverture модального окна
+function formatAuditTitle(name) {
+    if (!name) return isEnglish ? 'Audit' : isFrench ? 'Audit' : 'Аудит';
+    if (isEnglish) return `Audit in ${name}`;
+    if (isFrench) return `Audit en ${name}`;
+    return `Аудит в ${name}`;
+}
+
+window.setAuditModalData = function(countries) {
+    if (!Array.isArray(countries)) return;
+    const mapped = {};
+
+    countries.forEach(country => {
+        if (!country) return;
+        const id = country.id || (country.name ? country.name.toLowerCase().replace(/\s+/g, '-') : '');
+        if (!id) return;
+        mapped[id] = {
+            name: country.name || country.title || '',
+            flag: country.flag || '🏳️',
+            title: country.modalTitle || formatAuditTitle(country.name || country.title)
+        };
+    });
+
+    if (Object.keys(mapped).length > 0) {
+        auditCountries = mapped;
+    }
+};
+
+if (typeof window.getAuditCountries === 'function') {
+    window.setAuditModalData(window.getAuditCountries());
+}
+
+// Открытие модального окна
 function openAuditModal(countryId) {
     const modal = document.getElementById('audit-modal');
     const flagEl = document.getElementById('audit-modal-flag');
     const titleEl = document.getElementById('audit-modal-title');
     const countryEl = document.getElementById('audit-country');
+    const country = auditCountries[countryId] || auditCountries[Object.keys(auditCountries).find(key => key === countryId)];
+    if (!country) {
+        console.warn('Не найдена страна для модального окна аудита', countryId);
+        return;
+    }
     
-    const country = auditCountries[countryId];
-    if (!country) return;
-    
-    // Обновляем depuisодержимое модального окна
-    flagEl.textContent = country.flag;
-    titleEl.textContent = country.title;
-    countryEl.value = country.name;
+    // Обновляем содержимое модального окна
+    flagEl.textContent = country.flag || '🏳️';
+    titleEl.textContent = country.title || formatAuditTitle(country.name);
+    countryEl.value = country.name || '';
     
     // Показываем модальное окно
     modal.style.display = 'flex';
@@ -71,13 +107,13 @@ function closeAuditModal() {
     modal.style.display = 'none';
     document.body.style.overflow = '';
     
-    // Сброdepuis формы и depuisкрытие depuisообщения об уdepuisпехе
+    // Сброс формы и скрытие сообщения об успехе
     form.reset();
     form.style.display = 'block';
     successEl.style.display = 'none';
 }
 
-// Обрабà partir deка à partir deправки формы
+// Обработка отправки формы
 document.addEventListener('DOMContentLoaded', function() {
     const auditForm = document.getElementById('audit-form');
     const modal = document.getElementById('audit-modal');
@@ -100,18 +136,18 @@ document.addEventListener('DOMContentLoaded', function() {
                 // Отправляем в Telegram
                 await window.sendAuditToTelegram(data);
                 
-                // Показываем depuisообщение об уdepuisпехе
+                // Показываем сообщение об успехе
                 auditForm.style.display = 'none';
                 document.getElementById('audit-success').style.display = 'block';
                 
-                // Автоматичеdepuisки закрываем через 5 depuisекунд
+                // Автоматически закрываем через 5 секунд
                 setTimeout(() => {
                     closeAuditModal();
                 }, 5000);
                 
             } catch (error) {
-                console.error('Ошибка при à partir deправке:', error);
-                alert('Произошла ошибка при à partir deправке формы. Пожалуйdepuisта, попробуйте еще раз или depuisвяжитеdepuisь depuis нами напрямую.');
+                console.error('Ошибка при отправке:', error);
+                alert('Произошла ошибка при отправке формы. Пожалуйста, попробуйте еще раз или свяжитесь с нами напрямую.');
             }
         });
     }

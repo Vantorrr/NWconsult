@@ -1,46 +1,80 @@
-// Данные стран для аудита
-const auditCountries = {
+const lang = (document.documentElement.getAttribute('lang') || 'ru').toLowerCase();
+const isEnglish = lang.startsWith('en');
+const isFrench = lang.startsWith('fr');
+
+let auditCountries = {
     'cyprus': {
-        name: 'Кипр',
+        name: isEnglish ? 'Cyprus' : isFrench ? 'Chypre' : 'Кипр',
         flag: '🇨🇾',
-        title: 'Аудит на Кипре'
+        title: isEnglish ? 'Audit in Cyprus' : isFrench ? 'Audit à Chypre' : 'Аудит на Кипре'
     },
     'malta': {
-        name: 'Мальта',
+        name: isEnglish ? 'Malta' : isFrench ? 'Malte' : 'Мальта',
         flag: '🇲🇹',
-        title: 'Аудит в Мальте'
+        title: isEnglish ? 'Audit in Malta' : isFrench ? 'Audit à Malte' : 'Аудит в Мальте'
     },
     'singapore': {
-        name: 'Сингапур',
+        name: isEnglish ? 'Singapore' : isFrench ? 'Singapour' : 'Сингапур',
         flag: '🇸🇬',
-        title: 'Аудит в Сингапуре'
+        title: isEnglish ? 'Audit in Singapore' : isFrench ? 'Audit à Singapour' : 'Аудит в Сингапуре'
     },
     'hongkong': {
-        name: 'Гонконг',
+        name: isEnglish ? 'Hong Kong' : isFrench ? 'Hong Kong' : 'Гонконг',
         flag: '🇭🇰',
-        title: 'Аудит в Гонконге'
+        title: isEnglish ? 'Audit in Hong Kong' : isFrench ? 'Audit à Hong Kong' : 'Аудит в Гонконге'
     },
     'uae': {
-        name: 'ОАЭ',
+        name: isEnglish ? 'UAE' : isFrench ? 'EAU' : 'ОАЭ',
         flag: '🇦🇪',
-        title: 'Аудит в ОАЭ'
+        title: isEnglish ? 'Audit in the UAE' : isFrench ? 'Audit aux EAU' : 'Аудит в ОАЭ'
     },
     'uk': {
-        name: 'Великобритания',
+        name: isEnglish ? 'United Kingdom' : isFrench ? 'Royaume-Uni' : 'Великобритания',
         flag: '🇬🇧',
-        title: 'Аудит в Великобритании'
+        title: isEnglish ? 'Audit in the UK' : isFrench ? 'Audit au Royaume-Uni' : 'Аудит в Великобритании'
     },
     'estonia': {
-        name: 'Эстония',
+        name: isEnglish ? 'Estonia' : isFrench ? 'Estonie' : 'Эстония',
         flag: '🇪🇪',
-        title: 'Аудит в Эстонии'
+        title: isEnglish ? 'Audit in Estonia' : isFrench ? 'Audit en Estonie' : 'Аудит в Эстонии'
     },
     'switzerland': {
-        name: 'Швейцария',
+        name: isEnglish ? 'Switzerland' : isFrench ? 'Suisse' : 'Швейцария',
         flag: '🇨🇭',
-        title: 'Аудит в Швейцарии'
+        title: isEnglish ? 'Audit in Switzerland' : isFrench ? 'Audit en Suisse' : 'Аудит в Швейцарии'
     }
 };
+
+function formatAuditTitle(name) {
+    if (!name) return isEnglish ? 'Audit' : isFrench ? 'Audit' : 'Аудит';
+    if (isEnglish) return `Audit in ${name}`;
+    if (isFrench) return `Audit en ${name}`;
+    return `Аудит в ${name}`;
+}
+
+window.setAuditModalData = function(countries) {
+    if (!Array.isArray(countries)) return;
+    const mapped = {};
+
+    countries.forEach(country => {
+        if (!country) return;
+        const id = country.id || (country.name ? country.name.toLowerCase().replace(/\s+/g, '-') : '');
+        if (!id) return;
+        mapped[id] = {
+            name: country.name || country.title || '',
+            flag: country.flag || '🏳️',
+            title: country.modalTitle || formatAuditTitle(country.name || country.title)
+        };
+    });
+
+    if (Object.keys(mapped).length > 0) {
+        auditCountries = mapped;
+    }
+};
+
+if (typeof window.getAuditCountries === 'function') {
+    window.setAuditModalData(window.getAuditCountries());
+}
 
 // Открытие модального окна
 function openAuditModal(countryId) {
@@ -48,14 +82,16 @@ function openAuditModal(countryId) {
     const flagEl = document.getElementById('audit-modal-flag');
     const titleEl = document.getElementById('audit-modal-title');
     const countryEl = document.getElementById('audit-country');
-    
-    const country = auditCountries[countryId];
-    if (!country) return;
+    const country = auditCountries[countryId] || auditCountries[Object.keys(auditCountries).find(key => key === countryId)];
+    if (!country) {
+        console.warn('Не найдена страна для модального окна аудита', countryId);
+        return;
+    }
     
     // Обновляем содержимое модального окна
-    flagEl.textContent = country.flag;
-    titleEl.textContent = country.title;
-    countryEl.value = country.name;
+    flagEl.textContent = country.flag || '🏳️';
+    titleEl.textContent = country.title || formatAuditTitle(country.name);
+    countryEl.value = country.name || '';
     
     // Показываем модальное окно
     modal.style.display = 'flex';

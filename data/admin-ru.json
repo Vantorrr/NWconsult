@@ -65,6 +65,7 @@
       "typeText": "Традиционный",
       "remote": false,
       "time": "10-14 дней",
+      "cost": "$5,000",
       "minimum": "$5,000",
       "features": "Мультивалютные счета, инвестиции, премиум обслуживание"
     },
@@ -78,6 +79,7 @@
       "typeText": "Традиционный",
       "remote": false,
       "time": "2-3 недели",
+      "cost": "$30,000",
       "minimum": "$30,000",
       "features": "Азиатский хаб, мультивалютные счета, торговое финансирование"
     },
@@ -91,6 +93,7 @@
       "typeText": "Цифровой банк",
       "remote": true,
       "time": "1-2 дня",
+      "cost": "$0",
       "minimum": "$0",
       "features": "Мультивалютные счета, крипто операции, API интеграция"
     },
@@ -104,6 +107,7 @@
       "typeText": "Цифровой банк",
       "remote": true,
       "time": "1-3 дня",
+      "cost": "$0",
       "minimum": "$0",
       "features": "USD счета, интеграции, высокие лимиты"
     },
@@ -117,6 +121,7 @@
       "typeText": "Традиционный",
       "remote": false,
       "time": "5-7 дней",
+      "cost": "€5,000",
       "minimum": "€5,000",
       "features": "EU счета, торговое финансирование"
     },
@@ -130,6 +135,7 @@
       "typeText": "EMI",
       "remote": true,
       "time": "1 день",
+      "cost": "$0",
       "minimum": "$0",
       "features": "Мультивалютные счета, низкие комиссии, API"
     },
@@ -143,6 +149,7 @@
       "typeText": "EMI",
       "remote": true,
       "time": "1-2 дня",
+      "cost": "€0",
       "minimum": "€0",
       "features": "SEPA платежи, мультивалютные счета"
     },
@@ -156,6 +163,7 @@
       "typeText": "Традиционный",
       "remote": true,
       "time": "7-10 дней",
+      "cost": "€1,000",
       "minimum": "€1,000",
       "features": "e-Residency поддержка, крипто-френдли"
     },
@@ -169,6 +177,7 @@
       "typeText": "Традиционный",
       "remote": false,
       "time": "2-4 недели",
+      "cost": "HKD 50,000",
       "minimum": "HKD 50,000",
       "features": "Глобальная сеть, премиум обслуживание"
     },
@@ -182,11 +191,101 @@
       "typeText": "Традиционный",
       "remote": false,
       "time": "1-2 недели",
+      "cost": "AED 25,000",
       "minimum": "AED 25,000",
       "features": "Исламский банкинг, мультивалютные счета"
     }
   ],
-  "auditCountries": [],
+  "auditCountries": [
+    {
+      "id": "cyprus",
+      "name": "Кипр",
+      "flag": "🇨🇾",
+      "region": "europe",
+      "regionText": "Европа",
+      "taxRate": "12.5%",
+      "auditRequired": "Обязательный ежегодный",
+      "standards": "МСФО",
+      "articleUrl": "./articles/audit-cyprus.html"
+    },
+    {
+      "id": "malta",
+      "name": "Мальта",
+      "flag": "🇲🇹",
+      "region": "europe",
+      "regionText": "Европа",
+      "taxRate": "35%",
+      "auditRequired": "Для крупных компаний",
+      "standards": "МСФО",
+      "articleUrl": "./articles/audit-malta.html"
+    },
+    {
+      "id": "singapore",
+      "name": "Сингапур",
+      "flag": "🇸🇬",
+      "region": "asia",
+      "regionText": "Азия",
+      "taxRate": "17%",
+      "auditRequired": "По размеру компании",
+      "standards": "SFRS",
+      "articleUrl": "./articles/audit-singapore.html"
+    },
+    {
+      "id": "hongkong",
+      "name": "Гонконг",
+      "flag": "🇭🇰",
+      "region": "asia",
+      "regionText": "Азия",
+      "taxRate": "16.5%",
+      "auditRequired": "Обязательный",
+      "standards": "HKFRS",
+      "articleUrl": "./articles/audit-hongkong.html"
+    },
+    {
+      "id": "uae",
+      "name": "ОАЭ",
+      "flag": "🇦🇪",
+      "region": "middle-east",
+      "regionText": "Ближний Восток",
+      "taxRate": "0-9%",
+      "auditRequired": "В свободных зонах - нет",
+      "standards": "IFRS",
+      "articleUrl": "./articles/audit-uae.html"
+    },
+    {
+      "id": "uk",
+      "name": "Великобритания",
+      "flag": "🇬🇧",
+      "region": "europe",
+      "regionText": "Европа",
+      "taxRate": "19-25%",
+      "auditRequired": "По размеру компании",
+      "standards": "UK GAAP",
+      "articleUrl": "./articles/audit-uk.html"
+    },
+    {
+      "id": "estonia",
+      "name": "Эстония",
+      "flag": "🇪🇪",
+      "region": "europe",
+      "regionText": "Европа",
+      "taxRate": "20%",
+      "auditRequired": "По размеру компании",
+      "standards": "МСФО",
+      "articleUrl": "./articles/audit-estonia.html"
+    },
+    {
+      "id": "switzerland",
+      "name": "Швейцария",
+      "flag": "🇨🇭",
+      "region": "europe",
+      "regionText": "Европа",
+      "taxRate": "12-21%",
+      "auditRequired": "Обязательный",
+      "standards": "Swiss GAAP",
+      "articleUrl": "./articles/audit-switzerland.html"
+    }
+  ],
   "kikArticle": {},
   "showcaseSlides": [],
   "articles": [],

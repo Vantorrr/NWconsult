@@ -1,4 +1,4 @@
-// PRELOADER обрабатываетdepuisя инлайн depuisкриптом в index.html
+// PRELOADER обрабатывается инлайн скриптом в index.html
 
 // Navigation burger toggle
 const toggle = document.querySelector('.nav__toggle');
@@ -254,32 +254,39 @@ document.addEventListener('DOMContentLoaded', () => {
   function loadShowcaseSlides() {
     const slides = localStorage.getItem('showcaseSlides');
     if (slides) {
-      return JSON.parse(slides);
+      try {
+        const parsed = JSON.parse(slides);
+        if (Array.isArray(parsed) && parsed.length > 0) {
+          return parsed;
+        }
+      } catch (e) {
+        console.warn('Не удалось прочитать сохранённые слайды, используем дефолтные.', e);
+      }
     }
     // Default slides
     return [
       {
         id: '1',
-        title: 'Спецпредложение меdepuisяца',
-        desc: 'Enregistrement de la société в ÉAU + à partir deкрытие корпоративного depuisчета вdepuisего за $2,500',
+        title: 'Спецпредложение месяца',
+        desc: 'Регистрация компании в ОАЭ + открытие корпоративного счета всего за $2,500',
         link: './pages/registratsiya.html',
-        linkText: 'En savoir plus →',
+        linkText: 'Узнать подробнее →',
         image: 'https://images.unsplash.com/photo-1512453979798-5ea266f8880c?w=600&h=400&fit=crop',
         imageAlt: 'Dubai skyline'
       },
       {
         id: '2',
-        title: 'Новые юриdepuisдикции',
-        desc: 'Теперь доdepuisтупна региdepuisтрация компаний в Эdepuisтонии и Швейцарии depuis диdepuisтанционным à partir deкрытием depuisчетов',
+        title: 'Новые юрисдикции',
+        desc: 'Теперь доступна регистрация компаний в Эстонии и Швейцарии с дистанционным открытием счетов',
         link: './pages/registratsiya.html',
-        linkText: 'Choisir une juridiction →',
+        linkText: 'Выбрать юрисдикцию →',
         image: 'https://images.unsplash.com/photo-1521295121783-8a321d551ad2?w=600&h=400&fit=crop',
         imageAlt: 'European city'
       },
       {
         id: '3',
-        title: 'Banques для IT',
-        desc: 'Специальные уdepuisловия à partir deкрытия depuisчетов для IT-компаний. Rapideе раdepuisdepuisмà partir deрение заявок',
+        title: 'Банки для IT',
+        desc: 'Специальные условия открытия счетов для IT-компаний. Быстрое рассмотрение заявок',
         link: './pages/banki.html',
         linkText: 'Подобрать банк →',
         image: 'https://images.unsplash.com/photo-1563986768609-322da13575f3?w=600&h=400&fit=crop',

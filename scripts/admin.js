@@ -29,6 +29,26 @@ document.addEventListener('DOMContentLoaded', function() {
   
   // Current editing country
   let editingCountryId = null;
+
+  function showNotification(message, type = 'success') {
+    if (!message) return;
+    const existing = document.querySelector('.admin-toast');
+    existing?.remove();
+    
+    const toast = document.createElement('div');
+    toast.className = `admin-toast admin-toast--${type}`;
+    toast.textContent = message;
+    document.body.appendChild(toast);
+    
+    requestAnimationFrame(() => {
+      toast.classList.add('visible');
+    });
+    
+    setTimeout(() => {
+      toast.classList.remove('visible');
+      setTimeout(() => toast.remove(), 200);
+    }, 2800);
+  }
   
   // Get PIN from localStorage or use default
   function getStoredPin() {
@@ -219,7 +239,7 @@ document.addEventListener('DOMContentLoaded', function() {
       </div>
     `).join('');
   }
-  
+
   // Get region name
   function getRegionName(region) {
     const regions = {
@@ -237,6 +257,18 @@ document.addEventListener('DOMContentLoaded', function() {
     modalTitle.textContent = 'Добавить страну';
     countryForm.reset();
     showModal();
+  }
+
+  function getAuditRegionName(regionKey, fallback) {
+    const regions = {
+      'europe': 'Европа',
+      'asia': 'Азия',
+      'america': 'Америка',
+      'middle-east': 'Ближний Восток',
+      'offshore': 'Оффшоры',
+      'africa': 'Африка'
+    };
+    return fallback || regions[regionKey] || regionKey || 'Регион не указан';
   }
 
   window.openAddCountryModal = () => openAddModalInternal();
@@ -447,7 +479,7 @@ document.addEventListener('DOMContentLoaded', function() {
         typeText: 'Традиционный',
         remote: false,
         time: '10-14 дней',
-        minimum: '$5,000',
+        cost: '$5,000',
         features: 'Мультивалютные счета, инвестиции, премиум обслуживание'
       },
       {
@@ -460,7 +492,7 @@ document.addEventListener('DOMContentLoaded', function() {
         typeText: 'Традиционный',
         remote: false,
         time: '2-3 недели',
-        minimum: '$30,000',
+        cost: '$30,000',
         features: 'Азиатский хаб, мультивалютные счета, торговое финансирование'
       },
       {
@@ -473,7 +505,7 @@ document.addEventListener('DOMContentLoaded', function() {
         typeText: 'Цифровой банк',
         remote: true,
         time: '1-2 дня',
-        minimum: '$0',
+        cost: '$0',
         features: 'Мультивалютные счета, крипто операции, API интеграция'
       },
       {
@@ -486,7 +518,7 @@ document.addEventListener('DOMContentLoaded', function() {
         typeText: 'Цифровой банк',
         remote: true,
         time: '1-3 дня',
-        minimum: '$0',
+        cost: '$0',
         features: 'USD счета, интеграции, высокие лимиты'
       },
       {
@@ -499,7 +531,7 @@ document.addEventListener('DOMContentLoaded', function() {
         typeText: 'Традиционный',
         remote: false,
         time: '5-7 дней',
-        minimum: '€5,000',
+        cost: '€5,000',
         features: 'EU счета, торговое финансирование'
       },
       {
@@ -512,7 +544,7 @@ document.addEventListener('DOMContentLoaded', function() {
         typeText: 'EMI',
         remote: true,
         time: '1 день',
-        minimum: '$0',
+        cost: '$0',
         features: 'Мультивалютные счета, низкие комиссии, API'
       },
       {
@@ -525,7 +557,7 @@ document.addEventListener('DOMContentLoaded', function() {
         typeText: 'EMI',
         remote: true,
         time: '1-2 дня',
-        minimum: '€0',
+        cost: '€0',
         features: 'SEPA платежи, мультивалютные счета'
       },
       {
@@ -538,7 +570,7 @@ document.addEventListener('DOMContentLoaded', function() {
         typeText: 'Традиционный',
         remote: true,
         time: '7-10 дней',
-        minimum: '€1,000',
+        cost: '€1,000',
         features: 'e-Residency поддержка, крипто-френдли'
       },
       {
@@ -551,7 +583,7 @@ document.addEventListener('DOMContentLoaded', function() {
         typeText: 'Традиционный',
         remote: false,
         time: '2-4 недели',
-        minimum: 'HKD 50,000',
+        cost: 'HKD 50,000',
         features: 'Глобальная сеть, премиум обслуживание'
       },
       {
@@ -564,7 +596,7 @@ document.addEventListener('DOMContentLoaded', function() {
         typeText: 'Традиционный',
         remote: false,
         time: '1-2 недели',
-        minimum: 'AED 25,000',
+        cost: 'AED 25,000',
         features: 'Исламский банкинг, мультивалютные счета'
       }
     ];
@@ -581,7 +613,8 @@ document.addEventListener('DOMContentLoaded', function() {
         </td>
         <td>${bank.country}</td>
         <td>${bank.typeText}</td>
-        <td>${bank.minimum}</td>
+        <td>${bank.remote ? 'Удалённо' : 'С визитом'}</td>
+        <td>${bank.cost || bank.minimum || '—'}</td>
         <td>${bank.time}</td>
         <td>
           <button class="icon-btn" onclick="editBank(${index})" title="Редактировать">
@@ -672,8 +705,8 @@ document.addEventListener('DOMContentLoaded', function() {
               <input type="text" id="bank-time" value="${bank?.time || ''}" placeholder="5-7 дней">
             </div>
             <div class="form-group">
-              <label>Минимальный баланс</label>
-              <input type="text" id="bank-minimum" value="${bank?.minimum || ''}" placeholder="$1,000">
+              <label>Стоимость (услуги/пакета)</label>
+              <input type="text" id="bank-cost" value="${bank?.cost || bank?.minimum || ''}" placeholder="$1,000">
             </div>
             <div class="form-group">
               <label>Особенности</label>
@@ -715,7 +748,8 @@ document.addEventListener('DOMContentLoaded', function() {
         typeText: typeTexts[typeSelect.value],
         remote: modal.querySelector('#bank-remote').value === 'true',
         time: modal.querySelector('#bank-time').value,
-        minimum: modal.querySelector('#bank-minimum').value,
+        cost: modal.querySelector('#bank-cost').value,
+        minimum: modal.querySelector('#bank-cost').value,
         features: modal.querySelector('#bank-features').value
       };
       
@@ -867,7 +901,7 @@ document.addEventListener('DOMContentLoaded', function() {
   });
   
   // Audit functionality
-  const auditTbody = document.querySelector('#admin-audit-table tbody');
+  const auditGrid = document.getElementById('admin-audit-grid');
   const addAuditBtn = document.getElementById('audit-add');
   const exportAuditBtn = document.getElementById('audit-export');
   const importAuditBtn = document.getElementById('audit-import');
@@ -883,105 +917,135 @@ document.addEventListener('DOMContentLoaded', function() {
         id: 'cyprus',
         name: 'Кипр',
         flag: '🇨🇾',
-        region: 'Европа',
+        region: 'europe',
+        regionText: 'Европа',
         taxRate: '12.5%',
         auditRequired: 'Обязательный ежегодный',
-        standards: 'МСФО'
+        standards: 'МСФО',
+        articleUrl: './articles/audit-cyprus.html'
       },
       {
         id: 'malta',
         name: 'Мальта',
         flag: '🇲🇹',
-        region: 'Европа',
+        region: 'europe',
+        regionText: 'Европа',
         taxRate: '35%',
         auditRequired: 'Для крупных компаний',
-        standards: 'МСФО'
+        standards: 'МСФО',
+        articleUrl: './articles/audit-malta.html'
       },
       {
         id: 'singapore',
         name: 'Сингапур',
         flag: '🇸🇬',
-        region: 'Азия',
+        region: 'asia',
+        regionText: 'Азия',
         taxRate: '17%',
         auditRequired: 'По размеру компании',
-        standards: 'SFRS'
+        standards: 'SFRS',
+        articleUrl: './articles/audit-singapore.html'
       },
       {
         id: 'hongkong',
         name: 'Гонконг',
         flag: '🇭🇰',
-        region: 'Азия',
+        region: 'asia',
+        regionText: 'Азия',
         taxRate: '16.5%',
         auditRequired: 'Обязательный',
-        standards: 'HKFRS'
+        standards: 'HKFRS',
+        articleUrl: './articles/audit-hongkong.html'
       },
       {
         id: 'uae',
         name: 'ОАЭ',
         flag: '🇦🇪',
-        region: 'Ближний Восток',
+        region: 'middle-east',
+        regionText: 'Ближний Восток',
         taxRate: '0-9%',
         auditRequired: 'В свободных зонах - нет',
-        standards: 'IFRS'
+        standards: 'IFRS',
+        articleUrl: './articles/audit-uae.html'
       },
       {
         id: 'uk',
         name: 'Великобритания',
         flag: '🇬🇧',
-        region: 'Европа',
+        region: 'europe',
+        regionText: 'Европа',
         taxRate: '19-25%',
         auditRequired: 'По размеру компании',
-        standards: 'UK GAAP'
+        standards: 'UK GAAP',
+        articleUrl: './articles/audit-uk.html'
       },
       {
         id: 'estonia',
         name: 'Эстония',
         flag: '🇪🇪',
-        region: 'Европа',
+        region: 'europe',
+        regionText: 'Европа',
         taxRate: '20%',
         auditRequired: 'По размеру компании',
-        standards: 'МСФО'
+        standards: 'МСФО',
+        articleUrl: './articles/audit-estonia.html'
       },
       {
         id: 'switzerland',
         name: 'Швейцария',
         flag: '🇨🇭',
-        region: 'Европа',
+        region: 'europe',
+        regionText: 'Европа',
         taxRate: '12-21%',
         auditRequired: 'Обязательный',
-        standards: 'Swiss GAAP'
+        standards: 'Swiss GAAP',
+        articleUrl: './articles/audit-switzerland.html'
       }
     ];
   }
 
   function renderAuditCountries(countries) {
-    if (!auditTbody) return;
-    
-    auditTbody.innerHTML = countries.map((country, index) => `
-      <tr>
-        <td>
-          <span style="font-size: 20px; margin-right: 8px;">${country.flag}</span>
-          ${country.name}
-        </td>
-        <td>${country.region}</td>
-        <td>${country.taxRate}</td>
-        <td>${country.auditRequired}</td>
-        <td>${country.standards}</td>
-        <td>
-          <button class="icon-btn" onclick="editAuditCountry(${index})" title="Редактировать">
-            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-              <path d="M11 4H4a2 2 0 00-2 2v14a2 2 0 002 2h14a2 2 0 002-2v-7"/>
-              <path d="M18.5 2.5a2.121 2.121 0 013 3L12 15l-4 1 1-4 9.5-9.5z"/>
-            </svg>
-          </button>
-          <button class="icon-btn danger" onclick="deleteAuditCountry(${index})" title="Удалить">
-            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-              <polyline points="3 6 5 6 21 6"/>
-              <path d="M19 6v14a2 2 0 01-2 2H7a2 2 0 01-2-2V6m3 0V4a2 2 0 012-2h4a2 2 0 012 2v2"/>
-            </svg>
-          </button>
-        </td>
-      </tr>
+    if (!auditGrid) return;
+
+    if (!Array.isArray(countries) || countries.length === 0) {
+      auditGrid.innerHTML = `
+        <div class="admin-country-card admin-country-card--placeholder">
+          <p class="muted">Добавьте первую юрисдикцию аудита, чтобы она появилась здесь.</p>
+        </div>
+      `;
+      return;
+    }
+
+    auditGrid.innerHTML = countries.map((country, index) => `
+      <div class="admin-country-card">
+        <div class="admin-country-header">
+          <h3 class="admin-country-name">
+            <span class="admin-country-flag">${country.flag || '🏳️'}</span>
+            ${country.name}
+          </h3>
+          <div class="admin-country-actions">
+            <button class="icon-btn" onclick="editAuditCountry(${index})" title="Редактировать">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M11 4H4a2 2 0 00-2 2v14a2 2 0 002 2h14a2 2 0 002-2v-7"/>
+                <path d="M18.5 2.5a2.121 2.121 0 013 3L12 15l-4 1 1-4 9.5-9.5z"/>
+              </svg>
+            </button>
+            <button class="icon-btn danger" onclick="deleteAuditCountry(${index})" title="Удалить">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <polyline points="3 6 5 6 21 6"/>
+                <path d="M19 6v14a2 2 0 01-2 2H7a2 2 0 01-2-2V6m3 0V4a2 2 0 012-2h4a2 2 0 012 2v2"/>
+              </svg>
+            </button>
+          </div>
+        </div>
+        <div class="admin-country-info">
+          <div><strong>Регион:</strong> ${getAuditRegionName(country.region, country.regionText)}</div>
+          <div><strong>Налог:</strong> ${country.taxRate || '—'}</div>
+          <div><strong>Требования:</strong> ${country.auditRequired || '—'}</div>
+          <div><strong>Стандарты:</strong> ${country.standards || '—'}</div>
+          ${country.articleUrl ? `<div><strong>Статья:</strong> <a href="${country.articleUrl}" target="_blank" rel="noopener">${country.articleUrl}</a></div>` : ''}
+        </div>
+      </div>
     `).join('');
   }
 
@@ -1002,7 +1066,11 @@ document.addEventListener('DOMContentLoaded', function() {
       let countries = JSON.parse(localStorage.getItem('auditData')) || getDefaultAuditCountries();
       countries.splice(index, 1);
       localStorage.setItem('auditData', JSON.stringify(countries));
+      localStorage.setItem('auditCountries', JSON.stringify(countries));
       loadAuditCountries();
+      if (window.setAuditCountries) {
+        window.setAuditCountries(countries);
+      }
     }
   };
 
@@ -1029,12 +1097,12 @@ document.addEventListener('DOMContentLoaded', function() {
             <div class="form-group">
               <label>Регион</label>
               <select id="audit-region">
-                <option value="Европа" ${country?.region === 'Европа' ? 'selected' : ''}>Европа</option>
-                <option value="Азия" ${country?.region === 'Азия' ? 'selected' : ''}>Азия</option>
-                <option value="Америка" ${country?.region === 'Америка' ? 'selected' : ''}>Америка</option>
-                <option value="Африка" ${country?.region === 'Африка' ? 'selected' : ''}>Африка</option>
-                <option value="Океания" ${country?.region === 'Океания' ? 'selected' : ''}>Океания</option>
-                <option value="Ближний Восток" ${country?.region === 'Ближний Восток' ? 'selected' : ''}>Ближний Восток</option>
+                <option value="europe" ${(!country || country?.region === 'europe') ? 'selected' : ''}>Европа</option>
+                <option value="asia" ${country?.region === 'asia' ? 'selected' : ''}>Азия</option>
+                <option value="america" ${country?.region === 'america' ? 'selected' : ''}>Америка</option>
+                <option value="middle-east" ${country?.region === 'middle-east' ? 'selected' : ''}>Ближний Восток</option>
+                <option value="offshore" ${country?.region === 'offshore' ? 'selected' : ''}>Оффшоры</option>
+                <option value="africa" ${country?.region === 'africa' ? 'selected' : ''}>Африка</option>
               </select>
             </div>
             <div class="form-group">
@@ -1048,6 +1116,10 @@ document.addEventListener('DOMContentLoaded', function() {
             <div class="form-group">
               <label>Стандарты отчётности</label>
               <input type="text" id="audit-standards" value="${country?.standards || ''}" placeholder="МСФО">
+            </div>
+            <div class="form-group">
+              <label>Ссылка на статью</label>
+              <input type="text" id="audit-article" value="${country?.articleUrl || ''}" placeholder="./articles/audit-cyprus.html">
             </div>
             <div class="modal-actions">
               <button type="button" class="btn btn--ghost" onclick="this.closest('.modal').remove()">Отмена</button>
@@ -1067,15 +1139,20 @@ document.addEventListener('DOMContentLoaded', function() {
       e.preventDefault();
 
       const countries = JSON.parse(localStorage.getItem('auditData')) || getDefaultAuditCountries();
-      
+      const regionValue = modal.querySelector('#audit-region').value;
+      const countryName = modal.querySelector('#audit-name').value.trim();
+      const normalizedId = country?.id || countryName.toLowerCase().replace(/\s+/g, '-').replace(/[^\w-]/g, '');
+
       const countryData = {
-        id: country?.id || modal.querySelector('#audit-name').value.toLowerCase().replace(/\s+/g, '-'),
-        name: modal.querySelector('#audit-name').value,
-        flag: modal.querySelector('#audit-flag').value,
-        region: modal.querySelector('#audit-region').value,
+        id: normalizedId || `audit_${Date.now()}`,
+        name: countryName || 'Без названия',
+        flag: modal.querySelector('#audit-flag').value || '🏴',
+        region: regionValue,
+        regionText: getAuditRegionName(regionValue),
         taxRate: modal.querySelector('#audit-tax').value,
         auditRequired: modal.querySelector('#audit-requirements').value,
-        standards: modal.querySelector('#audit-standards').value
+        standards: modal.querySelector('#audit-standards').value,
+        articleUrl: modal.querySelector('#audit-article').value || `./articles/audit-${normalizedId}.html`
       };
 
       if (index !== null) {
@@ -1083,10 +1160,15 @@ document.addEventListener('DOMContentLoaded', function() {
       } else {
         countries.push(countryData);
       }
-
+      
       localStorage.setItem('auditData', JSON.stringify(countries));
+      localStorage.setItem('auditCountries', JSON.stringify(countries));
       loadAuditCountries();
       modal.remove();
+      
+      if (window.setAuditCountries) {
+        window.setAuditCountries(countries);
+      }
     });
   }
 
@@ -1117,8 +1199,12 @@ document.addEventListener('DOMContentLoaded', function() {
         
         if (Array.isArray(countries)) {
           localStorage.setItem('auditData', JSON.stringify(countries));
+          localStorage.setItem('auditCountries', JSON.stringify(countries));
           loadAuditCountries();
           alert('Страны аудита успешно импортированы!');
+          if (window.setAuditCountries) {
+            window.setAuditCountries(countries);
+          }
         } else {
           alert('Неверный формат файла');
         }
@@ -1178,6 +1264,162 @@ document.addEventListener('DOMContentLoaded', function() {
   // Preview KIK article
   kikPreviewBtn?.addEventListener('click', () => {
     window.open('../pages/articles/ru-kik.html', '_blank');
+  });
+
+  // Other services management
+  const otherServicesBody = document.getElementById('other-services-body');
+  const otherServiceAddBtn = document.getElementById('other-service-add');
+  const otherServiceModal = document.getElementById('other-service-modal');
+  const otherServiceModalTitle = document.getElementById('other-service-modal-title');
+  const otherServiceModalClose = document.getElementById('other-service-modal-close');
+  const otherServiceModalCancel = document.getElementById('other-service-modal-cancel');
+  const otherServiceForm = document.getElementById('other-service-form');
+  const otherServiceIdInput = document.getElementById('other-service-id');
+  const otherServiceTitleInput = document.getElementById('other-service-title');
+  const otherServiceDescInput = document.getElementById('other-service-desc');
+  const otherServiceLinkInput = document.getElementById('other-service-link');
+  let editingServiceId = null;
+
+  function getDefaultOtherServices() {
+    return [
+      {
+        id: 'kik-consulting',
+        title: 'Консультации по КИК',
+        desc: 'Сопровождение уведомлений, расчёт прибыли и проверка обязательств контролирующих лиц.',
+        link: '/pages/articles/ru-kik.html'
+      }
+    ];
+  }
+
+  function loadOtherServices() {
+    if (!otherServicesBody) return;
+
+    let services;
+    try {
+      const raw = localStorage.getItem('otherServices');
+      if (!raw) {
+        services = getDefaultOtherServices();
+        localStorage.setItem('otherServices', JSON.stringify(services));
+      } else {
+        services = JSON.parse(raw);
+        if (!Array.isArray(services)) throw new Error('invalid');
+      }
+    } catch (error) {
+      console.error('Failed to load other services, resetting to defaults.', error);
+      services = getDefaultOtherServices();
+      localStorage.setItem('otherServices', JSON.stringify(services));
+    }
+
+    renderOtherServices(services);
+  }
+
+  function renderOtherServices(services) {
+    if (!otherServicesBody) return;
+
+    if (!services || services.length === 0) {
+      otherServicesBody.innerHTML = `
+        <tr class="table-placeholder">
+          <td colspan="4" style="text-align:center;">Добавьте первую услугу, чтобы она появилась здесь</td>
+        </tr>
+      `;
+      return;
+    }
+
+    otherServicesBody.innerHTML = services.map(service => `
+      <tr data-service-id="${service.id}">
+        <td>${service.title}</td>
+        <td>${service.desc || '—'}</td>
+        <td>${service.link ? `<a href="${service.link}" target="_blank" rel="noopener">${service.link}</a>` : '—'}</td>
+        <td>
+          <button class="icon-btn" title="Редактировать" onclick="editOtherService('${service.id}')">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M11 4H4a2 2 0 00-2 2v14a2 2 0 002 2h14a2 2 0 002-2v-7"/>
+              <path d="M18.5 2.5a2.121 2.121 0 013 3L12 15l-4 1 1-4 9.5-9.5z"/>
+            </svg>
+          </button>
+          <button class="icon-btn danger" title="Удалить" onclick="deleteOtherService('${service.id}')">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <polyline points="3 6 5 6 21 6"/>
+              <path d="M19 6v14a2 2 0 01-2 2H7a2 2 0 01-2-2V6m3 0V4a2 2 0 012-2h4a2 2 0 012 2v2"/>
+            </svg>
+          </button>
+        </td>
+      </tr>
+    `).join('');
+  }
+
+  function openOtherServiceModal(service = null) {
+    if (!otherServiceModal) return;
+
+    editingServiceId = service?.id || null;
+    otherServiceModalTitle.textContent = service ? 'Редактировать услугу' : 'Добавить услугу';
+    otherServiceIdInput.value = service?.id || '';
+    otherServiceTitleInput.value = service?.title || '';
+    otherServiceDescInput.value = service?.desc || '';
+    otherServiceLinkInput.value = service?.link || '';
+    otherServiceModal.style.display = 'block';
+  }
+
+  function closeOtherServiceModal() {
+    if (!otherServiceModal) return;
+    otherServiceModal.style.display = 'none';
+    otherServiceForm?.reset();
+    editingServiceId = null;
+  }
+
+  if (otherServiceAddBtn) {
+    otherServiceAddBtn.addEventListener('click', () => openOtherServiceModal());
+  }
+
+  otherServiceModalClose?.addEventListener('click', closeOtherServiceModal);
+  otherServiceModalCancel?.addEventListener('click', closeOtherServiceModal);
+
+  window.editOtherService = (id) => {
+    const services = JSON.parse(localStorage.getItem('otherServices') || '[]');
+    const service = services.find(item => item.id === id);
+    if (!service) {
+      showNotification('Услуга не найдена', 'error');
+      return;
+    }
+    openOtherServiceModal(service);
+  };
+
+  window.deleteOtherService = (id) => {
+    if (!confirm('Удалить эту услугу?')) return;
+    let services = JSON.parse(localStorage.getItem('otherServices') || '[]');
+    services = services.filter(item => item.id !== id);
+    localStorage.setItem('otherServices', JSON.stringify(services));
+    renderOtherServices(services);
+    showNotification('Услуга удалена');
+  };
+
+  otherServiceForm?.addEventListener('submit', (e) => {
+    e.preventDefault();
+    const title = otherServiceTitleInput.value.trim();
+    const desc = otherServiceDescInput.value.trim();
+    const link = otherServiceLinkInput.value.trim();
+
+    if (!title) {
+      showNotification('Введите название услуги', 'error');
+      return;
+    }
+
+    let services = JSON.parse(localStorage.getItem('otherServices') || '[]');
+    if (!Array.isArray(services)) services = [];
+
+    const id = editingServiceId || `service_${Date.now()}`;
+    const serviceData = { id, title, desc, link };
+
+    if (editingServiceId) {
+      services = services.map(item => item.id === id ? serviceData : item);
+    } else {
+      services.push(serviceData);
+    }
+
+    localStorage.setItem('otherServices', JSON.stringify(services));
+    renderOtherServices(services);
+    closeOtherServiceModal();
+    showNotification('Услуга сохранена');
   });
 
   // Initialize
@@ -1244,12 +1486,15 @@ document.addEventListener('DOMContentLoaded', function() {
   };
   
   // Load data if on admin page
-  if (document.querySelector('#admin-audit-table')) {
+  if (document.querySelector('#admin-audit-grid')) {
     loadAuditCountries();
   }
   
   if (document.querySelector('#kik-title')) {
     loadKikData();
+  }
+  if (otherServicesBody) {
+    loadOtherServices();
   }
 
   // ========== SHOWCASE MANAGEMENT ==========
@@ -1260,6 +1505,10 @@ document.addEventListener('DOMContentLoaded', function() {
   const showcaseForm = document.getElementById('showcase-form');
   const showcaseModalClose = document.getElementById('showcase-modal-close');
   const showcaseModalCancel = document.getElementById('showcase-modal-cancel');
+  const showcaseImageInput = document.getElementById('showcase-image');
+  const showcaseImageUpload = document.getElementById('showcase-image-upload');
+  const showcaseUploadTrigger = document.getElementById('showcase-upload-trigger');
+  const showcaseImageStatus = document.getElementById('showcase-image-status');
 
   function loadShowcaseSlides() {
     const slides = localStorage.getItem('showcaseSlides');
@@ -1329,7 +1578,12 @@ document.addEventListener('DOMContentLoaded', function() {
     document.getElementById('showcase-desc').value = slide.desc;
     document.getElementById('showcase-link').value = slide.link;
     document.getElementById('showcase-link-text').value = slide.linkText;
-    document.getElementById('showcase-image').value = slide.image;
+    if (showcaseImageInput) {
+      showcaseImageInput.value = slide.image;
+    }
+    if (showcaseImageStatus) {
+      showcaseImageStatus.textContent = slide.image ? 'Используется сохранённое изображение' : 'Файл не выбран';
+    }
     document.getElementById('showcase-image-alt').value = slide.imageAlt || '';
     
     showcaseModal.style.display = 'block';
@@ -1349,6 +1603,9 @@ document.addEventListener('DOMContentLoaded', function() {
     showcaseModalTitle.textContent = 'Добавить слайд';
     showcaseForm.reset();
     document.getElementById('showcase-id').value = '';
+    if (showcaseImageInput) showcaseImageInput.value = '';
+    if (showcaseImageUpload) showcaseImageUpload.value = '';
+    if (showcaseImageStatus) showcaseImageStatus.textContent = 'Файл не выбран';
     showcaseModal.style.display = 'block';
   }
 
@@ -1372,6 +1629,10 @@ document.addEventListener('DOMContentLoaded', function() {
   if (showcaseForm) {
     showcaseForm.addEventListener('submit', (e) => {
       e.preventDefault();
+      if (showcaseImageInput && !showcaseImageInput.value) {
+        showNotification('Пожалуйста, загрузите изображение для слайда', 'error');
+        return;
+      }
       
       const slideData = {
         id: document.getElementById('showcase-id').value || Date.now().toString(),
@@ -1379,7 +1640,7 @@ document.addEventListener('DOMContentLoaded', function() {
         desc: document.getElementById('showcase-desc').value,
         link: document.getElementById('showcase-link').value,
         linkText: document.getElementById('showcase-link-text').value,
-        image: document.getElementById('showcase-image').value,
+        image: showcaseImageInput ? showcaseImageInput.value : '',
         imageAlt: document.getElementById('showcase-image-alt').value
       };
       
@@ -1411,6 +1672,28 @@ document.addEventListener('DOMContentLoaded', function() {
         }, 10);
       });
     }
+  });
+
+  showcaseUploadTrigger?.addEventListener('click', () => {
+    showcaseImageUpload?.click();
+  });
+
+  showcaseImageUpload?.addEventListener('change', (event) => {
+    const file = event.target.files?.[0];
+    if (!file) {
+      if (showcaseImageStatus) showcaseImageStatus.textContent = 'Файл не выбран';
+      return;
+    }
+
+    const reader = new FileReader();
+    reader.onload = () => {
+      if (showcaseImageInput) showcaseImageInput.value = reader.result;
+      if (showcaseImageStatus) showcaseImageStatus.textContent = `Загружено: ${file.name}`;
+    };
+    reader.onerror = () => {
+      showNotification('Не удалось прочитать файл изображения', 'error');
+    };
+    reader.readAsDataURL(file);
   });
 })();
 

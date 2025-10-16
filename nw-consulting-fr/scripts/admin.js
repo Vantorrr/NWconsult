@@ -1,5 +1,5 @@
 // Admin Panel JavaScript
-(function() {
+document.addEventListener('DOMContentLoaded', function() {
   // Default PIN
   const DEFAULT_PIN = '123456';
   
@@ -20,6 +20,7 @@
   const exportCountriesBtn = document.getElementById('reg-export');
   const importCountriesBtn = document.getElementById('reg-import');
   
+  
   // Modal
   const countryModal = document.getElementById('country-modal');
   const countryForm = document.getElementById('country-form');
@@ -28,6 +29,26 @@
   
   // Current editing country
   let editingCountryId = null;
+
+  function showNotification(message, type = 'success') {
+    if (!message) return;
+    const existing = document.querySelector('.admin-toast');
+    existing?.remove();
+    
+    const toast = document.createElement('div');
+    toast.className = `admin-toast admin-toast--${type}`;
+    toast.textContent = message;
+    document.body.appendChild(toast);
+    
+    requestAnimationFrame(() => {
+      toast.classList.add('visible');
+    });
+    
+    setTimeout(() => {
+      toast.classList.remove('visible');
+      setTimeout(() => toast.remove(), 200);
+    }, 2800);
+  }
   
   // Get PIN from localStorage or use default
   function getStoredPin() {
@@ -68,7 +89,7 @@
         sessionStorage.setItem('adminAuthenticated', 'true');
         showAdminPanel();
       } else {
-        pinError.textContent = 'PIN incorrect-код';
+        pinError.textContent = 'Неверный PIN-код';
         pinInput.value = '';
         setTimeout(() => {
           pinError.textContent = '';
@@ -97,10 +118,29 @@
     });
   });
   
-  // Load countries
+  // Load countries (with self-heal if storage is empty/corrupted)
   function loadCountries() {
-    const countries = JSON.parse(localStorage.getItem('registrationCountries')) || getDefaultCountries();
-    renderCountries(countries);
+    try {
+      const raw = localStorage.getItem('registrationCountries');
+      if (!raw) {
+        const defaults = getDefaultCountries();
+        localStorage.setItem('registrationCountries', JSON.stringify(defaults));
+        renderCountries(defaults);
+        return;
+      }
+      const parsed = JSON.parse(raw);
+      if (!Array.isArray(parsed) || parsed.length === 0) {
+        const defaults = getDefaultCountries();
+        localStorage.setItem('registrationCountries', JSON.stringify(defaults));
+        renderCountries(defaults);
+        return;
+      }
+      renderCountries(parsed);
+    } catch (e) {
+      const defaults = getDefaultCountries();
+      localStorage.setItem('registrationCountries', JSON.stringify(defaults));
+      renderCountries(defaults);
+    }
   }
   
   // Get default countries
@@ -108,33 +148,53 @@
     return [
       { 
         id: 'cyprus',
-        name: 'Chypre',
+        name: 'Кипр',
         flag: '🇨🇾',
         region: 'europe',
-        time: '7-10 jours',
-        price: 2500,
-        priceText: '$2,500',
-        features: ['Société UE', 'Faibles impôts', 'Prestige']
+        time: '5-10 дней',
+        price: 3900,
+        priceText: '€3,900',
+        features: ['EU компания', 'Низкие налоги', 'Престиж']
+      },
+      { 
+        id: 'uae',
+        name: 'ОАЭ (Freezone)',
+        flag: '🇦🇪',
+        region: 'asia',
+        time: '5-14 дней',
+        price: 2900,
+        priceText: '$2,900',
+        features: ['0% налог', 'Банковский счет', 'Виза резидента']
+      },
+      { 
+        id: 'hongkong',
+        name: 'Гонконг',
+        flag: '🇭🇰',
+        region: 'asia',
+        time: '5-7 дней',
+        price: 1800,
+        priceText: '$1,800',
+        features: ['Международный центр', 'Простая отчетность', 'Банки']
       },
       { 
         id: 'uk',
-        name: 'Royaume-Uni',
+        name: 'Великобритания',
         flag: '🇬🇧',
         region: 'europe',
-        time: '3-5 jours',
-        price: 1500,
-        priceText: '$1,500',
-        features: ['Enregistrement rapide', 'Prestige mondial', 'Banques']
+        time: '1-3 дня',
+        price: 950,
+        priceText: '£950',
+        features: ['Быстрая регистрация', 'Мировой престиж', 'Банки']
       },
       { 
-        id: 'estonia',
-        name: 'Estonie',
-        flag: '🇪🇪',
-        region: 'europe',
-        time: '1-3 jours',
-        price: 1200,
-        priceText: '$1,200',
-        features: ['E-Residency', 'Gestion en ligne', 'Société UE']
+        id: 'usa',
+        name: 'США (LLC)',
+        flag: '🇺🇸',
+        region: 'america',
+        time: '2-7 дней',
+        price: 650,
+        priceText: '$650',
+        features: ['LLC структура', 'Банковский счет', 'Международный бизнес']
       }
     ];
   }
@@ -151,13 +211,13 @@
             ${country.name}
           </h3>
           <div class="admin-country-actions">
-            <button class="icon-btn" onclick="editCountry('${country.id}')" title="Modifier">
+            <button class="icon-btn" onclick="editCountry('${country.id}')" title="Редактировать">
               <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                 <path d="M11 4H4a2 2 0 00-2 2v14a2 2 0 002 2h14a2 2 0 002-2v-7"/>
                 <path d="M18.5 2.5a2.121 2.121 0 013 3L12 15l-4 1 1-4 9.5-9.5z"/>
               </svg>
             </button>
-            <button class="icon-btn danger" onclick="deleteCountry('${country.id}')" title="Supprimer">
+            <button class="icon-btn danger" onclick="deleteCountry('${country.id}')" title="Удалить">
               <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                 <polyline points="3 6 5 6 21 6"/>
                 <path d="M19 6v14a2 2 0 01-2 2H7a2 2 0 01-2-2V6m3 0V4a2 2 0 012-2h4a2 2 0 012 2v2"/>
@@ -166,11 +226,11 @@
           </div>
         </div>
         <div class="admin-country-info">
-          <div><strong>Région:</strong> ${getRegionName(country.region)}</div>
-          <div><strong>Délai:</strong> ${country.time}</div>
-          <div><strong>Prix:</strong> ${country.priceText}</div>
+          <div><strong>Регион:</strong> ${getRegionName(country.region)}</div>
+          <div><strong>Срок:</strong> ${country.time}</div>
+          <div><strong>Цена:</strong> ${country.priceText}</div>
           ${country.features && country.features.length > 0 ? `
-            <div><strong>Avantages:</strong></div>
+            <div><strong>Преимущества:</strong></div>
             <ul class="admin-country-features">
               ${country.features.map(f => `<li>${f}</li>`).join('')}
             </ul>
@@ -179,25 +239,43 @@
       </div>
     `).join('');
   }
-  
+
   // Get region name
   function getRegionName(region) {
     const regions = {
-      'europe': 'Europe',
-      'asia': 'Asie',
-      'america': 'Amérique',
-      'offshore': 'Offshore'
+      'europe': 'Европа',
+      'asia': 'Азия',
+      'america': 'Америка',
+      'offshore': 'Оффшоры'
     };
     return regions[region] || region;
   }
   
-  // Add country
-  addCountryBtn?.addEventListener('click', () => {
+  // Add country (also expose a global for inline fallback)
+  function openAddModalInternal() {
     editingCountryId = null;
-    modalTitle.textContent = 'Ajouter un pays';
+    modalTitle.textContent = 'Добавить страну';
     countryForm.reset();
     showModal();
-  });
+  }
+
+  function getAuditRegionName(regionKey, fallback) {
+    const regions = {
+      'europe': 'Европа',
+      'asia': 'Азия',
+      'america': 'Америка',
+      'middle-east': 'Ближний Восток',
+      'offshore': 'Оффшоры',
+      'africa': 'Африка'
+    };
+    return fallback || regions[regionKey] || regionKey || 'Регион не указан';
+  }
+
+  window.openAddCountryModal = () => openAddModalInternal();
+
+  if (addCountryBtn) {
+    addCountryBtn.addEventListener('click', openAddModalInternal);
+  }
   
   // Edit country
   window.editCountry = (id) => {
@@ -206,7 +284,7 @@
     
     if (country) {
       editingCountryId = id;
-      modalTitle.textContent = 'Modifier depuisтрану';
+      modalTitle.textContent = 'Редактировать страну';
       
       // Fill form
       document.getElementById('country-name').value = country.name;
@@ -216,13 +294,24 @@
       document.getElementById('country-price').value = country.price;
       document.getElementById('country-features').value = (country.features || []).join('\n');
       
+      // Set currency based on priceText
+      if (document.getElementById('country-currency')) {
+        if (country.priceText.includes('€')) {
+          document.getElementById('country-currency').value = '€';
+        } else if (country.priceText.includes('£')) {
+          document.getElementById('country-currency').value = '£';
+        } else {
+          document.getElementById('country-currency').value = '$';
+        }
+      }
+      
       showModal();
     }
   };
   
   // Delete country
   window.deleteCountry = (id) => {
-    if (confirm('Supprimer эту depuisтрану?')) {
+    if (confirm('Удалить эту страну?')) {
       let countries = JSON.parse(localStorage.getItem('registrationCountries')) || getDefaultCountries();
       countries = countries.filter(c => c.id !== id);
       localStorage.setItem('registrationCountries', JSON.stringify(countries));
@@ -237,54 +326,82 @@
   
   // Show/hide modal
   function showModal() {
-    countryModal.style.display = 'flex';
+    if (countryModal) {
+      countryModal.style.display = 'flex';
+    }
   }
   
   window.closeCountryModal = () => {
-    countryModal.style.display = 'none';
-    countryForm.reset();
+    const modal = document.getElementById('country-modal');
+    const form = document.getElementById('country-form');
+    if (modal) modal.style.display = 'none';
+    if (form) form.reset();
     editingCountryId = null;
   };
   
-  modalClose?.addEventListener('click', closeCountryModal);
+  if (modalClose) {
+    modalClose.addEventListener('click', closeCountryModal);
+  }
   
   // Country form submit
-  countryForm?.addEventListener('submit', (e) => {
-    e.preventDefault();
-    
-    const countries = JSON.parse(localStorage.getItem('registrationCountries')) || getDefaultCountries();
-    
-    const countryData = {
-      id: editingCountryId || `country_${Date.now()}`,
-      name: document.getElementById('country-name').value,
-      flag: document.getElementById('country-flag').value || '🏳️',
-      region: document.getElementById('country-region').value,
-      time: document.getElementById('country-time').value,
-      price: parseInt(document.getElementById('country-price').value),
-      priceText: `$${parseInt(document.getElementById('country-price').value).toLocaleString()}`,
-      features: document.getElementById('country-features').value.split('\n').filter(f => f.trim())
-    };
-    
-    if (editingCountryId) {
-      // Update existing
-      const index = countries.findIndex(c => c.id === editingCountryId);
-      if (index !== -1) {
-        countries[index] = countryData;
+  if (countryForm) {
+    console.log('Setting up form submit handler');
+    countryForm.addEventListener('submit', (e) => {
+      console.log('Form submitted!');
+      e.preventDefault();
+      
+      try {
+        const countries = JSON.parse(localStorage.getItem('registrationCountries')) || getDefaultCountries();
+        console.log('Current countries:', countries);
+        
+        const currency = document.getElementById('country-currency')?.value || '$';
+        const price = parseInt(document.getElementById('country-price').value);
+        
+        const countryData = {
+          id: editingCountryId || `country_${Date.now()}`,
+          name: document.getElementById('country-name').value,
+          flag: document.getElementById('country-flag').value || '🏳️',
+          region: document.getElementById('country-region').value,
+          time: document.getElementById('country-time').value,
+          price: price,
+          priceText: `${currency}${price.toLocaleString()}`,
+          features: document.getElementById('country-features').value.split('\n').filter(f => f.trim())
+        };
+        console.log('New country data:', countryData);
+        
+        if (editingCountryId) {
+          // Update existing
+          const index = countries.findIndex(c => c.id === editingCountryId);
+          if (index !== -1) {
+            countries[index] = countryData;
+            console.log('Updated country at index:', index);
+          }
+        } else {
+          // Add new
+          countries.push(countryData);
+          console.log('Added new country');
+        }
+        
+        localStorage.setItem('registrationCountries', JSON.stringify(countries));
+        console.log('Saved to localStorage');
+        
+        loadCountries();
+        closeCountryModal();
+        
+        alert('Страна сохранена!');
+        
+        // Update main page if function exists
+        if (window.setRegistrationCountries) {
+          window.setRegistrationCountries(countries);
+        }
+      } catch (error) {
+        console.error('Error saving country:', error);
+        alert('Ошибка при сохранении: ' + error.message);
       }
-    } else {
-      // Add new
-      countries.push(countryData);
-    }
-    
-    localStorage.setItem('registrationCountries', JSON.stringify(countries));
-    loadCountries();
-    closeCountryModal();
-    
-    // Update main page if function exists
-    if (window.setRegistrationCountries) {
-      window.setRegistrationCountries(countries);
-    }
-  });
+    });
+  } else {
+    console.error('Country form not found!');
+  }
   
   // Export countries
   exportCountriesBtn?.addEventListener('click', () => {
@@ -320,7 +437,7 @@
             window.setRegistrationCountries(countries);
           }
           
-          alert('Страны уdepuisпешно импортированы!');
+          alert('Страны успешно импортированы!');
         } else {
           alert('Неверный формат файла');
         }
@@ -354,68 +471,68 @@
     return [
       {
         id: 'swiss-cim',
-        country: 'Suisse',
+        country: 'Швейцария',
         countryCode: 'switzerland',
         flag: '🇨🇭',
         bank: 'CIM Banque',
         type: 'traditional',
-        typeText: 'Traditionnel',
+        typeText: 'Традиционный',
         remote: false,
-        time: '10-14 jours',
-        minimum: '$5,000',
-        features: 'Comptes multidevises, investissements, service premium'
+        time: '10-14 дней',
+        cost: '$5,000',
+        features: 'Мультивалютные счета, инвестиции, премиум обслуживание'
       },
       {
         id: 'singapore-dbs',
-        country: 'Singapour',
+        country: 'Сингапур',
         countryCode: 'singapore',
         flag: '🇸🇬',
         bank: 'DBS Bank',
         type: 'traditional',
-        typeText: 'Traditionnel',
+        typeText: 'Традиционный',
         remote: false,
         time: '2-3 недели',
-        minimum: '$30,000',
-        features: 'Hub asiatique, мультивалютные depuisчета, торговое финанdepuisирование'
+        cost: '$30,000',
+        features: 'Азиатский хаб, мультивалютные счета, торговое финансирование'
       },
       {
         id: 'uk-revolut',
-        country: 'Royaume-Uni',
+        country: 'Великобритания',
         countryCode: 'uk',
         flag: '🇬🇧',
         bank: 'Revolut Business',
         type: 'digital',
-        typeText: 'Banque numérique',
+        typeText: 'Цифровой банк',
         remote: true,
-        time: '1-2 jours',
-        minimum: '$0',
-        features: 'Comptes multidevises, крипто операции, API интеграция'
+        time: '1-2 дня',
+        cost: '$0',
+        features: 'Мультивалютные счета, крипто операции, API интеграция'
       },
       {
         id: 'usa-mercury',
-        country: 'États-Unis',
+        country: 'США',
         countryCode: 'usa',
         flag: '🇺🇸',
         bank: 'Mercury Bank',
         type: 'digital',
-        typeText: 'Banque numérique',
+        typeText: 'Цифровой банк',
         remote: true,
-        time: '1-3 jours',
-        minimum: '$0',
-        features: 'USD depuisчета, интеграции, выdepuisокие лимиты'
+        time: '1-3 дня',
+        cost: '$0',
+        features: 'USD счета, интеграции, высокие лимиты'
       },
       {
         id: 'cyprus-bank',
-        country: 'Chypre',
+        country: 'Кипр',
         countryCode: 'cyprus',
         flag: '🇨🇾',
         bank: 'Bank of Cyprus',
         type: 'traditional',
-        typeText: 'Traditionnel',
+        typeText: 'Традиционный',
         remote: false,
-        time: '5-7 jours',
-        minimum: '€5,000',
-        features: 'Comptes UE, торговое финанdepuisирование'
+        time: '5-7 дней',
+        cost: '€5,000',
+        features: 'EU счета, торговое финансирование'
       },
       {
         id: 'wise-business',
@@ -426,9 +543,9 @@
         type: 'emi',
         typeText: 'EMI',
         remote: true,
-        time: '1 jour',
-        minimum: '$0',
-        features: 'Comptes multidevises, низкие комиdepuisdepuisии, API'
+        time: '1 день',
+        cost: '$0',
+        features: 'Мультивалютные счета, низкие комиссии, API'
       },
       {
         id: 'lithuania-paysera',
@@ -439,48 +556,48 @@
         type: 'emi',
         typeText: 'EMI',
         remote: true,
-        time: '1-2 jours',
-        minimum: '€0',
-        features: 'SEPA платежи, мультивалютные depuisчета'
+        time: '1-2 дня',
+        cost: '€0',
+        features: 'SEPA платежи, мультивалютные счета'
       },
       {
         id: 'estonia-lpb',
-        country: 'Estonie',
+        country: 'Эстония',
         countryCode: 'estonia',
         flag: '🇪🇪',
         bank: 'LHV Bank',
         type: 'traditional',
-        typeText: 'Traditionnel',
+        typeText: 'Традиционный',
         remote: true,
-        time: '7-10 jours',
-        minimum: '€1,000',
+        time: '7-10 дней',
+        cost: '€1,000',
         features: 'e-Residency поддержка, крипто-френдли'
       },
       {
         id: 'hongkong-hsbc',
-        country: 'Hong Kong',
+        country: 'Гонконг',
         countryCode: 'hongkong',
         flag: '🇭🇰',
         bank: 'HSBC',
         type: 'traditional',
-        typeText: 'Traditionnel',
+        typeText: 'Традиционный',
         remote: false,
         time: '2-4 недели',
-        minimum: 'HKD 50,000',
-        features: 'Глобальная depuisеть, service premium'
+        cost: 'HKD 50,000',
+        features: 'Глобальная сеть, премиум обслуживание'
       },
       {
         id: 'uae-emirates',
-        country: 'ÉAU',
+        country: 'ОАЭ',
         countryCode: 'uae',
         flag: '🇦🇪',
         bank: 'Emirates NBD',
         type: 'traditional',
-        typeText: 'Traditionnel',
+        typeText: 'Традиционный',
         remote: false,
         time: '1-2 недели',
-        minimum: 'AED 25,000',
-        features: 'Banque islamique, мультивалютные depuisчета'
+        cost: 'AED 25,000',
+        features: 'Исламский банкинг, мультивалютные счета'
       }
     ];
   }
@@ -496,16 +613,17 @@
         </td>
         <td>${bank.country}</td>
         <td>${bank.typeText}</td>
-        <td>${bank.minimum}</td>
+        <td>${bank.remote ? 'Удалённо' : 'С визитом'}</td>
+        <td>${bank.cost || bank.minimum || '—'}</td>
         <td>${bank.time}</td>
         <td>
-          <button class="icon-btn" onclick="editBank(${index})" title="Modifier">
+          <button class="icon-btn" onclick="editBank(${index})" title="Редактировать">
             <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
               <path d="M11 4H4a2 2 0 00-2 2v14a2 2 0 002 2h14a2 2 0 002-2v-7"/>
               <path d="M18.5 2.5a2.121 2.121 0 013 3L12 15l-4 1 1-4 9.5-9.5z"/>
             </svg>
           </button>
-          <button class="icon-btn danger" onclick="deleteBank(${index})" title="Supprimer">
+          <button class="icon-btn danger" onclick="deleteBank(${index})" title="Удалить">
             <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
               <polyline points="3 6 5 6 21 6"/>
               <path d="M19 6v14a2 2 0 01-2 2H7a2 2 0 01-2-2V6m3 0V4a2 2 0 012-2h4a2 2 0 012 2v2"/>
@@ -529,7 +647,7 @@
   
   // Delete bank
   window.deleteBank = (index) => {
-    if (confirm('Supprimer этà partir de банк?')) {
+    if (confirm('Удалить этот банк?')) {
       let banks = JSON.parse(localStorage.getItem('banksData')) || getDefaultBanks();
       banks.splice(index, 1);
       localStorage.setItem('banksData', JSON.stringify(banks));
@@ -549,17 +667,17 @@
     modal.innerHTML = `
       <div class="modal-content">
         <div class="modal-header">
-          <h3>${bank ? 'Modifier банк' : 'Добавить банк'}</h3>
+          <h3>${bank ? 'Редактировать банк' : 'Добавить банк'}</h3>
           <button class="modal-close" onclick="this.closest('.modal').remove()">&times;</button>
         </div>
         <div class="modal-body">
           <form id="bank-form">
             <div class="form-group">
-              <label>Nom банка</label>
+              <label>Название банка</label>
               <input type="text" id="bank-name" value="${bank?.bank || ''}" required>
             </div>
             <div class="form-group">
-              <label>Pays</label>
+              <label>Страна</label>
               <input type="text" id="bank-country" value="${bank?.country || ''}" required>
             </div>
             <div class="form-group">
@@ -567,36 +685,36 @@
               <input type="text" id="bank-flag" value="${bank?.flag || '🏦'}" maxlength="2">
             </div>
             <div class="form-group">
-              <label>Type</label>
+              <label>Тип</label>
               <select id="bank-type">
-                <option value="traditional" ${bank?.type === 'traditional' ? 'selected' : ''}>Banque traditionnelle</option>
-                <option value="digital" ${bank?.type === 'digital' ? 'selected' : ''}>Banque numérique</option>
+                <option value="traditional" ${bank?.type === 'traditional' ? 'selected' : ''}>Традиционный банк</option>
+                <option value="digital" ${bank?.type === 'digital' ? 'selected' : ''}>Цифровой банк</option>
                 <option value="emi" ${bank?.type === 'emi' ? 'selected' : ''}>EMI</option>
-                <option value="crypto" ${bank?.type === 'crypto' ? 'selected' : ''}>Crypto-френдли</option>
+                <option value="crypto" ${bank?.type === 'crypto' ? 'selected' : ''}>Крипто-френдли</option>
               </select>
             </div>
             <div class="form-group">
-              <label>Ouverture</label>
+              <label>Открытие</label>
               <select id="bank-remote">
-                <option value="true" ${bank?.remote === true ? 'selected' : ''}>À distance</option>
-                <option value="false" ${bank?.remote === false ? 'selected' : ''}>Avec visite</option>
+                <option value="true" ${bank?.remote === true ? 'selected' : ''}>Удалённо</option>
+                <option value="false" ${bank?.remote === false ? 'selected' : ''}>С визитом</option>
               </select>
             </div>
             <div class="form-group">
-              <label>Délai à partir deкрытия</label>
-              <input type="text" id="bank-time" value="${bank?.time || ''}" placeholder="5-7 jours">
+              <label>Срок открытия</label>
+              <input type="text" id="bank-time" value="${bank?.time || ''}" placeholder="5-7 дней">
             </div>
             <div class="form-group">
-              <label>Минимальный баланdepuis</label>
-              <input type="text" id="bank-minimum" value="${bank?.minimum || ''}" placeholder="$1,000">
+              <label>Стоимость (услуги/пакета)</label>
+              <input type="text" id="bank-cost" value="${bank?.cost || bank?.minimum || ''}" placeholder="$1,000">
             </div>
             <div class="form-group">
-              <label>Оdepuisобенноdepuisти</label>
+              <label>Особенности</label>
               <textarea id="bank-features" rows="3">${bank?.features || ''}</textarea>
             </div>
             <div class="modal-actions">
               <button type="button" class="btn btn--ghost" onclick="this.closest('.modal').remove()">Отмена</button>
-              <button type="submit" class="btn btn--primary">Enregistrer</button>
+              <button type="submit" class="btn btn--primary">Сохранить</button>
             </div>
           </form>
         </div>
@@ -615,10 +733,10 @@
       
       const typeSelect = modal.querySelector('#bank-type');
       const typeTexts = {
-        'traditional': 'Traditionnel',
-        'digital': 'Banque numérique',
+        'traditional': 'Традиционный',
+        'digital': 'Цифровой банк',
         'emi': 'EMI',
-        'crypto': 'Crypto-френдли'
+        'crypto': 'Крипто-френдли'
       };
       
       const bankData = {
@@ -630,7 +748,8 @@
         typeText: typeTexts[typeSelect.value],
         remote: modal.querySelector('#bank-remote').value === 'true',
         time: modal.querySelector('#bank-time').value,
-        minimum: modal.querySelector('#bank-minimum').value,
+        cost: modal.querySelector('#bank-cost').value,
+        minimum: modal.querySelector('#bank-cost').value,
         features: modal.querySelector('#bank-features').value
       };
       
@@ -685,7 +804,7 @@
             window.setBanksData(banks);
           }
           
-          alert('Banques уdepuisпешно импортированы!');
+          alert('Банки успешно импортированы!');
         } else {
           alert('Неверный формат файла');
         }
@@ -708,10 +827,10 @@
     const newPin = newPinInput.value;
     if (newPin.length === 6 && /^\d+$/.test(newPin)) {
       localStorage.setItem('adminPin', newPin);
-      alert('PIN-код уdepuisпешно изменен!');
+      alert('PIN-код успешно изменен!');
       newPinInput.value = '';
     } else {
-      alert('PIN должен depuisоdepuisтоять из 6 цифр');
+      alert('PIN должен состоять из 6 цифр');
     }
   });
   
@@ -746,7 +865,7 @@
         const text = await file.text();
         const data = JSON.parse(text);
         
-        if (confirm('Это заменит вdepuisе текущие данные. Продолжить?')) {
+        if (confirm('Это заменит все текущие данные. Продолжить?')) {
           if (data.registrationCountries) {
             localStorage.setItem('registrationCountries', JSON.stringify(data.registrationCountries));
           }
@@ -757,7 +876,7 @@
             localStorage.setItem('adminPin', data.adminPin);
           }
           
-          alert('Данные уdepuisпешно воdepuisdepuisтановлены!');
+          alert('Данные успешно восстановлены!');
           location.reload();
         }
       } catch (error) {
@@ -770,19 +889,19 @@
   // Clear all data
   clearAllBtn?.addEventListener('click', () => {
     if (confirm('Вы уверены? Это удалит ВСЕ данные!')) {
-      if (confirm('Это дейdepuisтвие НЕОБРАТИМО! Вы точно уверены?')) {
+      if (confirm('Это действие НЕОБРАТИМО! Вы точно уверены?')) {
         localStorage.removeItem('registrationCountries');
         localStorage.removeItem('banksData');
         localStorage.removeItem('adminPin');
         sessionStorage.clear();
-        alert('Tous данные удалены. Страница будет перезагружена.');
+        alert('Все данные удалены. Страница будет перезагружена.');
         location.reload();
       }
     }
   });
   
   // Audit functionality
-  const auditTbody = document.querySelector('#admin-audit-table tbody');
+  const auditGrid = document.getElementById('admin-audit-grid');
   const addAuditBtn = document.getElementById('audit-add');
   const exportAuditBtn = document.getElementById('audit-export');
   const importAuditBtn = document.getElementById('audit-import');
@@ -796,107 +915,137 @@
     return [
       {
         id: 'cyprus',
-        name: 'Chypre',
+        name: 'Кипр',
         flag: '🇨🇾',
-        region: 'Europe',
+        region: 'europe',
+        regionText: 'Европа',
         taxRate: '12.5%',
-        auditRequired: 'Obligatoire annuel',
-        standards: 'МСФО'
+        auditRequired: 'Обязательный ежегодный',
+        standards: 'МСФО',
+        articleUrl: './articles/audit-cyprus.html'
       },
       {
         id: 'malta',
-        name: 'Malte',
+        name: 'Мальта',
         flag: '🇲🇹',
-        region: 'Europe',
+        region: 'europe',
+        regionText: 'Европа',
         taxRate: '35%',
-        auditRequired: 'Pour les grandes entreprises',
-        standards: 'МСФО'
+        auditRequired: 'Для крупных компаний',
+        standards: 'МСФО',
+        articleUrl: './articles/audit-malta.html'
       },
       {
         id: 'singapore',
-        name: 'Singapour',
+        name: 'Сингапур',
         flag: '🇸🇬',
-        region: 'Asie',
+        region: 'asia',
+        regionText: 'Азия',
         taxRate: '17%',
-        auditRequired: 'Selon la taille de l'entreprise',
-        standards: 'SFRS'
+        auditRequired: 'По размеру компании',
+        standards: 'SFRS',
+        articleUrl: './articles/audit-singapore.html'
       },
       {
         id: 'hongkong',
-        name: 'Hong Kong',
+        name: 'Гонконг',
         flag: '🇭🇰',
-        region: 'Asie',
+        region: 'asia',
+        regionText: 'Азия',
         taxRate: '16.5%',
         auditRequired: 'Обязательный',
-        standards: 'HKFRS'
+        standards: 'HKFRS',
+        articleUrl: './articles/audit-hongkong.html'
       },
       {
         id: 'uae',
-        name: 'ÉAU',
+        name: 'ОАЭ',
         flag: '🇦🇪',
-        region: 'Ближний Воdepuisток',
+        region: 'middle-east',
+        regionText: 'Ближний Восток',
         taxRate: '0-9%',
-        auditRequired: 'Dans les zones franches - non',
-        standards: 'IFRS'
+        auditRequired: 'В свободных зонах - нет',
+        standards: 'IFRS',
+        articleUrl: './articles/audit-uae.html'
       },
       {
         id: 'uk',
-        name: 'Royaume-Uni',
+        name: 'Великобритания',
         flag: '🇬🇧',
-        region: 'Europe',
+        region: 'europe',
+        regionText: 'Европа',
         taxRate: '19-25%',
-        auditRequired: 'Selon la taille de l'entreprise',
-        standards: 'UK GAAP'
+        auditRequired: 'По размеру компании',
+        standards: 'UK GAAP',
+        articleUrl: './articles/audit-uk.html'
       },
       {
         id: 'estonia',
-        name: 'Estonie',
+        name: 'Эстония',
         flag: '🇪🇪',
-        region: 'Europe',
+        region: 'europe',
+        regionText: 'Европа',
         taxRate: '20%',
-        auditRequired: 'Selon la taille de l'entreprise',
-        standards: 'МСФО'
+        auditRequired: 'По размеру компании',
+        standards: 'МСФО',
+        articleUrl: './articles/audit-estonia.html'
       },
       {
         id: 'switzerland',
-        name: 'Suisse',
+        name: 'Швейцария',
         flag: '🇨🇭',
-        region: 'Europe',
+        region: 'europe',
+        regionText: 'Европа',
         taxRate: '12-21%',
         auditRequired: 'Обязательный',
-        standards: 'Swiss GAAP'
+        standards: 'Swiss GAAP',
+        articleUrl: './articles/audit-switzerland.html'
       }
     ];
   }
 
   function renderAuditCountries(countries) {
-    if (!auditTbody) return;
-    
-    auditTbody.innerHTML = countries.map((country, index) => `
-      <tr>
-        <td>
-          <span style="font-size: 20px; margin-right: 8px;">${country.flag}</span>
-          ${country.name}
-        </td>
-        <td>${country.region}</td>
-        <td>${country.taxRate}</td>
-        <td>${country.auditRequired}</td>
-        <td>${country.standards}</td>
-        <td>
-          <button class="icon-btn" onclick="editAuditCountry(${index})" title="Modifier">
-            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-              <path d="M11 4H4a2 2 0 00-2 2v14a2 2 0 002 2h14a2 2 0 002-2v-7"/>
-              <path d="M18.5 2.5a2.121 2.121 0 013 3L12 15l-4 1 1-4 9.5-9.5z"/>
-            </svg>
-          </button>
-          <button class="icon-btn danger" onclick="deleteAuditCountry(${index})" title="Supprimer">
-            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-              <polyline points="3 6 5 6 21 6"/>
-              <path d="M19 6v14a2 2 0 01-2 2H7a2 2 0 01-2-2V6m3 0V4a2 2 0 012-2h4a2 2 0 012 2v2"/>
-            </svg>
-          </button>
-        </td>
-      </tr>
+    if (!auditGrid) return;
+
+    if (!Array.isArray(countries) || countries.length === 0) {
+      auditGrid.innerHTML = `
+        <div class="admin-country-card admin-country-card--placeholder">
+          <p class="muted">Добавьте первую юрисдикцию аудита, чтобы она появилась здесь.</p>
+        </div>
+      `;
+      return;
+    }
+
+    auditGrid.innerHTML = countries.map((country, index) => `
+      <div class="admin-country-card">
+        <div class="admin-country-header">
+          <h3 class="admin-country-name">
+            <span class="admin-country-flag">${country.flag || '🏳️'}</span>
+            ${country.name}
+          </h3>
+          <div class="admin-country-actions">
+            <button class="icon-btn" onclick="editAuditCountry(${index})" title="Редактировать">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M11 4H4a2 2 0 00-2 2v14a2 2 0 002 2h14a2 2 0 002-2v-7"/>
+                <path d="M18.5 2.5a2.121 2.121 0 013 3L12 15l-4 1 1-4 9.5-9.5z"/>
+              </svg>
+            </button>
+            <button class="icon-btn danger" onclick="deleteAuditCountry(${index})" title="Удалить">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <polyline points="3 6 5 6 21 6"/>
+                <path d="M19 6v14a2 2 0 01-2 2H7a2 2 0 01-2-2V6m3 0V4a2 2 0 012-2h4a2 2 0 012 2v2"/>
+              </svg>
+            </button>
+          </div>
+        </div>
+        <div class="admin-country-info">
+          <div><strong>Регион:</strong> ${getAuditRegionName(country.region, country.regionText)}</div>
+          <div><strong>Налог:</strong> ${country.taxRate || '—'}</div>
+          <div><strong>Требования:</strong> ${country.auditRequired || '—'}</div>
+          <div><strong>Стандарты:</strong> ${country.standards || '—'}</div>
+          ${country.articleUrl ? `<div><strong>Статья:</strong> <a href="${country.articleUrl}" target="_blank" rel="noopener">${country.articleUrl}</a></div>` : ''}
+        </div>
+      </div>
     `).join('');
   }
 
@@ -913,11 +1062,15 @@
 
   // Delete audit country
   window.deleteAuditCountry = (index) => {
-    if (confirm('Supprimer эту depuisтрану из depuisпиdepuisка аудита?')) {
+    if (confirm('Удалить эту страну из списка аудита?')) {
       let countries = JSON.parse(localStorage.getItem('auditData')) || getDefaultAuditCountries();
       countries.splice(index, 1);
       localStorage.setItem('auditData', JSON.stringify(countries));
+      localStorage.setItem('auditCountries', JSON.stringify(countries));
       loadAuditCountries();
+      if (window.setAuditCountries) {
+        window.setAuditCountries(countries);
+      }
     }
   };
 
@@ -928,13 +1081,13 @@
     modal.innerHTML = `
       <div class="modal-content">
         <div class="modal-header">
-          <h3>${country ? 'Modifier depuisтрану' : 'Ajouter un pays'}</h3>
+          <h3>${country ? 'Редактировать страну' : 'Добавить страну'}</h3>
           <button class="modal-close" onclick="this.closest('.modal').remove()">&times;</button>
         </div>
         <div class="modal-body">
           <form id="audit-form">
             <div class="form-group">
-              <label>Nom depuisтраны</label>
+              <label>Название страны</label>
               <input type="text" id="audit-name" value="${country?.name || ''}" required>
             </div>
             <div class="form-group">
@@ -942,31 +1095,35 @@
               <input type="text" id="audit-flag" value="${country?.flag || '🏴'}" maxlength="2">
             </div>
             <div class="form-group">
-              <label>Région</label>
+              <label>Регион</label>
               <select id="audit-region">
-                <option value="Europe" ${country?.region === 'Europe' ? 'selected' : ''}>Europe</option>
-                <option value="Asie" ${country?.region === 'Asie' ? 'selected' : ''}>Asie</option>
-                <option value="Amérique" ${country?.region === 'Amérique' ? 'selected' : ''}>Amérique</option>
-                <option value="Африка" ${country?.region === 'Африка' ? 'selected' : ''}>Африка</option>
-                <option value="Океания" ${country?.region === 'Океания' ? 'selected' : ''}>Океания</option>
-                <option value="Ближний Воdepuisток" ${country?.region === 'Ближний Воdepuisток' ? 'selected' : ''}>Ближний Воdepuisток</option>
+                <option value="europe" ${(!country || country?.region === 'europe') ? 'selected' : ''}>Европа</option>
+                <option value="asia" ${country?.region === 'asia' ? 'selected' : ''}>Азия</option>
+                <option value="america" ${country?.region === 'america' ? 'selected' : ''}>Америка</option>
+                <option value="middle-east" ${country?.region === 'middle-east' ? 'selected' : ''}>Ближний Восток</option>
+                <option value="offshore" ${country?.region === 'offshore' ? 'selected' : ''}>Оффшоры</option>
+                <option value="africa" ${country?.region === 'africa' ? 'selected' : ''}>Африка</option>
               </select>
             </div>
             <div class="form-group">
-              <label>Impôtовая depuisтавка</label>
+              <label>Налоговая ставка</label>
               <input type="text" id="audit-tax" value="${country?.taxRate || ''}" placeholder="12.5%">
             </div>
             <div class="form-group">
               <label>Требования к аудиту</label>
-              <input type="text" id="audit-requirements" value="${country?.auditRequired || ''}" placeholder="Obligatoire annuel">
+              <input type="text" id="audit-requirements" value="${country?.auditRequired || ''}" placeholder="Обязательный ежегодный">
             </div>
             <div class="form-group">
-              <label>Стандарты à partir deчётноdepuisти</label>
+              <label>Стандарты отчётности</label>
               <input type="text" id="audit-standards" value="${country?.standards || ''}" placeholder="МСФО">
+            </div>
+            <div class="form-group">
+              <label>Ссылка на статью</label>
+              <input type="text" id="audit-article" value="${country?.articleUrl || ''}" placeholder="./articles/audit-cyprus.html">
             </div>
             <div class="modal-actions">
               <button type="button" class="btn btn--ghost" onclick="this.closest('.modal').remove()">Отмена</button>
-              <button type="submit" class="btn btn--primary">Enregistrer</button>
+              <button type="submit" class="btn btn--primary">Сохранить</button>
             </div>
           </form>
         </div>
@@ -982,15 +1139,20 @@
       e.preventDefault();
 
       const countries = JSON.parse(localStorage.getItem('auditData')) || getDefaultAuditCountries();
-      
+      const regionValue = modal.querySelector('#audit-region').value;
+      const countryName = modal.querySelector('#audit-name').value.trim();
+      const normalizedId = country?.id || countryName.toLowerCase().replace(/\s+/g, '-').replace(/[^\w-]/g, '');
+
       const countryData = {
-        id: country?.id || modal.querySelector('#audit-name').value.toLowerCase().replace(/\s+/g, '-'),
-        name: modal.querySelector('#audit-name').value,
-        flag: modal.querySelector('#audit-flag').value,
-        region: modal.querySelector('#audit-region').value,
+        id: normalizedId || `audit_${Date.now()}`,
+        name: countryName || 'Без названия',
+        flag: modal.querySelector('#audit-flag').value || '🏴',
+        region: regionValue,
+        regionText: getAuditRegionName(regionValue),
         taxRate: modal.querySelector('#audit-tax').value,
         auditRequired: modal.querySelector('#audit-requirements').value,
-        standards: modal.querySelector('#audit-standards').value
+        standards: modal.querySelector('#audit-standards').value,
+        articleUrl: modal.querySelector('#audit-article').value || `./articles/audit-${normalizedId}.html`
       };
 
       if (index !== null) {
@@ -998,10 +1160,15 @@
       } else {
         countries.push(countryData);
       }
-
+      
       localStorage.setItem('auditData', JSON.stringify(countries));
+      localStorage.setItem('auditCountries', JSON.stringify(countries));
       loadAuditCountries();
       modal.remove();
+      
+      if (window.setAuditCountries) {
+        window.setAuditCountries(countries);
+      }
     });
   }
 
@@ -1032,8 +1199,12 @@
         
         if (Array.isArray(countries)) {
           localStorage.setItem('auditData', JSON.stringify(countries));
+          localStorage.setItem('auditCountries', JSON.stringify(countries));
           loadAuditCountries();
-          alert('Страны аудита уdepuisпешно импортированы!');
+          alert('Страны аудита успешно импортированы!');
+          if (window.setAuditCountries) {
+            window.setAuditCountries(countries);
+          }
         } else {
           alert('Неверный формат файла');
         }
@@ -1058,8 +1229,8 @@
         const leadTextarea = document.getElementById('kik-lead');
         const metaInput = document.getElementById('kik-meta');
         
-        if (titleInput) titleInput.value = data.title || 'Контролируемые иноdepuisтранные компании (КИК)';
-        if (leadTextarea) leadTextarea.value = data.lead || 'Комплекdepuisные конdepuisультации по вопроdepuisам КИК...';
+        if (titleInput) titleInput.value = data.title || 'Контролируемые иностранные компании (КИК)';
+        if (leadTextarea) leadTextarea.value = data.lead || 'Комплексные консультации по вопросам КИК...';
         if (metaInput) metaInput.value = data.meta || '10 мин чтения';
       } catch (e) {
         console.error('Error loading KIK data:', e);
@@ -1095,16 +1266,235 @@
     window.open('../pages/articles/ru-kik.html', '_blank');
   });
 
+  // Other services management
+  const otherServicesBody = document.getElementById('other-services-body');
+  const otherServiceAddBtn = document.getElementById('other-service-add');
+  const otherServiceModal = document.getElementById('other-service-modal');
+  const otherServiceModalTitle = document.getElementById('other-service-modal-title');
+  const otherServiceModalClose = document.getElementById('other-service-modal-close');
+  const otherServiceModalCancel = document.getElementById('other-service-modal-cancel');
+  const otherServiceForm = document.getElementById('other-service-form');
+  const otherServiceIdInput = document.getElementById('other-service-id');
+  const otherServiceTitleInput = document.getElementById('other-service-title');
+  const otherServiceDescInput = document.getElementById('other-service-desc');
+  const otherServiceLinkInput = document.getElementById('other-service-link');
+  let editingServiceId = null;
+
+  function getDefaultOtherServices() {
+    return [
+      {
+        id: 'kik-consulting',
+        title: 'Консультации по КИК',
+        desc: 'Сопровождение уведомлений, расчёт прибыли и проверка обязательств контролирующих лиц.',
+        link: '/pages/articles/ru-kik.html'
+      }
+    ];
+  }
+
+  function loadOtherServices() {
+    if (!otherServicesBody) return;
+
+    let services;
+    try {
+      const raw = localStorage.getItem('otherServices');
+      if (!raw) {
+        services = getDefaultOtherServices();
+        localStorage.setItem('otherServices', JSON.stringify(services));
+      } else {
+        services = JSON.parse(raw);
+        if (!Array.isArray(services)) throw new Error('invalid');
+      }
+    } catch (error) {
+      console.error('Failed to load other services, resetting to defaults.', error);
+      services = getDefaultOtherServices();
+      localStorage.setItem('otherServices', JSON.stringify(services));
+    }
+
+    renderOtherServices(services);
+  }
+
+  function renderOtherServices(services) {
+    if (!otherServicesBody) return;
+
+    if (!services || services.length === 0) {
+      otherServicesBody.innerHTML = `
+        <tr class="table-placeholder">
+          <td colspan="4" style="text-align:center;">Добавьте первую услугу, чтобы она появилась здесь</td>
+        </tr>
+      `;
+      return;
+    }
+
+    otherServicesBody.innerHTML = services.map(service => `
+      <tr data-service-id="${service.id}">
+        <td>${service.title}</td>
+        <td>${service.desc || '—'}</td>
+        <td>${service.link ? `<a href="${service.link}" target="_blank" rel="noopener">${service.link}</a>` : '—'}</td>
+        <td>
+          <button class="icon-btn" title="Редактировать" onclick="editOtherService('${service.id}')">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M11 4H4a2 2 0 00-2 2v14a2 2 0 002 2h14a2 2 0 002-2v-7"/>
+              <path d="M18.5 2.5a2.121 2.121 0 013 3L12 15l-4 1 1-4 9.5-9.5z"/>
+            </svg>
+          </button>
+          <button class="icon-btn danger" title="Удалить" onclick="deleteOtherService('${service.id}')">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <polyline points="3 6 5 6 21 6"/>
+              <path d="M19 6v14a2 2 0 01-2 2H7a2 2 0 01-2-2V6m3 0V4a2 2 0 012-2h4a2 2 0 012 2v2"/>
+            </svg>
+          </button>
+        </td>
+      </tr>
+    `).join('');
+  }
+
+  function openOtherServiceModal(service = null) {
+    if (!otherServiceModal) return;
+
+    editingServiceId = service?.id || null;
+    otherServiceModalTitle.textContent = service ? 'Редактировать услугу' : 'Добавить услугу';
+    otherServiceIdInput.value = service?.id || '';
+    otherServiceTitleInput.value = service?.title || '';
+    otherServiceDescInput.value = service?.desc || '';
+    otherServiceLinkInput.value = service?.link || '';
+    otherServiceModal.style.display = 'block';
+  }
+
+  function closeOtherServiceModal() {
+    if (!otherServiceModal) return;
+    otherServiceModal.style.display = 'none';
+    otherServiceForm?.reset();
+    editingServiceId = null;
+  }
+
+  if (otherServiceAddBtn) {
+    otherServiceAddBtn.addEventListener('click', () => openOtherServiceModal());
+  }
+
+  otherServiceModalClose?.addEventListener('click', closeOtherServiceModal);
+  otherServiceModalCancel?.addEventListener('click', closeOtherServiceModal);
+
+  window.editOtherService = (id) => {
+    const services = JSON.parse(localStorage.getItem('otherServices') || '[]');
+    const service = services.find(item => item.id === id);
+    if (!service) {
+      showNotification('Услуга не найдена', 'error');
+      return;
+    }
+    openOtherServiceModal(service);
+  };
+
+  window.deleteOtherService = (id) => {
+    if (!confirm('Удалить эту услугу?')) return;
+    let services = JSON.parse(localStorage.getItem('otherServices') || '[]');
+    services = services.filter(item => item.id !== id);
+    localStorage.setItem('otherServices', JSON.stringify(services));
+    renderOtherServices(services);
+    showNotification('Услуга удалена');
+  };
+
+  otherServiceForm?.addEventListener('submit', (e) => {
+    e.preventDefault();
+    const title = otherServiceTitleInput.value.trim();
+    const desc = otherServiceDescInput.value.trim();
+    const link = otherServiceLinkInput.value.trim();
+
+    if (!title) {
+      showNotification('Введите название услуги', 'error');
+      return;
+    }
+
+    let services = JSON.parse(localStorage.getItem('otherServices') || '[]');
+    if (!Array.isArray(services)) services = [];
+
+    const id = editingServiceId || `service_${Date.now()}`;
+    const serviceData = { id, title, desc, link };
+
+    if (editingServiceId) {
+      services = services.map(item => item.id === id ? serviceData : item);
+    } else {
+      services.push(serviceData);
+    }
+
+    localStorage.setItem('otherServices', JSON.stringify(services));
+    renderOtherServices(services);
+    closeOtherServiceModal();
+    showNotification('Услуга сохранена');
+  });
+
   // Initialize
   checkAuth();
   
+  // Debug info
+  console.log('Admin script loaded');
+  console.log('Country modal:', document.getElementById('country-modal'));
+  console.log('Add button:', document.getElementById('reg-add-country'));
+  console.log('Country form:', document.getElementById('country-form'));
+  
+  // Глобальная функция для добавления страны
+  window.openAddCountryModal = function() {
+    console.log('Opening add country modal...');
+    const modal = document.getElementById('country-modal');
+    const form = document.getElementById('country-form');
+    const title = document.getElementById('country-modal-title');
+    
+    if (modal && form && title) {
+      editingCountryId = null;
+      title.textContent = 'Добавить страну';
+      form.reset();
+      modal.style.display = 'flex';
+      console.log('Modal opened successfully');
+    } else {
+      console.error('Modal elements not found:', {modal, form, title});
+    }
+  };
+  
+  // Глобальная функция для тестирования
+  window.testAddCountry = function() {
+    console.log('Testing add country...');
+    const modal = document.getElementById('country-modal');
+    if (modal) {
+      modal.style.display = 'flex';
+      console.log('Modal should be visible now');
+    } else {
+      console.error('Modal not found!');
+    }
+  };
+  
+  // Тестовая функция для добавления страны напрямую
+  window.testSaveCountry = function() {
+    try {
+      const countries = JSON.parse(localStorage.getItem('registrationCountries')) || getDefaultCountries();
+      const testCountry = {
+        id: `country_${Date.now()}`,
+        name: 'Тестовая страна',
+        flag: '🏳️',
+        region: 'europe',
+        time: '1-2 дня',
+        price: 1000,
+        priceText: '$1,000',
+        features: ['Тест 1', 'Тест 2']
+      };
+      countries.push(testCountry);
+      localStorage.setItem('registrationCountries', JSON.stringify(countries));
+      loadCountries();
+      alert('Тестовая страна добавлена!');
+    } catch (error) {
+      console.error('Error:', error);
+      alert('Ошибка: ' + error.message);
+    }
+  };
+  
   // Load data if on admin page
-  if (document.querySelector('#admin-audit-table')) {
+  if (document.querySelector('#admin-audit-grid')) {
     loadAuditCountries();
   }
   
   if (document.querySelector('#kik-title')) {
     loadKikData();
+  }
+  if (otherServicesBody) {
+    loadOtherServices();
   }
 
   // ========== SHOWCASE MANAGEMENT ==========
@@ -1115,6 +1505,10 @@
   const showcaseForm = document.getElementById('showcase-form');
   const showcaseModalClose = document.getElementById('showcase-modal-close');
   const showcaseModalCancel = document.getElementById('showcase-modal-cancel');
+  const showcaseImageInput = document.getElementById('showcase-image');
+  const showcaseImageUpload = document.getElementById('showcase-image-upload');
+  const showcaseUploadTrigger = document.getElementById('showcase-upload-trigger');
+  const showcaseImageStatus = document.getElementById('showcase-image-status');
 
   function loadShowcaseSlides() {
     const slides = localStorage.getItem('showcaseSlides');
@@ -1125,26 +1519,26 @@
     return [
       {
         id: '1',
-        title: 'Спецпредложение меdepuisяца',
-        desc: 'Enregistrement de la société в ÉAU + à partir deкрытие корпоративного depuisчета вdepuisего за $2,500',
+        title: 'Спецпредложение месяца',
+        desc: 'Регистрация компании в ОАЭ + открытие корпоративного счета всего за $2,500',
         link: './pages/registratsiya.html',
-        linkText: 'En savoir plus →',
+        linkText: 'Узнать подробнее →',
         image: 'https://images.unsplash.com/photo-1512453979798-5ea266f8880c?w=600&h=400&fit=crop',
         imageAlt: 'Dubai skyline'
       },
       {
         id: '2',
-        title: 'Новые юриdepuisдикции',
-        desc: 'Теперь доdepuisтупна региdepuisтрация компаний в Эdepuisтонии и Швейцарии depuis диdepuisтанционным à partir deкрытием depuisчетов',
+        title: 'Новые юрисдикции',
+        desc: 'Теперь доступна регистрация компаний в Эстонии и Швейцарии с дистанционным открытием счетов',
         link: './pages/registratsiya.html',
-        linkText: 'Choisir une juridiction →',
+        linkText: 'Выбрать юрисдикцию →',
         image: 'https://images.unsplash.com/photo-1521295121783-8a321d551ad2?w=600&h=400&fit=crop',
         imageAlt: 'European city'
       },
       {
         id: '3',
-        title: 'Banques для IT',
-        desc: 'Специальные уdepuisловия à partir deкрытия depuisчетов для IT-компаний. Rapideе раdepuisdepuisмà partir deрение заявок',
+        title: 'Банки для IT',
+        desc: 'Специальные условия открытия счетов для IT-компаний. Быстрое рассмотрение заявок',
         link: './pages/banki.html',
         linkText: 'Подобрать банк →',
         image: 'https://images.unsplash.com/photo-1563986768609-322da13575f3?w=600&h=400&fit=crop',
@@ -1178,20 +1572,25 @@
     const slide = slides.find(s => s.id === id);
     if (!slide) return;
 
-    showcaseModalTitle.textContent = 'Modifier depuisлайд';
+    showcaseModalTitle.textContent = 'Редактировать слайд';
     document.getElementById('showcase-id').value = slide.id;
     document.getElementById('showcase-title').value = slide.title;
     document.getElementById('showcase-desc').value = slide.desc;
     document.getElementById('showcase-link').value = slide.link;
     document.getElementById('showcase-link-text').value = slide.linkText;
-    document.getElementById('showcase-image').value = slide.image;
+    if (showcaseImageInput) {
+      showcaseImageInput.value = slide.image;
+    }
+    if (showcaseImageStatus) {
+      showcaseImageStatus.textContent = slide.image ? 'Используется сохранённое изображение' : 'Файл не выбран';
+    }
     document.getElementById('showcase-image-alt').value = slide.imageAlt || '';
     
     showcaseModal.style.display = 'block';
   };
 
   window.deleteShowcaseSlide = function(id) {
-    if (!confirm('Supprimer этà partir de depuisлайд?')) return;
+    if (!confirm('Удалить этот слайд?')) return;
     
     let slides = loadShowcaseSlides();
     slides = slides.filter(s => s.id !== id);
@@ -1201,9 +1600,12 @@
   };
 
   function showShowcaseModal() {
-    showcaseModalTitle.textContent = 'Добавить depuisлайд';
+    showcaseModalTitle.textContent = 'Добавить слайд';
     showcaseForm.reset();
     document.getElementById('showcase-id').value = '';
+    if (showcaseImageInput) showcaseImageInput.value = '';
+    if (showcaseImageUpload) showcaseImageUpload.value = '';
+    if (showcaseImageStatus) showcaseImageStatus.textContent = 'Файл не выбран';
     showcaseModal.style.display = 'block';
   }
 
@@ -1227,6 +1629,10 @@
   if (showcaseForm) {
     showcaseForm.addEventListener('submit', (e) => {
       e.preventDefault();
+      if (showcaseImageInput && !showcaseImageInput.value) {
+        showNotification('Пожалуйста, загрузите изображение для слайда', 'error');
+        return;
+      }
       
       const slideData = {
         id: document.getElementById('showcase-id').value || Date.now().toString(),
@@ -1234,7 +1640,7 @@
         desc: document.getElementById('showcase-desc').value,
         link: document.getElementById('showcase-link').value,
         linkText: document.getElementById('showcase-link-text').value,
-        image: document.getElementById('showcase-image').value,
+        image: showcaseImageInput ? showcaseImageInput.value : '',
         imageAlt: document.getElementById('showcase-image-alt').value
       };
       
@@ -1251,7 +1657,7 @@
       localStorage.setItem('showcaseSlides', JSON.stringify(slides));
       showcaseModal.style.display = 'none';
       renderShowcaseSlides();
-      showNotification('Слайд depuisохранен');
+      showNotification('Слайд сохранен');
     });
   }
 
@@ -1266,6 +1672,28 @@
         }, 10);
       });
     }
+  });
+
+  showcaseUploadTrigger?.addEventListener('click', () => {
+    showcaseImageUpload?.click();
+  });
+
+  showcaseImageUpload?.addEventListener('change', (event) => {
+    const file = event.target.files?.[0];
+    if (!file) {
+      if (showcaseImageStatus) showcaseImageStatus.textContent = 'Файл не выбран';
+      return;
+    }
+
+    const reader = new FileReader();
+    reader.onload = () => {
+      if (showcaseImageInput) showcaseImageInput.value = reader.result;
+      if (showcaseImageStatus) showcaseImageStatus.textContent = `Загружено: ${file.name}`;
+    };
+    reader.onerror = () => {
+      showNotification('Не удалось прочитать файл изображения', 'error');
+    };
+    reader.readAsDataURL(file);
   });
 })();
 
@@ -1285,37 +1713,37 @@
     const savedArticle = localStorage.getItem('kikArticle');
     if (savedArticle) {
       const article = JSON.parse(savedArticle);
-      articleTitle.value = article.title || 'КИК (Контролируемые иноdepuisтранные компании)';
+      articleTitle.value = article.title || 'КИК (Контролируемые иностранные компании)';
       articleEditor.innerHTML = article.content || '';
       updatePreview();
     } else {
       // Default content
-      articleTitle.value = 'КИК (Контролируемые иноdepuisтранные компании)';
+      articleTitle.value = 'КИК (Контролируемые иностранные компании)';
       articleEditor.innerHTML = `
         <h2>Что такое КИК?</h2>
-        <p>КИК (контролируеmai иноdepuisтранная компания) — это иноdepuisтранная организация или depuisтруктура без образования юридичеdepuisкого лица, кà partir deорая контролируетdepuisя налоговым резидентом РФ.</p>
+        <p>КИК (контролируемая иностранная компания) — это иностранная организация или структура без образования юридического лица, которая контролируется налоговым резидентом РФ.</p>
         
-        <h2>Кто должен à partir deчитыватьdepuisя о КИК?</h2>
-        <p>Отчитыватьdepuisя о КИК обязаны роdepuisdepuisийdepuisкие налоговые резиденты (физичеdepuisкие и юридичеdepuisкие лица), кà partir deорые:</p>
+        <h2>Кто должен отчитываться о КИК?</h2>
+        <p>Отчитываться о КИК обязаны российские налоговые резиденты (физические и юридические лица), которые:</p>
         <ul>
-          <li>Владеют долей более 25% в иноdepuisтранной компании</li>
-          <li>Владеют долей более 10%, еdepuisли доля вdepuisех резидентов РФ превышает 50%</li>
-          <li>Оdepuisущеdepuisтвляют контроль над иноdepuisтранной depuisтруктурой</li>
+          <li>Владеют долей более 25% в иностранной компании</li>
+          <li>Владеют долей более 10%, если доля всех резидентов РФ превышает 50%</li>
+          <li>Осуществляют контроль над иностранной структурой</li>
         </ul>
         
-        <h2>Impôtообложение прибыли КИК</h2>
-        <p>Прибыль КИК включаетdepuisя в налоговую базу контролирующего лица и облагаетdepuisя налогом по depuisтавке:</p>
+        <h2>Налогообложение прибыли КИК</h2>
+        <p>Прибыль КИК включается в налоговую базу контролирующего лица и облагается налогом по ставке:</p>
         <ul>
-          <li>13% — для физичеdepuisких лиц</li>
-          <li>20% — для юридичеdepuisких лиц</li>
+          <li>13% — для физических лиц</li>
+          <li>20% — для юридических лиц</li>
         </ul>
         
-        <h3>Оdepuisвобождение à partir de налогообложения</h3>
-        <p>Прибыль КИК оdepuisвобождаетdepuisя à partir de налогообложения, еdepuisли:</p>
+        <h3>Освобождение от налогообложения</h3>
+        <p>Прибыль КИК освобождается от налогообложения, если:</p>
         <ul>
           <li>Размер прибыли не превышает 10 млн рублей</li>
-          <li>КИК являетdepuisя резидентом depuisтраны из утвержденного перечня</li>
-          <li>Эффективная depuisтавка налога на прибыль КИК depuisоdepuisтавляет не менее 75% à partir de depuisредневзвешенной налоговой depuisтавки по налогу на прибыль в РФ</li>
+          <li>КИК является резидентом страны из утвержденного перечня</li>
+          <li>Эффективная ставка налога на прибыль КИК составляет не менее 75% от средневзвешенной налоговой ставки по налогу на прибыль в РФ</li>
         </ul>
       `;
       updatePreview();
@@ -1401,10 +1829,10 @@
     };
     
     localStorage.setItem('kikArticle', JSON.stringify(article));
-    showNotification('Статья depuisохранена');
+    showNotification('Статья сохранена');
     articleModal.style.display = 'none';
     
     // Update the actual article page if needed
     // This would require additional implementation
   });
-})();
+});

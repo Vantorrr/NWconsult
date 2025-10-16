@@ -1,6 +1,8 @@
 // Banks page functionality
 (function() {
-  const isEnglish = (document.documentElement.getAttribute('lang') || '').toLowerCase() === 'en';
+  const lang = (document.documentElement.getAttribute('lang') || '').toLowerCase();
+  const isEnglish = lang === 'en';
+  const isFrench = lang.startsWith('fr');
   
   // Load banks from server
   (async function() {
@@ -27,7 +29,7 @@
       typeText: 'Traditional',
       remote: false,
       time: '10-14 days',
-      minimum: '$5,000',
+      cost: '$5,000',
       features: 'Multi-currency accounts, investments, premium service'
     },
     {
@@ -40,7 +42,7 @@
       typeText: 'Traditional',
       remote: false,
       time: '7-10 days',
-      minimum: '$30,000',
+      cost: '$30,000',
       features: 'Asian hub, excellent reputation, online banking'
     },
     {
@@ -53,7 +55,7 @@
       typeText: 'Digital bank',
       remote: true,
       time: '1-3 days',
-      minimum: '€0',
+      cost: '€0',
       features: 'Fast opening, multi-currency, business API'
     },
     {
@@ -66,7 +68,7 @@
       typeText: 'Traditional',
       remote: false,
       time: '5-7 days',
-      minimum: '€1,000',
+      cost: '€1,000',
       features: 'EU accounts, suitable for holdings'
     },
     {
@@ -79,7 +81,7 @@
       typeText: 'Traditional',
       remote: false,
       time: '14-21 days',
-      minimum: 'HKD 50,000',
+      cost: 'HKD 50,000',
       features: 'Access to Asian markets, prestige, trade finance'
     },
     {
@@ -92,7 +94,7 @@
       typeText: 'Traditional',
       remote: false,
       time: '7-10 days',
-      minimum: 'AED 25,000',
+      cost: 'AED 25,000',
       features: 'Islamic banking, 0% taxes, resident visa'
     },
     {
@@ -105,7 +107,7 @@
       typeText: 'Traditional',
       remote: true,
       time: '3-5 days',
-      minimum: '$0',
+      cost: '$0',
       features: 'Easy opening, low fees'
     },
     {
@@ -118,7 +120,7 @@
       typeText: 'Traditional',
       remote: true,
       time: '3-5 days',
-      minimum: '$0',
+      cost: '$0',
       features: 'Remote opening, low requirements'
     },
     {
@@ -131,7 +133,7 @@
       typeText: 'EMI',
       remote: true,
       time: '1-2 days',
-      minimum: '€0',
+      cost: '€0',
       features: 'Multi-currency, low fees, API integration'
     },
     {
@@ -144,7 +146,7 @@
       typeText: 'Digital bank',
       remote: true,
       time: '1-3 days',
-      minimum: '$0',
+      cost: '$0',
       features: 'For startups, corporate cards, expense management'
     },
     {
@@ -157,7 +159,7 @@
       typeText: 'Crypto-friendly',
       remote: false,
       time: '14-21 days',
-      minimum: 'CHF 50,000',
+      cost: 'CHF 50,000',
       features: 'Digital assets, DeFi, traditional banking + crypto'
     },
     {
@@ -170,7 +172,7 @@
       typeText: 'EMI',
       remote: true,
       time: '5-7 дней',
-      minimum: '€0',
+      cost: '€0',
       features: 'Крипто-френдли, IBAN счета, SEPA/SWIFT'
     }
   ];
@@ -178,6 +180,11 @@
   // Get banks data from localStorage or use default
   // For EN pages ignore localStorage (it contains RU data from admin) and use EN dataset
   let banks = isEnglish ? banksData : (JSON.parse(localStorage.getItem('banksData')) || banksData);
+
+  banks = banks.map(bank => ({
+    ...bank,
+    cost: bank.cost || bank.minimum || bank.price || ''
+  }));
   
   // DOM elements
   const banksTbody = document.getElementById('banks-tbody');
@@ -211,15 +218,15 @@
         </td>
         <td>
           ${bank.remote 
-            ? '<span class="bank-remote">✓ Remote</span>' 
-            : '<span class="bank-visit">✈ With visit</span>'
+            ? `<span class="bank-remote">✓ ${isEnglish ? 'Remote' : isFrench ? 'À distance' : 'Удалённо'}</span>` 
+            : `<span class="bank-visit">✈ ${isEnglish ? 'On-site' : isFrench ? 'Sur place' : 'С визитом'}</span>`
           }
         </td>
         <td>${bank.time}</td>
-        <td>${bank.minimum}</td>
+        <td>${bank.cost || '—'}</td>
         <td>
           <button class="bank-cta" onclick="openBankModal('${bank.id}')">
-            Order
+            ${isEnglish ? 'Order' : isFrench ? 'Commander' : 'Заказать'}
           </button>
         </td>
       </tr>
@@ -275,9 +282,9 @@
       let bVal = b[field];
       
       // Handle numeric values
-      if (field === 'minimum') {
-        aVal = parseInt(aVal.replace(/[^0-9]/g, '')) || 0;
-        bVal = parseInt(bVal.replace(/[^0-9]/g, '')) || 0;
+      if (field === 'cost') {
+        aVal = parseInt((aVal || '').toString().replace(/[^0-9]/g, '')) || 0;
+        bVal = parseInt((bVal || '').toString().replace(/[^0-9]/g, '')) || 0;
       }
       
       // Handle time values
@@ -424,7 +431,10 @@
   // Export functions for admin panel
   window.getBanksData = () => banks;
   window.setBanksData = (newBanks) => {
-    banks = newBanks;
+    banks = (newBanks || []).map(bank => ({
+      ...bank,
+      cost: bank.cost || bank.minimum || bank.price || ''
+    }));
     localStorage.setItem('banksData', JSON.stringify(banks));
     renderBanks();
   };

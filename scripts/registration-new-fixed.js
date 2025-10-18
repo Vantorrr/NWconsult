@@ -168,23 +168,28 @@
   pickerSearch?.addEventListener('input', buildPickerList);
   pickerRegion?.addEventListener('change', buildPickerList);
 
-  renderCountries();
-  // Hydrate from server so all visitors see the same data
+  // Hydrate from server FIRST so all visitors see the same data
   (async function hydrateFromServer() {
     try {
       const res = await fetch('/api/save-data?lang=ru', { cache: 'no-store' });
-      if (!res.ok) return;
+      if (!res.ok) {
+        console.warn('Server returned', res.status);
+        renderCountries();
+        return;
+      }
       const data = await res.json();
       if (data && Array.isArray(data.registrationCountries)) {
         const serverCountries = (data.registrationCountries || []).filter(c => c && c.name);
-        // Применяем сервер, только если он не пустой и не меньше текущего состояния
-        if (serverCountries.length && serverCountries.length >= (Array.isArray(countries) ? countries.length : 0)) {
+        if (serverCountries.length > 0) {
           countries = serverCountries;
           try { localStorage.setItem('registrationCountries', JSON.stringify(countries)); } catch(_) {}
-          renderCountries();
         }
       }
-    } catch (e) {}
+    } catch (e) {
+      console.error('Failed to load from server', e);
+    } finally {
+      renderCountries();
+    }
   })();
 
   // Modal functionality

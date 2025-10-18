@@ -66,6 +66,7 @@
           
           
           <div class="filter-buttons">
+            <button class="filter-btn" id="open-country-picker">Выбрать страну</button>
             <button class="filter-btn" id="reset-filters">Сбросить</button>
           </div>
         </div>
@@ -286,5 +287,30 @@
     <script src="../scripts/main.js?v=4"></script>
     <script src="../scripts/animations.js?v=4"></script>
     <script src="../scripts/registration-new-fixed.js?v=9"></script>
+
+    <!-- Country Picker Modal -->
+    <div id="country-picker-modal" class="modal" style="display:none;">
+      <div class="modal__content" style="max-width: 920px; width: 96%;">
+        <button class="modal__close" id="picker-close">&times;</button>
+        <div class="modal__header">
+          <h2 class="modal__title">Выберите страну</h2>
+          <div style="display:flex;gap:10px;flex-wrap:wrap;margin-top:10px;">
+            <input type="text" id="picker-search" class="form-input" placeholder="Поиск страны..." style="flex:1;min-width:220px;">
+            <select id="picker-region" class="form-input" style="min-width:200px;">
+              <option value="">Все регионы</option>
+              <option value="europe">Европа</option>
+              <option value="asia">Азия</option>
+              <option value="america">Америка</option>
+              <option value="oceania">Австралия и Океания</option>
+              <option value="africa">Африка</option>
+              <option value="offshore">Оффшоры</option>
+            </select>
+          </div>
+        </div>
+        <div id="picker-list" style="max-height:60vh;overflow:auto;margin-top:10px;">
+          <!-- список генерируется скриптом -->
+        </div>
+      </div>
+    </div>
   </body>
 </html>

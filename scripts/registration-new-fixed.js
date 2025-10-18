@@ -36,6 +36,7 @@
   const searchInput = document.getElementById('country-search');
   const regionFilter = document.getElementById('region-filter');
   const resetBtn = document.getElementById('reset-filters');
+  const openPickerBtn = document.getElementById('open-country-picker');
 
   // Render countries
   function renderCountries(data = countries) {
@@ -96,6 +97,79 @@
     if (regionFilter) regionFilter.value = '';
     renderCountries();
   });
+
+  // Fullscreen Country Picker
+  const pickerModal = document.getElementById('country-picker-modal');
+  const pickerClose = document.getElementById('picker-close');
+  const pickerSearch = document.getElementById('picker-search');
+  const pickerRegion = document.getElementById('picker-region');
+  const pickerList = document.getElementById('picker-list');
+
+  function openPicker() {
+    if (!pickerModal) return;
+    buildPickerList();
+    pickerModal.style.display = 'block';
+    document.body.style.overflow = 'hidden';
+    pickerSearch?.focus();
+  }
+  function closePicker() {
+    if (!pickerModal) return;
+    pickerModal.style.display = 'none';
+    document.body.style.overflow = '';
+  }
+  function buildPickerList() {
+    if (!pickerList) return;
+    const term = (pickerSearch?.value || '').toLowerCase();
+    const region = pickerRegion?.value || '';
+    let list = [...countries].filter(c => c && c.name);
+    if (region) list = list.filter(c => c.region === region);
+    if (term) list = list.filter(c => (c.name || '').toLowerCase().includes(term));
+    // group by region then sort by name
+    const regionOrder = ['europe','asia','america','oceania','africa','offshore'];
+    const byRegion = region ? regionOrder : regionOrder;
+    const groups = {};
+    list.forEach(c => {
+      const key = c.region || 'other';
+      if (!groups[key]) groups[key] = [];
+      groups[key].push(c);
+    });
+    const parts = [];
+    byRegion.forEach(key => {
+      const items = (groups[key] || []).sort((a,b) => a.name.localeCompare(b.name, 'ru'));
+      if (items.length) {
+        parts.push(`<div style="padding:6px 0;color:#8899a6;font-weight:600;">${regionLabel(key)}</div>`);
+        parts.push('<div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:8px;">' +
+          items.map(c => `<button class="btn" style="justify-content:flex-start" data-pick="${c.id}">${c.flag || '🏳️'} ${c.name}</button>`).join('') +
+        '</div>');
+      }
+    });
+    pickerList.innerHTML = parts.join('') || '<p style="color:#8899a6;">Ничего не найдено</p>';
+    pickerList.querySelectorAll('[data-pick]').forEach(btn => {
+      btn.addEventListener('click', () => {
+        const id = btn.getAttribute('data-pick');
+        closePicker();
+        if (typeof window.openRegistrationModal === 'function') {
+          window.openRegistrationModal(id);
+        }
+      });
+    });
+  }
+  function regionLabel(r){
+    switch(r){
+      case 'europe': return 'Европа';
+      case 'asia': return 'Азия';
+      case 'america': return 'Америка';
+      case 'oceania': return 'Австралия и Океания';
+      case 'africa': return 'Африка';
+      case 'offshore': return 'Оффшоры';
+      default: return 'Прочее';
+    }
+  }
+  openPickerBtn?.addEventListener('click', openPicker);
+  pickerClose?.addEventListener('click', closePicker);
+  pickerModal?.addEventListener('click', (e) => { if (e.target === pickerModal) closePicker(); });
+  pickerSearch?.addEventListener('input', buildPickerList);
+  pickerRegion?.addEventListener('change', buildPickerList);
 
   renderCountries();
   // Hydrate from server so all visitors see the same data

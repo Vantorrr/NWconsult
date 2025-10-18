@@ -902,7 +902,7 @@
                     <h3><span class="flag">${c.flag}</span> ${c.name}</h3>
                     <p><strong>Регион:</strong> ${getRegionName(c.region)}</p>
                     <p><strong>Срок:</strong> ${c.time}</p>
-                    <p><strong>Цена:</strong> ${c.priceText || '$' + c.price.toLocaleString()}</p>
+                    <p><strong>Цена:</strong> ${c.priceText || (typeof c.price === 'number' ? '$' + c.price.toLocaleString() : '')}</p>
                     ${c.articleUrl ? `<p><strong>Статья:</strong> <a href="${c.articleUrl}" target="_blank" style="color: #3498db;">Открыть статью →</a></p>` : ''}
                     ${c.features && c.features.length > 0 ? `
                         <div style="margin: 10px 0;">
@@ -912,8 +912,8 @@
                             </ul>
                         </div>
                     ` : ''}
-                    <button class="btn btn-sm" onclick="editCountry(${c.id})">✏️ Редактировать</button>
-                    <button class="btn btn-danger btn-sm" onclick="deleteCountry(${c.id})">🗑️ Удалить</button>
+                    <button class="btn btn-sm" onclick="editCountry('${c.id}')">✏️ Редактировать</button>
+                    <button class="btn btn-danger btn-sm" onclick="deleteCountry('${c.id}')">🗑️ Удалить</button>
                 </div>
             `).join('');
         }
@@ -943,7 +943,9 @@
         function addCountry() {
             const countries = JSON.parse(localStorage.getItem(getStorageKey('registrationCountries'))) || [];
             const currency = document.getElementById('new-country-currency').value;
-            const price = parseInt(document.getElementById('new-country-price').value);
+            const rawPrice = document.getElementById('new-country-price').value;
+            const priceNum = Number(rawPrice);
+            const hasPrice = Number.isFinite(priceNum);
             
             const newCountry = {
                 id: Date.now(),
@@ -951,8 +953,8 @@
                 flag: document.getElementById('new-country-flag').value || '🏳️',
                 region: document.getElementById('new-country-region').value,
                 time: document.getElementById('new-country-time').value,
-                price: price,
-                priceText: `${currency}${price.toLocaleString()}`,
+                price: hasPrice ? priceNum : null,
+                priceText: hasPrice ? `${currency}${priceNum.toLocaleString()}` : '',
                 features: document.getElementById('new-country-features').value.split('\n').filter(f => f.trim()),
                 articleUrl: document.getElementById('new-country-article').value || ''
             };
@@ -976,7 +978,7 @@
         
         function editCountry(id) {
             const countries = JSON.parse(localStorage.getItem(getStorageKey('registrationCountries'))) || [];
-            const country = countries.find(c => c.id === id);
+            const country = countries.find(c => String(c.id) === String(id));
             if (!country) return;
             
             // Заполняем форму данными страны
@@ -1009,11 +1011,13 @@
         
         async function updateCountry(id) {
             let countries = JSON.parse(localStorage.getItem(getStorageKey('registrationCountries'))) || [];
-            const index = countries.findIndex(c => c.id === id);
+            const index = countries.findIndex(c => String(c.id) === String(id));
             if (index === -1) return;
             
             const currency = document.getElementById('new-country-currency').value;
-            const price = parseInt(document.getElementById('new-country-price').value);
+            const rawPrice = document.getElementById('new-country-price').value;
+            const priceNum = Number(rawPrice);
+            const hasPrice = Number.isFinite(priceNum);
             
             countries[index] = {
                 ...countries[index],
@@ -1021,8 +1025,8 @@
                 flag: document.getElementById('new-country-flag').value || '🏳️',
                 region: document.getElementById('new-country-region').value,
                 time: document.getElementById('new-country-time').value,
-                price: price,
-                priceText: `${currency}${price.toLocaleString()}`,
+                price: hasPrice ? priceNum : null,
+                priceText: hasPrice ? `${currency}${priceNum.toLocaleString()}` : '',
                 features: document.getElementById('new-country-features').value.split('\n').filter(f => f.trim()),
                 articleUrl: document.getElementById('new-country-article').value || ''
             };
@@ -1044,7 +1048,7 @@
         async function deleteCountry(id) {
             if (!confirm(t('messages.confirmDelete'))) return;
             let countries = JSON.parse(localStorage.getItem(getStorageKey('registrationCountries'))) || [];
-            countries = countries.filter(c => c.id !== id);
+            countries = countries.filter(c => String(c.id) !== String(id));
             localStorage.setItem(getStorageKey('registrationCountries'), JSON.stringify(countries));
             loadCountries();
             await saveAllToServer(); // мгновенное сохранение

@@ -104,10 +104,14 @@
       const res = await fetch('/api/save-data?lang=ru', { cache: 'no-store' });
       if (!res.ok) return;
       const data = await res.json();
-      if (data && Array.isArray(data.registrationCountries) && data.registrationCountries.length) {
-        countries = data.registrationCountries;
-        try { localStorage.setItem('registrationCountries', JSON.stringify(countries)); } catch(_) {}
-        renderCountries();
+      if (data && Array.isArray(data.registrationCountries)) {
+        const serverCountries = (data.registrationCountries || []).filter(c => c && c.name);
+        // Применяем сервер, только если он не пустой и не меньше текущего состояния
+        if (serverCountries.length && serverCountries.length >= (Array.isArray(countries) ? countries.length : 0)) {
+          countries = serverCountries;
+          try { localStorage.setItem('registrationCountries', JSON.stringify(countries)); } catch(_) {}
+          renderCountries();
+        }
       }
     } catch (e) {}
   })();

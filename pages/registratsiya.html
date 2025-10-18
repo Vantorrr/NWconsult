@@ -69,24 +69,6 @@
             <button class="filter-btn" id="open-country-picker">Выбрать страну</button>
             <button class="filter-btn" id="reset-filters">Сбросить</button>
           </div>
-          <!-- Выпадающий список стран (расширенный) -->
-          <div id="country-picker-panel" style="display:none;background:#1a2332;border:1px solid #2c3e50;border-radius:12px;padding:16px;margin-top:10px;position:relative;z-index:50;max-width:100%;overflow:hidden;">
-            <div style="display:flex;gap:10px;flex-wrap:wrap;align-items:center;margin-bottom:10px;">
-              <strong style="color:#fff;">Страны</strong>
-              <input type="text" id="picker-search" class="form-input" placeholder="Поиск страны..." style="flex:1;min-width:220px;">
-              <select id="picker-region" class="form-input" style="min-width:200px;">
-                <option value="">Все регионы</option>
-                <option value="europe">Европа</option>
-                <option value="asia">Азия</option>
-                <option value="america">Америка</option>
-                <option value="oceania">Австралия и Океания</option>
-                <option value="africa">Африка</option>
-                <option value="offshore">Оффшоры</option>
-              </select>
-              <button class="filter-btn" id="picker-close">Закрыть</button>
-            </div>
-            <div id="picker-list" style="max-height:400px;overflow-y:auto;overflow-x:hidden;"></div>
-          </div>
         </div>
       </div>
     </section>
@@ -301,10 +283,33 @@
       </div>
     </div>
     
+    <!-- Country Picker Modal -->
+    <div id="country-picker-modal" class="modal" style="display:none;position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,0.85);z-index:9999;overflow:hidden;">
+      <div style="position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);background:#1a2332;border:1px solid #2c3e50;border-radius:16px;padding:24px;width:90%;max-width:800px;max-height:80vh;display:flex;flex-direction:column;">
+        <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:16px;">
+          <h2 style="color:#fff;margin:0;">Выберите страну</h2>
+          <button id="picker-close" style="background:none;border:none;color:#fff;font-size:32px;cursor:pointer;padding:0;line-height:1;">&times;</button>
+        </div>
+        <div style="display:flex;gap:10px;margin-bottom:12px;flex-wrap:wrap;">
+          <input type="text" id="picker-search" placeholder="Поиск страны..." style="flex:1;min-width:200px;padding:10px;background:#0f1419;border:1px solid #2c3e50;border-radius:8px;color:#fff;">
+          <select id="picker-region" style="padding:10px;background:#0f1419;border:1px solid #2c3e50;border-radius:8px;color:#fff;min-width:180px;">
+            <option value="">Все регионы</option>
+            <option value="europe">Европа</option>
+            <option value="asia">Азия</option>
+            <option value="america">Америка</option>
+            <option value="oceania">Австралия и Океания</option>
+            <option value="africa">Африка</option>
+            <option value="offshore">Оффшоры</option>
+          </select>
+        </div>
+        <div id="picker-list" style="flex:1;overflow-y:auto;overflow-x:hidden;"></div>
+      </div>
+    </div>
+
     <script src="../scripts/telegram-sender.js"></script>
     <script src="../scripts/main.js?v=4"></script>
     <script src="../scripts/animations.js?v=4"></script>
-    <script src="../scripts/registration-new-fixed.js?v=11"></script>
+    <script src="../scripts/registration-new-fixed.js?v=12"></script>
 
     
   </body>

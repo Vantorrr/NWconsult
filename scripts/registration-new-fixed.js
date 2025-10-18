@@ -37,7 +37,7 @@
   const regionFilter = document.getElementById('region-filter');
   const resetBtn = document.getElementById('reset-filters');
   const openPickerBtn = document.getElementById('open-country-picker');
-  const pickerPanel = document.getElementById('country-picker-panel');
+  const pickerModal = document.getElementById('country-picker-modal');
 
   // Render countries
   function renderCountries(data = countries) {
@@ -106,14 +106,16 @@
   const pickerList = document.getElementById('picker-list');
 
   function openPicker() {
-    if (!pickerPanel) return;
+    if (!pickerModal) return;
     buildPickerList();
-    pickerPanel.style.display = 'block';
-    pickerSearch?.focus();
+    pickerModal.style.display = 'block';
+    document.body.style.overflow = 'hidden';
+    setTimeout(() => pickerSearch?.focus(), 100);
   }
   function closePicker() {
-    if (!pickerPanel) return;
-    pickerPanel.style.display = 'none';
+    if (!pickerModal) return;
+    pickerModal.style.display = 'none';
+    document.body.style.overflow = '';
   }
   function buildPickerList() {
     if (!pickerList) return;
@@ -165,6 +167,7 @@
   }
   openPickerBtn?.addEventListener('click', openPicker);
   pickerClose?.addEventListener('click', closePicker);
+  pickerModal?.addEventListener('click', (e) => { if (e.target === pickerModal) closePicker(); });
   pickerSearch?.addEventListener('input', buildPickerList);
   pickerRegion?.addEventListener('change', buildPickerList);
 

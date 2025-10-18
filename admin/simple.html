@@ -455,21 +455,54 @@
         <div id="audit" class="tab-content">
             <div class="section-header">
                 <h2>📊 Управление странами для аудита</h2>
-                <button class="btn btn-success" onclick="addAuditCountry()">➕ Добавить страну</button>
+                <div style="display: flex; gap: 10px;">
+                    <button class="btn btn-success" onclick="showAddAuditForm()">➕ Добавить страну</button>
+                    <button class="btn" onclick="forceSyncNow()" style="background: #f39c12;">🔄 Сохранить на сервер</button>
+                </div>
             </div>
-            
-            <table>
-                <thead>
-                    <tr>
-                        <th>Страна</th>
-                        <th>Регион</th>
-                        <th>Налог</th>
-                        <th>Подробная информация</th>
-                        <th>Действия</th>
-                    </tr>
-                </thead>
-                <tbody id="audit-list"></tbody>
-            </table>
+            <div id="audit-grid" class="countries-grid"></div>
+            <div id="add-audit-form" class="form-card" style="display:none;">
+                <h3>Добавить страну для аудита</h3>
+                <div class="form-group">
+                    <label>Название страны</label>
+                    <input type="text" id="new-audit-name" placeholder="Например: Германия">
+                </div>
+                <div class="form-group">
+                    <label>Флаг (эмодзи)</label>
+                    <input type="text" id="new-audit-flag" placeholder="🇩🇪">
+                </div>
+                <div class="form-group">
+                    <label>Регион</label>
+                    <select id="new-audit-region">
+                        <option value="europe">Европа</option>
+                        <option value="asia">Азия</option>
+                        <option value="america">Америка</option>
+                        <option value="oceania">Австралия и Океания</option>
+                        <option value="africa">Африка</option>
+                        <option value="offshore">Оффшоры</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label>Налог / Диапазон</label>
+                    <input type="text" id="new-audit-tax" placeholder="0–15%">
+                </div>
+                <div class="form-group">
+                    <label>Требования к аудиту</label>
+                    <input type="text" id="new-audit-required" placeholder="Обязательный ежегодный / По размеру компании и т.п.">
+                </div>
+                <div class="form-group">
+                    <label>Стандарты отчётности</label>
+                    <input type="text" id="new-audit-standards" placeholder="МСФО / HKFRS / UK GAAP и т.п.">
+                </div>
+                <div class="form-group">
+                    <label>Ссылка на статью (необязательно)</label>
+                    <input type="text" id="new-audit-article" placeholder="/pages/articles/audit-germany.html">
+                </div>
+                <div class="form-actions">
+                    <button class="btn btn-success" onclick="addAuditCountry()">💾 Сохранить</button>
+                    <button class="btn" onclick="hideAddAuditForm()">❌ Отмена</button>
+                </div>
+            </div>
         </div>
         
         <!-- ПРОЧИЕ УСЛУГИ -->
@@ -1182,39 +1215,109 @@
         
         // АУДИТ
         function loadAudit() {
-            const audits = JSON.parse(localStorage.getItem(getStorageKey('auditCountries'))) || [
-                { id: 1, country: 'Кипр', region: 'Европа', tax: '12.5%', infoUrl: '/pages/articles/audit-cyprus.html' },
-                { id: 2, country: 'ОАЭ', region: 'Азия', tax: '0–9%', infoUrl: '/pages/articles/audit-uae.html' }
+            const defaults = [
+                { id: 'cyprus', name: 'Кипр', flag: '🇨🇾', region: 'europe', taxRate: '12.5%', auditRequired: 'Обязательный ежегодный', standards: 'МСФО', articleUrl: '/pages/articles/audit-cyprus.html' },
+                { id: 'uae', name: 'ОАЭ', flag: '🇦🇪', region: 'asia', taxRate: '0–9%', auditRequired: 'Зависит от зоны', standards: 'IFRS', articleUrl: '/pages/articles/audit-uae.html' }
             ];
-            
-            const list = document.getElementById('audit-list');
-            list.innerHTML = audits.map(a => `
-                <tr>
-                    <td>${a.country}</td>
-                    <td>${a.region}</td>
-                    <td>${a.tax}</td>
-                    <td>${a.infoUrl ? `<a href="${a.infoUrl}" target="_blank" class=\"btn btn-sm\">👁️ Просмотр</a>` : ''}</td>
-                    <td>
-                        <button class="btn btn-sm" onclick="editAudit('${a.id}')">✏️ Редактировать</button>
-                        <button class="btn btn-danger btn-sm" onclick="deleteAudit('${a.id}')">🗑️ Удалить</button>
-                    </td>
-                </tr>
+            let items;
+            try { items = JSON.parse(localStorage.getItem(getStorageKey('auditCountries'))); } catch(e){ items = null; }
+            if (!Array.isArray(items)) {
+                items = defaults;
+                try { localStorage.setItem(getStorageKey('auditCountries'), JSON.stringify(items)); } catch(e){}
+            }
+            const grid = document.getElementById('audit-grid');
+            grid.innerHTML = items.map(c => `
+                <div class="country-card">
+                    <h3><span class="flag">${c.flag || '🏳️'}</span> ${c.name}</h3>
+                    <p><strong>Регион:</strong> ${getRegionName(c.region)}</p>
+                    <p><strong>Налог:</strong> ${c.taxRate || ''}</p>
+                    <p><strong>Требования:</strong> ${c.auditRequired || ''}</p>
+                    <p><strong>Стандарты:</strong> ${c.standards || ''}</p>
+                    ${c.articleUrl ? `<p><strong>Статья:</strong> <a href="${c.articleUrl}" target="_blank" style="color:#3498db;">Подробнее →</a></p>` : ''}
+                    <div class="form-actions">
+                        <button class="btn btn-sm" onclick="editAudit('${c.id}')">✏️ Редактировать</button>
+                        <button class="btn btn-danger btn-sm" onclick="deleteAudit('${c.id}')">🗑️ Удалить</button>
+                    </div>
+                </div>
             `).join('');
         }
         
+        function showAddAuditForm() {
+            document.getElementById('add-audit-form').style.display = 'block';
+        }
+        function hideAddAuditForm() {
+            document.getElementById('add-audit-form').style.display = 'none';
+            document.getElementById('new-audit-name').value = '';
+            document.getElementById('new-audit-flag').value = '';
+            document.getElementById('new-audit-tax').value = '';
+            document.getElementById('new-audit-required').value = '';
+            document.getElementById('new-audit-standards').value = '';
+            document.getElementById('new-audit-article').value = '';
+            document.querySelector('#add-audit-form h3').textContent = 'Добавить страну для аудита';
+            document.querySelector('#add-audit-form .btn-success').onclick = function(){ addAuditCountry(); };
+        }
         function addAuditCountry() {
-            const country = prompt('Название страны:');
-            if (!country) return;
-            const region = prompt('Регион:', 'Европа') || 'Европа';
-            const tax = prompt('Налог (диапазон допустим):', '0–12.5%') || '0%';
-            const infoUrl = prompt('Ссылка на подробную информацию (статью):', '/pages/articles/audit-template.html') || '';
-            
-            const audits = JSON.parse(localStorage.getItem(getStorageKey('auditCountries'))) || [];
-            audits.push({ id: Date.now(), country, region, tax, infoUrl });
-            
-            localStorage.setItem(getStorageKey('auditCountries'), JSON.stringify(audits));
+            const items = JSON.parse(localStorage.getItem(getStorageKey('auditCountries'))) || [];
+            const newItem = {
+                id: Date.now().toString(),
+                name: document.getElementById('new-audit-name').value,
+                flag: document.getElementById('new-audit-flag').value || '🏳️',
+                region: document.getElementById('new-audit-region').value,
+                taxRate: document.getElementById('new-audit-tax').value,
+                auditRequired: document.getElementById('new-audit-required').value,
+                standards: document.getElementById('new-audit-standards').value,
+                articleUrl: document.getElementById('new-audit-article').value || ''
+            };
+            items.push(newItem);
+            localStorage.setItem(getStorageKey('auditCountries'), JSON.stringify(items));
             loadAudit();
+            hideAddAuditForm();
             saveAllToServerDebounced();
+            alert(t('messages.saved'));
+        }
+        function editAudit(id) {
+            const items = JSON.parse(localStorage.getItem(getStorageKey('auditCountries'))) || [];
+            const it = items.find(x => String(x.id) === String(id));
+            if (!it) return;
+            document.getElementById('new-audit-name').value = it.name || '';
+            document.getElementById('new-audit-flag').value = it.flag || '';
+            document.getElementById('new-audit-region').value = it.region || 'europe';
+            document.getElementById('new-audit-tax').value = it.taxRate || '';
+            document.getElementById('new-audit-required').value = it.auditRequired || '';
+            document.getElementById('new-audit-standards').value = it.standards || '';
+            document.getElementById('new-audit-article').value = it.articleUrl || '';
+            document.getElementById('add-audit-form').style.display = 'block';
+            document.querySelector('#add-audit-form h3').textContent = 'Редактировать страну для аудита';
+            document.querySelector('#add-audit-form .btn-success').onclick = function(){ updateAudit(id); };
+        }
+        function updateAudit(id) {
+            const items = JSON.parse(localStorage.getItem(getStorageKey('auditCountries'))) || [];
+            const idx = items.findIndex(x => String(x.id) === String(id));
+            if (idx === -1) return;
+            items[idx] = {
+                ...items[idx],
+                name: document.getElementById('new-audit-name').value,
+                flag: document.getElementById('new-audit-flag').value || '🏳️',
+                region: document.getElementById('new-audit-region').value,
+                taxRate: document.getElementById('new-audit-tax').value,
+                auditRequired: document.getElementById('new-audit-required').value,
+                standards: document.getElementById('new-audit-standards').value,
+                articleUrl: document.getElementById('new-audit-article').value || ''
+            };
+            localStorage.setItem(getStorageKey('auditCountries'), JSON.stringify(items));
+            loadAudit();
+            hideAddAuditForm();
+            saveAllToServer();
+            alert(t('messages.saved'));
+        }
+        function deleteAudit(id) {
+            if (!confirm(t('messages.confirmDelete'))) return;
+            let items = JSON.parse(localStorage.getItem(getStorageKey('auditCountries'))) || [];
+            items = items.filter(x => String(x.id) !== String(id));
+            localStorage.setItem(getStorageKey('auditCountries'), JSON.stringify(items));
+            loadAudit();
+            saveAllToServer();
+            alert(t('messages.deleted'));
         }
         
         function editAudit(id) {

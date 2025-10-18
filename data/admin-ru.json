@@ -1,17 +1,6 @@
 {
   "registrationCountries": [
     {
-      "id": 1760117746384,
-      "name": "р4ещ3рйпщ3о",
-      "flag": "🏳️",
-      "region": "europe",
-      "time": "",
-      "price": null,
-      "priceText": "$не число",
-      "features": [],
-      "articleUrl": ""
-    },
-    {
       "id": 1760185053325,
       "name": "Албания",
       "flag": "🇦🇱",

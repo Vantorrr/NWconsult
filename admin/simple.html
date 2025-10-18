@@ -441,8 +441,9 @@
                         <th>Банк</th>
                         <th>Страна</th>
                         <th>Тип счета</th>
-                        <th>Мин. баланс</th>
+                        <th>Открытие</th>
                         <th>Срок</th>
+                        <th>Стоимость</th>
                         <th>Действия</th>
                     </tr>
                 </thead>
@@ -494,6 +495,7 @@
                 <div class="form-actions">
                     <button class="btn btn-success" onclick="saveKik()">💾 Сохранить изменения</button>
                     <button class="btn" onclick="window.open('../pages/articles/ru-kik.html', '_blank')">👁️ Просмотр статьи</button>
+                    <button class="btn btn-danger" onclick="deleteKik()">🗑️ Удалить</button>
                 </div>
             </div>
         </div>
@@ -575,8 +577,9 @@
                     <input type="text" id="new-slide-link-text" placeholder="Узнать подробнее →">
                 </div>
                 <div class="form-group">
-                    <label>URL изображения</label>
-                    <input type="text" id="new-slide-image" placeholder="https://example.com/image.jpg">
+                    <label>Изображение</label>
+                    <input type="file" id="new-slide-image-file" accept="image/*">
+                    <small style="color:#8899a6">Будет загружено в репозиторий и доступно по прямой ссылке</small>
                 </div>
                 <div class="form-actions">
                     <button class="btn btn-success" onclick="addSlide()">💾 Сохранить слайд</button>
@@ -1091,8 +1094,8 @@
         // БАНКИ
         function loadBanks() {
             const banks = JSON.parse(localStorage.getItem(getStorageKey('banksData'))) || [
-                { id: 1, bank: 'Bank of Cyprus', country: 'Кипр', type: 'Корпоративный', balance: '€5,000', time: '2-3 недели' },
-                { id: 2, bank: 'Emirates NBD', country: 'ОАЭ', type: 'Корпоративный', balance: 'AED 25,000', time: '1-2 недели' }
+                { id: 1, bank: 'Bank of Cyprus', country: 'Кипр', type: 'Традиционный', remote: false, time: '2-3 недели', cost: '€5,000' },
+                { id: 2, bank: 'Emirates NBD', country: 'ОАЭ', type: 'Традиционный', remote: false, time: '1-2 недели', cost: 'AED 25,000' }
             ];
             
             const list = document.getElementById('banks-list');
@@ -1101,8 +1104,9 @@
                     <td>${b.bank}</td>
                     <td>${b.country}</td>
                     <td>${b.type}</td>
-                    <td>${b.balance}</td>
-                    <td>${b.time}</td>
+                    <td>${b.remote ? 'Удалённо' : 'С визитом'}</td>
+                    <td>${b.time || ''}</td>
+                    <td>${b.cost || b.balance || ''}</td>
                     <td>
                         <button class="btn btn-sm" onclick="editBank('${b.id}')">✏️ Редактировать</button>
                         <button class="btn btn-danger btn-sm" onclick="deleteBank('${b.id}')">🗑️ Удалить</button>
@@ -1114,20 +1118,36 @@
         function addBank() {
             const name = prompt('Название банка:');
             if (!name) return;
+            const country = prompt('Страна:', 'Страна') || 'Страна';
+            const type = prompt('Тип (Традиционный/Цифровой/EMI/Крипто):', 'Традиционный') || 'Традиционный';
+            const remote = confirm('Открытие удалённо? (ОК — удалённо, Отмена — с визитом)');
+            const time = prompt('Срок:', '1-2 недели') || '1-2 недели';
+            const cost = prompt('Стоимость услуги:', '$0') || '$0';
             
             const banks = JSON.parse(localStorage.getItem(getStorageKey('banksData'))) || [];
-            banks.push({
-                id: Date.now(),
-                bank: name,
-                country: 'Страна',
-                type: 'Корпоративный',
-                balance: '$1,000',
-                time: '1-2 недели'
-            });
+            banks.push({ id: Date.now(), bank: name, country, type, remote, time, cost });
             
             localStorage.setItem(getStorageKey('banksData'), JSON.stringify(banks));
             loadBanks();
             saveAllToServerDebounced();
+        }
+
+        function editBank(id) {
+            const banks = JSON.parse(localStorage.getItem(getStorageKey('banksData'))) || [];
+            const bank = banks.find(b => String(b.id) === String(id));
+            if (!bank) return;
+            const name = prompt('Название банка:', bank.bank) || bank.bank;
+            const country = prompt('Страна:', bank.country) || bank.country;
+            const type = prompt('Тип (Традиционный/Цифровой/EMI/Крипто):', bank.type || 'Традиционный') || bank.type;
+            const remote = confirm('Открытие удалённо? (ОК — удалённо, Отмена — с визитом)');
+            const time = prompt('Срок:', bank.time || '') || bank.time;
+            const cost = prompt('Стоимость услуги:', bank.cost || bank.balance || '') || (bank.cost || bank.balance || '');
+            const idx = banks.findIndex(b => String(b.id) === String(id));
+            banks[idx] = { ...banks[idx], bank: name, country, type, remote, time, cost };
+            localStorage.setItem(getStorageKey('banksData'), JSON.stringify(banks));
+            loadBanks();
+            saveAllToServer();
+            alert(t('messages.saved'));
         }
         
         function editBank(id) {
@@ -1250,6 +1270,13 @@
             saveAllToServerDebounced();
             alert(t('messages.saved'));
         }
+        function deleteKik() {
+            if (!confirm(t('messages.confirmDelete'))) return;
+            localStorage.removeItem(getStorageKey('kikArticle'));
+            loadKik();
+            saveAllToServerDebounced();
+            alert(t('messages.deleted'));
+        }
         
         // СЛАЙДЕР
         function loadSlides() {
@@ -1293,29 +1320,43 @@
             document.getElementById('add-slide-form').style.display = 'none';
         }
         
-        function addSlide() {
+        async function addSlide() {
             const slides = JSON.parse(localStorage.getItem(getStorageKey('showcaseSlides'))) || [];
+            const fileInput = document.getElementById('new-slide-image-file');
+            let imageUrl = '';
+            if (fileInput && fileInput.files && fileInput.files[0]) {
+                const file = fileInput.files[0];
+                const arrayBuffer = await file.arrayBuffer();
+                const base64 = btoa(String.fromCharCode(...new Uint8Array(arrayBuffer)));
+                const res = await fetch('/api/upload-image', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ name: file.name, contentBase64: base64 })
+                });
+                const data = await res.json();
+                if (!res.ok || !data?.url) {
+                    alert('Не удалось загрузить изображение');
+                    return;
+                }
+                imageUrl = data.url;
+            }
             const newSlide = {
                 id: Date.now(),
                 title: document.getElementById('new-slide-title').value,
                 desc: document.getElementById('new-slide-desc').value,
                 link: document.getElementById('new-slide-link').value,
                 linkText: document.getElementById('new-slide-link-text').value,
-                image: document.getElementById('new-slide-image').value
+                image: imageUrl
             };
-            
             slides.push(newSlide);
             localStorage.setItem(getStorageKey('showcaseSlides'), JSON.stringify(slides));
             loadSlides();
             hideAddSlideForm();
-            
-            // Очистить форму
             document.getElementById('new-slide-title').value = '';
             document.getElementById('new-slide-desc').value = '';
             document.getElementById('new-slide-link').value = '';
             document.getElementById('new-slide-link-text').value = '';
-            document.getElementById('new-slide-image').value = '';
-            
+            if (fileInput) fileInput.value = '';
             saveAllToServerDebounced();
             alert(t('messages.saved'));
         }

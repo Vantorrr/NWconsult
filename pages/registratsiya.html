@@ -70,7 +70,7 @@
             <button class="filter-btn" id="reset-filters">Сбросить</button>
           </div>
           <!-- Выпадающий список стран (расширенный) -->
-          <div id="country-picker-panel" style="display:none;background:#1a2332;border:1px solid #2c3e50;border-radius:12px;padding:16px;margin-top:10px;position:relative;z-index:50;">
+          <div id="country-picker-panel" style="display:none;background:#1a2332;border:1px solid #2c3e50;border-radius:12px;padding:16px;margin-top:10px;position:relative;z-index:50;max-width:100%;overflow:hidden;">
             <div style="display:flex;gap:10px;flex-wrap:wrap;align-items:center;margin-bottom:10px;">
               <strong style="color:#fff;">Страны</strong>
               <input type="text" id="picker-search" class="form-input" placeholder="Поиск страны..." style="flex:1;min-width:220px;">
@@ -85,7 +85,7 @@
               </select>
               <button class="filter-btn" id="picker-close">Закрыть</button>
             </div>
-            <div id="picker-list" style="max-height:60vh;overflow:auto;"></div>
+            <div id="picker-list" style="max-height:400px;overflow-y:auto;overflow-x:hidden;"></div>
           </div>
         </div>
       </div>
@@ -304,7 +304,7 @@
     <script src="../scripts/telegram-sender.js"></script>
     <script src="../scripts/main.js?v=4"></script>
     <script src="../scripts/animations.js?v=4"></script>
-    <script src="../scripts/registration-new-fixed.js?v=9"></script>
+    <script src="../scripts/registration-new-fixed.js?v=10"></script>
 
     
   </body>

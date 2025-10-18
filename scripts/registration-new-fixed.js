@@ -135,13 +135,13 @@
     byRegion.forEach(key => {
       const items = (groups[key] || []).sort((a,b) => a.name.localeCompare(b.name, 'ru'));
       if (items.length) {
-        parts.push(`<div style="padding:6px 0;color:#8899a6;font-weight:600;">${regionLabel(key)}</div>`);
-        parts.push('<div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:8px;">' +
-          items.map(c => `<button class="btn" style="justify-content:flex-start" data-pick="${c.id}">${c.flag || '🏳️'} ${c.name}</button>`).join('') +
+        parts.push(`<div style="padding:8px 0;color:#3498db;font-weight:600;font-size:15px;border-bottom:1px solid #2c3e50;">${regionLabel(key)}</div>`);
+        parts.push('<div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(180px,1fr));gap:8px;padding:8px 0;">' +
+          items.map(c => `<button class="btn btn-sm" style="justify-content:flex-start;font-size:13px;padding:10px 14px;" data-pick="${c.id}">${c.flag || '🏳️'} ${c.name}</button>`).join('') +
         '</div>');
       }
     });
-    pickerList.innerHTML = parts.join('') || '<p style="color:#8899a6;">Ничего не найдено</p>';
+    pickerList.innerHTML = parts.join('') || '<p style="color:#8899a6;text-align:center;padding:20px;">Ничего не найдено</p>';
     pickerList.querySelectorAll('[data-pick]').forEach(btn => {
       btn.addEventListener('click', () => {
         const id = btn.getAttribute('data-pick');

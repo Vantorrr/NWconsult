@@ -428,6 +428,22 @@
         "Environnement innovant"
       ],
       "articleUrl": ""
+    },
+    {
+      "id": 1761066478126,
+      "name": "Colombie",
+      "flag": "🇨🇴",
+      "region": "america",
+      "time": "10-20 jours",
+      "price": 3600,
+      "priceText": "€3 600",
+      "features": [
+        "Croissance économique",
+        "Riches ressources naturelles",
+        "Développement du secteur informatique",
+        "Incitations fiscales"
+      ],
+      "articleUrl": ""
     }
   ],
   "banksData": [],

@@ -63,6 +63,21 @@
         "Pas d'impôt sur les plus-values"
       ],
       "articleUrl": ""
+    },
+    {
+      "id": 1761062077588,
+      "name": "Argentine",
+      "flag": "🇦🇷",
+      "region": "america",
+      "time": "7-14 jours",
+      "price": 5000,
+      "priceText": "€5 000",
+      "features": [
+        "Accès aux marchés d'Amérique du Nord et du Sud",
+        "Économie en développement",
+        "La propriété étrangère à 100 % est autorisée"
+      ],
+      "articleUrl": ""
     }
   ],
   "banksData": [],

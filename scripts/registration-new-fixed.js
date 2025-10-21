@@ -206,7 +206,14 @@
     } catch (e) {
       console.error('Failed to load from server', e);
     } finally {
-      renderCountries();
+      // If navigated with hash like #cyprus, filter immediately
+      const hash = (location.hash || '').replace('#','');
+      if (hash) {
+        renderCountries();
+        filterByCountryId(hash);
+      } else {
+        renderCountries();
+      }
     }
   })();
 

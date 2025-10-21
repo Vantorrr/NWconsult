@@ -13,7 +13,8 @@
       if (registrationMenuItem) {
         const dropdown = registrationMenuItem.parentElement.querySelector('.dropdown');
         if (dropdown && countries.length > 0) {
-          const dropdownHTML = countries.map(country => {
+          const sorted = [...countries].filter(c=>c&&c.name).sort((a,b)=>a.name.localeCompare(b.name,'ru'));
+          const dropdownHTML = sorted.map(country => {
             const countryId = country.id || country.name.toLowerCase().replace(/[^a-z]/g, '');
             return `<li><a href="./pages/registratsiya.html#${countryId}"><span class="dropdown-flag">${country.flag || '🏳️'}</span> ${country.name}</a></li>`;
           }).join('');

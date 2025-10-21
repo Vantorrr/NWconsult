@@ -256,6 +256,21 @@
         "Confidentialité"
       ],
       "articleUrl": ""
+    },
+    {
+      "id": 1761064387488,
+      "name": "Cap-Vert",
+      "flag": "🇨🇻",
+      "region": "offshore",
+      "time": "15-30 jours",
+      "price": 1400,
+      "priceText": "€1 400",
+      "features": [
+        "Croissance économique stable",
+        "Situation géographique favorable",
+        "Un climat d'investissement favorable"
+      ],
+      "articleUrl": ""
     }
   ],
   "banksData": [],

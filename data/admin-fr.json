@@ -334,6 +334,21 @@
         "Accès aux banques européennes"
       ],
       "articleUrl": ""
+    },
+    {
+      "id": 1761065330084,
+      "name": "Bahamas",
+      "flag": "🇧🇸",
+      "region": "offshore",
+      "time": "7-14 дней",
+      "price": 1600,
+      "priceText": "€1 600",
+      "features": [
+        "Pas de taxes",
+        "Exonération fiscale pour les non-résidents",
+        "Confidentialité"
+      ],
+      "articleUrl": ""
     }
   ],
   "banksData": [],

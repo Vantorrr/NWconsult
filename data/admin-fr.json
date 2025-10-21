@@ -444,6 +444,23 @@
         "Incitations fiscales"
       ],
       "articleUrl": ""
+    },
+    {
+      "id": 1761066593051,
+      "name": "Costa Rica",
+      "flag": "🇨🇷",
+      "region": "america",
+      "time": "10-20 jours",
+      "price": 2200,
+      "priceText": "€2 200",
+      "features": [
+        "Pas de taxes sur les jeux de hasard",
+        "Croissance économique stable",
+        "Stabilité politique",
+        "Une infrastructure fiable",
+        "Accès aux marchés mondiaux"
+      ],
+      "articleUrl": ""
     }
   ],
   "banksData": [],

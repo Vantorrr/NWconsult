@@ -216,14 +216,26 @@
     } finally {
       // If navigated with hash like #cyprus, filter immediately
       const hash = (location.hash || '').replace('#','');
+      console.log('Page loaded with hash:', hash);
       if (hash) {
         renderCountries();
-        filterByCountryId(hash);
+        setTimeout(() => filterByCountryId(hash), 100);
       } else {
         renderCountries();
       }
     }
   })();
+
+  // Listen for hash changes
+  window.addEventListener('hashchange', () => {
+    const hash = (location.hash || '').replace('#','');
+    console.log('Hash changed to:', hash);
+    if (hash) {
+      filterByCountryId(hash);
+    } else {
+      renderCountries();
+    }
+  });
 
   // Modal functionality
   const modal = document.getElementById('registration-modal');

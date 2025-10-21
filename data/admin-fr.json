@@ -271,6 +271,22 @@
         "Un climat d'investissement favorable"
       ],
       "articleUrl": ""
+    },
+    {
+      "id": 1761064552112,
+      "name": "Canada",
+      "flag": "🇨🇦",
+      "region": "america",
+      "time": "7-14 дней",
+      "price": 2200,
+      "priceText": "€2 200",
+      "features": [
+        "Stabilité politique et économique",
+        "Système juridique transparent",
+        "Accès au marché mondial",
+        "Infrastructures développées"
+      ],
+      "articleUrl": ""
     }
   ],
   "banksData": [],

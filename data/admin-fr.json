@@ -349,6 +349,22 @@
         "Confidentialité"
       ],
       "articleUrl": ""
+    },
+    {
+      "id": 1761065918266,
+      "name": "Bahreïn",
+      "flag": "🇧🇭",
+      "region": "asia",
+      "time": "15-30 jours",
+      "price": 7000,
+      "priceText": "€7 000",
+      "features": [
+        "Zéro impôt sur les sociétés",
+        "La propriété étrangère à 100 % est autorisée",
+        "Infrastructures développées",
+        "Accès aux marchés"
+      ],
+      "articleUrl": ""
     }
   ],
   "banksData": [],

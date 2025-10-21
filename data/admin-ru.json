@@ -2353,6 +2353,16 @@
       "auditRequired": "Аудит добровольный.",
       "standards": "МСФО",
       "articleUrl": ""
+    },
+    {
+      "id": "1761056652449",
+      "name": "Армения",
+      "flag": "🇦🇲",
+      "region": "europe",
+      "taxRate": "18%",
+      "auditRequired": "Аудит добровольный",
+      "standards": "МСФО",
+      "articleUrl": ""
     }
   ],
   "kikArticle": {},

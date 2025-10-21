@@ -32,7 +32,7 @@ function transliterate(text) {
         if (dropdown && countries.length > 0) {
           const sorted = [...countries].filter(c=>c&&c.name).sort((a,b)=>a.name.localeCompare(b.name,'ru'));
           const dropdownHTML = sorted.map(country => {
-            const countryId = country.id || transliterate(country.name);
+            const countryId = (country.id !== undefined && country.id !== null) ? String(country.id) : transliterate(country.name);
             return `<li><a href="./pages/registratsiya.html#${countryId}"><span class="dropdown-flag">${country.flag || '🏳️'}</span> ${country.name}</a></li>`;
           }).join('');
           

@@ -100,7 +100,7 @@
     console.log('Filtering by countryId:', countryId);
     // Try to match by id first, then by generated id from name
     const match = (countries || []).find(c => {
-      const cId = c.id || slugify(c.name);
+      const cId = (c.id !== undefined && c.id !== null) ? String(c.id) : slugify(c.name);
       console.log('Checking country:', c.name, 'generated id:', cId, 'matches:', cId === countryId);
       return cId === countryId;
     });

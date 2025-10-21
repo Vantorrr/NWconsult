@@ -175,6 +175,21 @@
         "Accès au marché européen"
       ],
       "articleUrl": ""
+    },
+    {
+      "id": 1761063733077,
+      "name": "Bosnie-Herzégovine",
+      "flag": "🇧🇦",
+      "region": "europe",
+      "time": "7-14 jours",
+      "price": 2300,
+      "priceText": "€2 300",
+      "features": [
+        "Politique fiscale loyale",
+        "Zones économiques franches",
+        "Faible coût de faire des affaires"
+      ],
+      "articleUrl": ""
     }
   ],
   "banksData": [],

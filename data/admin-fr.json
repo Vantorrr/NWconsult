@@ -206,6 +206,23 @@
         "Potentiel technologique"
       ],
       "articleUrl": ""
+    },
+    {
+      "id": 1761064054241,
+      "name": "Brunei",
+      "flag": "🇧🇳",
+      "region": "asia",
+      "time": "15-30 оjours",
+      "price": 20500,
+      "priceText": "€20 500",
+      "features": [
+        "Économie développée",
+        "Environnement politique stable",
+        "Soutien aux investisseurs",
+        "Protection des entreprises",
+        "Emplacement stratégique"
+      ],
+      "articleUrl": ""
     }
   ],
   "banksData": [],

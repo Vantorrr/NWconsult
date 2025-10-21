@@ -97,17 +97,21 @@
       renderCountries();
       return;
     }
+    console.log('Filtering by countryId:', countryId);
     // Try to match by id first, then by generated id from name
     const match = (countries || []).find(c => {
       const cId = c.id || c.name.toLowerCase().replace(/[^a-z]/g, '');
+      console.log('Checking country:', c.name, 'generated id:', cId, 'matches:', cId === countryId);
       return cId === countryId;
     });
+    console.log('Found match:', match);
     if (searchInput) searchInput.value = '';
     if (regionFilter) regionFilter.value = '';
     if (match) {
       renderCountries([match]);
       try { countriesGrid?.scrollIntoView({ behavior: 'smooth', block: 'start' }); } catch (_) {}
     } else {
+      console.log('No match found, showing all countries');
       renderCountries();
     }
   }

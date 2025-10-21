@@ -47,6 +47,22 @@
         "Confidentialité"
       ],
       "articleUrl": ""
+    },
+    {
+      "id": 1761061883915,
+      "name": "Antigua-et-Barbuda",
+      "flag": "🇦🇬",
+      "region": "offshore",
+      "time": "7-14 jours",
+      "price": 2400,
+      "priceText": "€2 400",
+      "features": [
+        "Caraïbes",
+        "Faibles impôts",
+        "Citoyenneté par investissement",
+        "Pas d'impôt sur les plus-values"
+      ],
+      "articleUrl": ""
     }
   ],
   "banksData": [],

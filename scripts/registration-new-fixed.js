@@ -97,7 +97,11 @@
       renderCountries();
       return;
     }
-    const match = (countries || []).find(c => (c.id || '') === countryId);
+    // Try to match by id first, then by generated id from name
+    const match = (countries || []).find(c => {
+      const cId = c.id || c.name.toLowerCase().replace(/[^a-z]/g, '');
+      return cId === countryId;
+    });
     if (searchInput) searchInput.value = '';
     if (regionFilter) regionFilter.value = '';
     if (match) {

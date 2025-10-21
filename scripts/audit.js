@@ -326,7 +326,22 @@
 
   function initializeAuditPage() {
     auditCountriesData = normalizeCountries(getCountriesData());
-    renderCountries(auditCountriesData);
+    
+    // Check for hash filter
+    const hash = (location.hash || '').replace('#','');
+    if (hash) {
+      const found = auditCountriesData.find(c => {
+        const cId = c.id || c.name.toLowerCase().replace(/[^a-z]/g, '');
+        return cId === hash;
+      });
+      if (found) {
+        renderCountries([found]);
+      } else {
+        renderCountries(auditCountriesData);
+      }
+    } else {
+      renderCountries(auditCountriesData);
+    }
 
     const searchInput = document.getElementById('search');
     const regionSelect = document.getElementById('region');

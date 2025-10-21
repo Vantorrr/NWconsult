@@ -365,6 +365,21 @@
         "Accès aux marchés"
       ],
       "articleUrl": ""
+    },
+    {
+      "id": 1761066011863,
+      "name": "Bangladesh",
+      "flag": "🇧🇩",
+      "region": "asia",
+      "time": "7-14 jours",
+      "price": 4000,
+      "priceText": "€4 000",
+      "features": [
+        "Incitations fiscales",
+        "Accès aux marchés asiatiques",
+        "Faibles coûts de main-d'œuvre"
+      ],
+      "articleUrl": ""
     }
   ],
   "banksData": [],

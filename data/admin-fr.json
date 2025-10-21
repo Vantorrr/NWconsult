@@ -93,6 +93,21 @@
         "Rapatriement illimité des bénéfices"
       ],
       "articleUrl": ""
+    },
+    {
+      "id": 1761062310773,
+      "name": "Barbade",
+      "flag": "🇧🇧",
+      "region": "offshore",
+      "time": "7-14 jours",
+      "price": 2200,
+      "priceText": "€2 200",
+      "features": [
+        "Caraïbes",
+        "Faibles impôts",
+        "Accès aux marchés internationaux"
+      ],
+      "articleUrl": ""
     }
   ],
   "banksData": [],

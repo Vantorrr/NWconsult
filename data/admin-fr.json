@@ -287,6 +287,22 @@
         "Infrastructures développées"
       ],
       "articleUrl": ""
+    },
+    {
+      "id": 1761064896415,
+      "name": "Aruba",
+      "flag": "🇦🇼",
+      "region": "offshore",
+      "time": "15-30 дней",
+      "price": 1600,
+      "priceText": "€1 600",
+      "features": [
+        "Caraïbes",
+        "Niveau européen de législation",
+        "Absence de contrôle des devises",
+        "Confidentialité"
+      ],
+      "articleUrl": ""
     }
   ],
   "banksData": [],

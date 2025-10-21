@@ -380,6 +380,23 @@
         "Faibles coûts de main-d'œuvre"
       ],
       "articleUrl": ""
+    },
+    {
+      "id": 1761066149732,
+      "name": "Îles Caïmans",
+      "flag": "🇰🇾",
+      "region": "offshore",
+      "time": "7-14 jours",
+      "price": 4100,
+      "priceText": "€4 100",
+      "features": [
+        "Caraïbes",
+        "Pas de taxes",
+        "Absence de contrôle des devises",
+        "Secteur financier développé",
+        "Stabilité politique et économique"
+      ],
+      "articleUrl": ""
     }
   ],
   "banksData": [],

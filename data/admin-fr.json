@@ -142,6 +142,23 @@
         "Secteur informatique développé"
       ],
       "articleUrl": ""
+    },
+    {
+      "id": 1761063001567,
+      "name": "Belize",
+      "flag": "🇧🇿",
+      "region": "offshore",
+      "time": "7-14 jours",
+      "price": 1000,
+      "priceText": "€1 000",
+      "features": [
+        "Pas de taxes",
+        "Faibles coûts",
+        "Stabilité politique et économique",
+        "Absence de contrôle des devises",
+        "Droit britannique"
+      ],
+      "articleUrl": ""
     }
   ],
   "banksData": [],

@@ -78,6 +78,21 @@
         "La propriété étrangère à 100 % est autorisée"
       ],
       "articleUrl": ""
+    },
+    {
+      "id": 1761062205011,
+      "name": "Arménie",
+      "flag": "🇦🇲",
+      "region": "europe",
+      "time": "7-14 jours",
+      "price": 1300,
+      "priceText": "€1 300",
+      "features": [
+        "Faibles impôts",
+        "Avantages pour les entreprises",
+        "Rapatriement illimité des bénéfices"
+      ],
+      "articleUrl": ""
     }
   ],
   "banksData": [],

@@ -2343,6 +2343,16 @@
       "auditRequired": "Добровольный аудит. ",
       "standards": "МСФО",
       "articleUrl": ""
+    },
+    {
+      "id": "1761056519393",
+      "name": "Аргентина",
+      "flag": "🇦🇷",
+      "region": "america",
+      "taxRate": "35%",
+      "auditRequired": "Аудит добровольный.",
+      "standards": "МСФО",
+      "articleUrl": ""
     }
   ],
   "kikArticle": {},

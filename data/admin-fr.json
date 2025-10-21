@@ -1,1 +1,26 @@
-{}
+{
+  "registrationCountries": [
+    {
+      "id": 1761061104020,
+      "name": "Albanie",
+      "flag": "🇦🇱",
+      "region": "europe",
+      "time": "7-14 дней",
+      "price": 3100,
+      "priceText": "€3 100",
+      "features": [
+        "Faibles impôts",
+        "Soutien de l'État aux entreprises",
+        "Un climat d'investissement favorable",
+        "Accès à l'UE"
+      ],
+      "articleUrl": ""
+    }
+  ],
+  "banksData": [],
+  "auditCountries": [],
+  "kikArticle": {},
+  "showcaseSlides": [],
+  "articles": [],
+  "adminUsers": []
+}

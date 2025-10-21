@@ -397,6 +397,21 @@
         "Stabilité politique et économique"
       ],
       "articleUrl": ""
+    },
+    {
+      "id": 1761066258195,
+      "name": "Chili",
+      "flag": "🇨🇱",
+      "region": "america",
+      "time": "15-30 Jours",
+      "price": 14000,
+      "priceText": "€14 000",
+      "features": [
+        "Croissance économique",
+        "Soutien aux entrepreneurs",
+        "Logistique développée"
+      ],
+      "articleUrl": ""
     }
   ],
   "banksData": [],

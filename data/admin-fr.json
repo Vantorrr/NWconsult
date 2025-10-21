@@ -303,6 +303,21 @@
         "Confidentialité"
       ],
       "articleUrl": ""
+    },
+    {
+      "id": 1761065042806,
+      "name": "Australie",
+      "flag": "🇦🇺",
+      "region": "oceania",
+      "time": "15-30 jours",
+      "price": 2300,
+      "priceText": "€2 300",
+      "features": [
+        "Une économie forte et stable",
+        "Infrastructures développées",
+        "Système juridique transparent"
+      ],
+      "articleUrl": ""
     }
   ],
   "banksData": [],

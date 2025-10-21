@@ -239,6 +239,23 @@
         "Situation géographique favorable"
       ],
       "articleUrl": ""
+    },
+    {
+      "id": 1761064279429,
+      "name": "Îles Vierges britanniques",
+      "flag": "🇻🇬",
+      "region": "offshore",
+      "time": "7-14 jours",
+      "price": 1500,
+      "priceText": "€1 500",
+      "features": [
+        "Caraïbes",
+        "Pas de taxes",
+        "Absence de contrôle des devises",
+        "Stabilité politique et économique",
+        "Confidentialité"
+      ],
+      "articleUrl": ""
     }
   ],
   "banksData": [],

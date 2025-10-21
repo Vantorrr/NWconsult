@@ -318,6 +318,22 @@
         "Système juridique transparent"
       ],
       "articleUrl": ""
+    },
+    {
+      "id": 1761065215292,
+      "name": "Autriche",
+      "flag": "🇦🇹",
+      "region": "europe",
+      "time": "7-14 дней",
+      "price": 6000,
+      "priceText": "€6 000",
+      "features": [
+        "Emplacement central",
+        "Accès au marché européen",
+        "Législation des sociétés stable",
+        "Accès aux banques européennes"
+      ],
+      "articleUrl": ""
     }
   ],
   "banksData": [],

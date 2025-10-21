@@ -412,6 +412,22 @@
         "Logistique développée"
       ],
       "articleUrl": ""
+    },
+    {
+      "id": 1761066346967,
+      "name": "Chine",
+      "flag": "🇨🇳",
+      "region": "asia",
+      "time": "10-20 Jours",
+      "price": 6500,
+      "priceText": "€6 500",
+      "features": [
+        "Un énorme marché de vente",
+        "Faibles coûts de production",
+        "Infrastructures mondiales",
+        "Environnement innovant"
+      ],
+      "articleUrl": ""
     }
   ],
   "banksData": [],

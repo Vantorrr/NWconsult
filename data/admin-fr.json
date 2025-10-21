@@ -478,6 +478,22 @@
         "Économie stable"
       ],
       "articleUrl": ""
+    },
+    {
+      "id": 1761066809556,
+      "name": "Cuba",
+      "flag": "🇨🇺",
+      "region": "america",
+      "time": "10-20 jours",
+      "price": 10500,
+      "priceText": "€10 500",
+      "features": [
+        "Fiscalité préférentielle",
+        "Protection des investissements",
+        "Infrastructures développées",
+        "La propriété étrangère à 100 % est autorisée"
+      ],
+      "articleUrl": ""
     }
   ],
   "banksData": [],

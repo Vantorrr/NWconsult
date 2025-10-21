@@ -461,6 +461,23 @@
         "Accès aux marchés mondiaux"
       ],
       "articleUrl": ""
+    },
+    {
+      "id": 1761066719236,
+      "name": "Croatie",
+      "flag": "🇭🇷",
+      "region": "europe",
+      "time": "7-14 jours",
+      "price": 3300,
+      "priceText": "€3 300",
+      "features": [
+        "Entreprise européenne",
+        "Situation géographique favorable",
+        "Zones économiques franches",
+        "Soutien aux investisseurs",
+        "Économie stable"
+      ],
+      "articleUrl": ""
     }
   ],
   "banksData": [],

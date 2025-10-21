@@ -19,11 +19,28 @@ document.querySelectorAll('.nav__list a').forEach((link) => {
 const yearEl = document.getElementById('year');
 if (yearEl) yearEl.textContent = String(new Date().getFullYear());
 
-// Dropdowns (desktop hover)
-document.querySelectorAll('.nav__item').forEach((item)=>{
-  item.addEventListener('mouseenter', ()=> item.classList.add('open'));
-  item.addEventListener('mouseleave', ()=> item.classList.remove('open'));
+// Dropdowns (desktop hover) — ensure only one open at a time
+const navEl = document.querySelector('.nav');
+const navItems = document.querySelectorAll('.nav__item');
+navItems.forEach((item)=>{
+  item.addEventListener('mouseenter', ()=>{
+    navItems.forEach(i=> i !== item && i.classList.remove('open'));
+    item.classList.add('open');
+    if (navEl) navEl.classList.add('nav--dropdown-open');
+  });
+  item.addEventListener('mouseleave', ()=>{
+    item.classList.remove('open');
+    const anyOpen = Array.from(navItems).some(i=> i.classList.contains('open'));
+    if (!anyOpen && navEl) navEl.classList.remove('nav--dropdown-open');
+  });
 });
+// Close all on leaving the whole nav area
+if (navEl) {
+  navEl.addEventListener('mouseleave', ()=>{
+    navItems.forEach(i=> i.classList.remove('open'));
+    navEl.classList.remove('nav--dropdown-open');
+  });
+}
 
 // Reveal animations - Enhanced
 window.addEventListener('load', () => {

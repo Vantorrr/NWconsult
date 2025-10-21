@@ -125,6 +125,23 @@
         "Confidentialité"
       ],
       "articleUrl": ""
+    },
+    {
+      "id": 1761062768465,
+      "name": "Biélorussie",
+      "flag": "🇧🇾",
+      "region": "europe",
+      "time": "7-14 jours",
+      "price": 600,
+      "priceText": "€600",
+      "features": [
+        "Situation géographique",
+        "Réseau de transport développé",
+        "Zones économiques spéciales",
+        "Avantages fiscaux",
+        "Secteur informatique développé"
+      ],
+      "articleUrl": ""
     }
   ],
   "banksData": [],

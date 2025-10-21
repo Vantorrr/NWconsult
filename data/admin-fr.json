@@ -190,6 +190,22 @@
         "Faible coût de faire des affaires"
       ],
       "articleUrl": ""
+    },
+    {
+      "id": 1761063926435,
+      "name": "Brésil",
+      "flag": "🇧🇷",
+      "region": "america",
+      "time": "15-30 jours",
+      "price": 4500,
+      "priceText": "€4 500",
+      "features": [
+        "Situation géographique favorable",
+        "Incitations gouvernementales pour les entreprises",
+        "Infrastructures développées",
+        "Potentiel technologique"
+      ],
+      "articleUrl": ""
     }
   ],
   "banksData": [],

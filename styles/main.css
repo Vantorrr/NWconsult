@@ -736,7 +736,11 @@ a:hover{color:#fff}
   width:min(92vw, 780px);
   max-height:60vh;overflow:auto;
   grid-template-columns:repeat(auto-fill,minmax(220px,1fr));gap:8px 12px;
-  padding:12px
+  padding:12px;
+  /* center under the menu item and keep within viewport */
+  left:50% !important;
+  transform:translateX(-50%);
+  right:auto
 }
 .nav.nav--dropdown-open > .nav__list > .nav__item > a{pointer-events:none}
 .nav.nav--dropdown-open > .nav__list > .nav__item.open > a{pointer-events:auto}

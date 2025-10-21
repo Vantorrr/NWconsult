@@ -159,6 +159,22 @@
         "Droit britannique"
       ],
       "articleUrl": ""
+    },
+    {
+      "id": 1761063264009,
+      "name": "Belgique",
+      "flag": "🇧🇪",
+      "region": "offshore",
+      "time": "7-14 jours",
+      "price": 3500,
+      "priceText": "€3 500",
+      "features": [
+        "Emplacement central",
+        "Stabilité politique et économique",
+        "Un climat d'investissement favorable",
+        "Accès au marché européen"
+      ],
+      "articleUrl": ""
     }
   ],
   "banksData": [],

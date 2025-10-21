@@ -108,6 +108,23 @@
         "Accès aux marchés internationaux"
       ],
       "articleUrl": ""
+    },
+    {
+      "id": 1761062538767,
+      "name": "Bermudes",
+      "flag": "🇧🇲",
+      "region": "offshore",
+      "time": "15-30 jours",
+      "price": 9000,
+      "priceText": "€9 000",
+      "features": [
+        "Pas d'impôt sur les sociétés",
+        "Pas d'impôts sur les plus-values, les dividendes, les successions et les donations",
+        "Droit britannique",
+        "Secteur financier développé",
+        "Confidentialité"
+      ],
+      "articleUrl": ""
     }
   ],
   "banksData": [],

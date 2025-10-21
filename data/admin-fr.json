@@ -223,6 +223,22 @@
         "Emplacement stratégique"
       ],
       "articleUrl": ""
+    },
+    {
+      "id": 1761064136947,
+      "name": "Bulgarie",
+      "flag": "🇧🇬",
+      "region": "europe",
+      "time": "7-14 jours",
+      "price": 1900,
+      "priceText": "€1 900",
+      "features": [
+        "Entreprise européenne",
+        "Faibles impôts",
+        "Accès au marché européen",
+        "Situation géographique favorable"
+      ],
+      "articleUrl": ""
     }
   ],
   "banksData": [],

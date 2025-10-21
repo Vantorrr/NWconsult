@@ -91,6 +91,23 @@
     renderCountries(filtered);
   }
 
+  // Filter by exact country id and render only that card
+  function filterByCountryId(countryId) {
+    if (!countryId) {
+      renderCountries();
+      return;
+    }
+    const match = (countries || []).find(c => (c.id || '') === countryId);
+    if (searchInput) searchInput.value = '';
+    if (regionFilter) regionFilter.value = '';
+    if (match) {
+      renderCountries([match]);
+      try { countriesGrid?.scrollIntoView({ behavior: 'smooth', block: 'start' }); } catch (_) {}
+    } else {
+      renderCountries();
+    }
+  }
+
   searchInput?.addEventListener('input', filterCountries);
   regionFilter?.addEventListener('change', filterCountries);
   resetBtn?.addEventListener('click', () => {
@@ -148,9 +165,7 @@
       btn.addEventListener('click', () => {
         const id = btn.getAttribute('data-pick');
         closePicker();
-        if (typeof window.openRegistrationModal === 'function') {
-          window.openRegistrationModal(id);
-        }
+        filterByCountryId(id);
       });
     });
   }

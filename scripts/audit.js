@@ -345,6 +345,88 @@
     setupAnimations();
   }
 
+  // --- Modal picker for Audit page ---
+  function initAuditPicker() {
+    const overlay = document.getElementById('country-picker');
+    const pickerSearch = document.getElementById('picker-search');
+    const pickerList = document.getElementById('picker-list');
+    const openBtn = document.getElementById('open-country-picker');
+    const closeBtn = document.getElementById('picker-close');
+    let selectedRegion = '';
+
+    function keyLabel(k){
+      switch((k||'').toLowerCase()){
+        case 'europe': return 'Европа';
+        case 'asia': return 'Азия';
+        case 'america': return 'Америка';
+        case 'middle-east': return 'Ближний Восток';
+        case 'oceania': return 'Австралия и Океания';
+        case 'africa': return 'Африка';
+        case 'offshore': return 'Оффшоры';
+        default: return 'Прочее';
+      }
+    }
+
+    function buildPickerList(){
+      if (!pickerList) return;
+      const term = (pickerSearch?.value || '').toLowerCase();
+      let list = [...(auditCountriesData || [])];
+      if (selectedRegion) list = list.filter(c => (c.region || '').toLowerCase() === selectedRegion.toLowerCase());
+      if (term) list = list.filter(c => (c.name || '').toLowerCase().includes(term));
+
+      const regionOrder = ['europe','asia','america','middle-east','oceania','africa','offshore'];
+      const groups = {};
+      list.forEach(c => { const key = (c.region || 'other'); (groups[key] ||= []).push(c); });
+
+      const parts = [];
+      regionOrder.forEach(key => {
+        const items = (groups[key] || []).sort((a,b) => (a.name || '').localeCompare(b.name || '', 'ru'));
+        if (items.length) {
+          parts.push(`<div class="picker-group"><h4>${keyLabel(key)}</h4><div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(180px,1fr));gap:8px;">` +
+            items.map(c => `<button class="picker-item" data-pick="${c.id}"><span class="picker-flag">${c.flag || '🏳️'}</span><span>${c.name}</span></button>`).join('') +
+          `</div></div>`);
+        }
+      });
+
+      pickerList.innerHTML = parts.join('') || '<p style="color:#8899a6;text-align:center;padding:20px;">Ничего не найдено</p>';
+      pickerList.querySelectorAll('[data-pick]').forEach(btn => {
+        btn.addEventListener('click', () => {
+          const id = btn.getAttribute('data-pick');
+          closePicker();
+          const found = (auditCountriesData || []).find(c => (c.id || '') === id);
+          if (found) renderCountries([found]); else renderCountries(auditCountriesData);
+          try { document.getElementById('countries-grid')?.scrollIntoView({ behavior: 'smooth' }); } catch(_) {}
+        });
+      });
+    }
+
+    function openPicker(){
+      if (!overlay) return;
+      buildPickerList();
+      overlay.style.display = 'block';
+      document.body.style.overflow = 'hidden';
+      setTimeout(() => pickerSearch?.focus(), 50);
+    }
+    function closePicker(){
+      if (!overlay) return;
+      overlay.style.display = 'none';
+      document.body.style.overflow = '';
+    }
+
+    openBtn?.addEventListener('click', openPicker);
+    closeBtn?.addEventListener('click', closePicker);
+    overlay?.addEventListener('click', (e) => { if (e.target === overlay) closePicker(); });
+    pickerSearch?.addEventListener('input', buildPickerList);
+    document.querySelectorAll('.picker-chip').forEach(chip => {
+      chip.addEventListener('click', () => {
+        document.querySelectorAll('.picker-chip').forEach(c => c.classList.remove('active'));
+        chip.classList.add('active');
+        selectedRegion = chip.getAttribute('data-region') || '';
+        buildPickerList();
+      });
+    });
+  }
+
   function setupAnimations() {
     if (!auditObserver) {
       const observerOptions = {
@@ -373,8 +455,10 @@
 
   if (document.readyState === 'loading') {
     document.addEventListener('DOMContentLoaded', initializeAuditPage);
+    document.addEventListener('DOMContentLoaded', initAuditPicker);
   } else {
     initializeAuditPage();
+    initAuditPicker();
   }
 
   window.setAuditCountries = function(newCountries) {

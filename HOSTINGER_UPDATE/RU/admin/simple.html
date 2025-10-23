@@ -336,6 +336,50 @@
                 min-width: 120px;
             }
         }
+        
+        /* Modal styles */
+        .admin-modal {
+            position: fixed;
+            z-index: 1000;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0,0,0,0.5);
+            display: none;
+        }
+        
+        .modal-content {
+            background-color: #1a2332;
+            margin: 50px auto;
+            padding: 20px;
+            border: 1px solid #2c3e50;
+            border-radius: 8px;
+            width: 80%;
+            max-width: 600px;
+            max-height: 90vh;
+            overflow-y: auto;
+        }
+        
+        .close {
+            color: #aaa;
+            float: right;
+            font-size: 28px;
+            font-weight: bold;
+            cursor: pointer;
+        }
+        
+        .close:hover,
+        .close:focus {
+            color: #fff;
+        }
+        
+        .admin-cards {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+            gap: 20px;
+            margin-top: 20px;
+        }
     </style>
 </head>
 <body>
@@ -437,7 +481,8 @@
                         <th>Банк</th>
                         <th>Страна</th>
                         <th>Тип счета</th>
-                        <th>Мин. баланс</th>
+                        <th>Стоимость</th>
+                        <th>Открытие</th>
                         <th>Срок</th>
                         <th>Действия</th>
                     </tr>
@@ -450,21 +495,72 @@
         <div id="audit" class="tab-content">
             <div class="section-header">
                 <h2>📊 Управление странами для аудита</h2>
-                <button class="btn btn-success" onclick="addAuditCountry()">➕ Добавить страну</button>
+                <button class="btn btn-success" onclick="showAuditModal()">➕ Добавить страну</button>
             </div>
             
-            <table>
-                <thead>
-                    <tr>
-                        <th>Страна</th>
-                        <th>Регион</th>
-                        <th>Налог</th>
-                        <th>Подробная информация</th>
-                        <th>Действия</th>
-                    </tr>
-                </thead>
-                <tbody id="audit-list"></tbody>
-            </table>
+            <div id="audit-cards" class="admin-cards">
+                <!-- Audit countries will be loaded here -->
+            </div>
+            
+            <!-- Audit Modal -->
+            <div id="audit-modal" class="admin-modal" style="display:none;">
+                <div class="modal-content">
+                    <span class="close" onclick="hideAuditModal()">&times;</span>
+                    <h3 id="audit-modal-title">Добавить страну для аудита</h3>
+                    <form id="audit-form" onsubmit="saveAuditCountry(event)">
+                        <input type="hidden" id="audit-id">
+                        
+                        <div class="form-group">
+                            <label>Флаг страны</label>
+                            <input type="text" id="audit-flag" placeholder="🏳️" required>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label>Название страны</label>
+                            <input type="text" id="audit-name" placeholder="Кипр" required>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label>Регион</label>
+                            <select id="audit-region" required>
+                                <option value="europe">Европа</option>
+                                <option value="asia">Азия</option>
+                                <option value="america">Америка</option>
+                                <option value="oceania">Австралия и Океания</option>
+                                <option value="africa">Африка</option>
+                                <option value="offshore">Оффшоры</option>
+                            </select>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label>Налоговая ставка</label>
+                            <input type="text" id="audit-tax" placeholder="12.5%" required>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label>Требования к аудиту</label>
+                            <textarea id="audit-requirements" rows="4" placeholder="Обязательный ежегодный аудит&#10;Минимальный оборот €1 млн&#10;Более 50 сотрудников"></textarea>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label>Стандарты аудита</label>
+                            <input type="text" id="audit-standards" placeholder="IFRS, ISA">
+                        </div>
+                        
+                        <div class="form-group">
+                            <label>Стоимость</label>
+                            <input type="text" id="audit-price" placeholder="от €2,000">
+                        </div>
+                        
+                        <div class="form-group">
+                            <label>Ссылка на статью</label>
+                            <input type="text" id="audit-article" placeholder="/pages/audit/cyprus.html">
+                        </div>
+                        
+                        <button type="submit" class="btn btn-primary">Сохранить</button>
+                    </form>
+                </div>
+            </div>
         </div>
         
         <!-- ПРОЧИЕ УСЛУГИ -->
@@ -1047,10 +1143,10 @@
         
         async function deleteCountry(id) {
             if (!confirm(t('messages.confirmDelete'))) return;
-            let countries = JSON.parse(localStorage.getItem(getStorageKey('registrationCountries'))) || [];
+                let countries = JSON.parse(localStorage.getItem(getStorageKey('registrationCountries'))) || [];
             countries = countries.filter(c => String(c.id) !== String(id));
-            localStorage.setItem(getStorageKey('registrationCountries'), JSON.stringify(countries));
-            loadCountries();
+                localStorage.setItem(getStorageKey('registrationCountries'), JSON.stringify(countries));
+                loadCountries();
             await saveAllToServer(); // мгновенное сохранение
             alert(t('messages.deleted'));
         }
@@ -1068,26 +1164,57 @@
                     <td>${b.bank}</td>
                     <td>${b.country}</td>
                     <td>${b.type}</td>
-                    <td>${b.balance}</td>
+                    <td>${b.cost || b.balance || 'По запросу'}</td>
+                    <td>${b.opening || 'Удалённо'}</td>
                     <td>${b.time}</td>
-                    <td><button class="btn btn-danger btn-sm" onclick="deleteBank(${b.id})">🗑️ Удалить</button></td>
+                    <td>
+                        <button class="btn btn-primary btn-sm" onclick="editBank(${b.id})">✏️ Редактировать</button>
+                        <button class="btn btn-danger btn-sm" onclick="deleteBank(${b.id})">🗑️ Удалить</button>
+                    </td>
                 </tr>
             `).join('');
         }
         
         function addBank() {
-            const name = prompt('Название банка:');
+            const name = prompt('Название банка/EMI:');
             if (!name) return;
+            
+            const country = prompt('Страна:', 'Кипр');
+            const type = prompt('Тип (Банк/EMI):', 'Банк');
+            const cost = prompt('Стоимость:', '€1,000');
+            const opening = prompt('Открытие (Удалённо/С визитом):', 'Удалённо');
+            const time = prompt('Срок открытия:', '1-2 недели');
             
             const banks = JSON.parse(localStorage.getItem(getStorageKey('banksData'))) || [];
             banks.push({
                 id: Date.now(),
                 bank: name,
-                country: 'Страна',
-                type: 'Корпоративный',
-                balance: '$1,000',
-                time: '1-2 недели'
+                country: country || 'Не указано',
+                type: type || 'Банк',
+                cost: cost || 'По запросу',
+                opening: opening || 'Удалённо',
+                time: time || '1-2 недели'
             });
+            
+            localStorage.setItem(getStorageKey('banksData'), JSON.stringify(banks));
+            loadBanks();
+            saveAllToServerDebounced();
+        }
+        
+        function editBank(id) {
+            const banks = JSON.parse(localStorage.getItem(getStorageKey('banksData'))) || [];
+            const bank = banks.find(b => b.id === id);
+            if (!bank) return;
+            
+            const name = prompt('Название банка/EMI:', bank.bank);
+            if (!name) return;
+            
+            bank.bank = name;
+            bank.country = prompt('Страна:', bank.country) || bank.country;
+            bank.type = prompt('Тип (Банк/EMI):', bank.type) || bank.type;
+            bank.cost = prompt('Стоимость:', bank.cost || bank.balance) || bank.cost;
+            bank.opening = prompt('Открытие (Удалённо/С визитом):', bank.opening || 'Удалённо') || bank.opening;
+            bank.time = prompt('Срок открытия:', bank.time) || bank.time;
             
             localStorage.setItem(getStorageKey('banksData'), JSON.stringify(banks));
             loadBanks();
@@ -1106,42 +1233,131 @@
         
         // АУДИТ
         function loadAudit() {
-            const audits = JSON.parse(localStorage.getItem(getStorageKey('auditCountries'))) || [
-                { id: 1, country: 'Кипр', region: 'Европа', tax: '12.5%', infoUrl: '/pages/articles/audit-cyprus.html' },
-                { id: 2, country: 'ОАЭ', region: 'Азия', tax: '0–9%', infoUrl: '/pages/articles/audit-uae.html' }
-            ];
+            const audits = JSON.parse(localStorage.getItem(getStorageKey('auditCountries'))) || [];
             
-            const list = document.getElementById('audit-list');
-            list.innerHTML = audits.map(a => `
-                <tr>
-                    <td>${a.country}</td>
-                    <td>${a.region}</td>
-                    <td>${a.tax}</td>
-                    <td>${a.infoUrl ? `<a href="${a.infoUrl}" target="_blank" class=\"btn btn-sm\">👁️ Просмотр</a>` : ''}</td>
-                    <td><button class="btn btn-danger btn-sm" onclick="deleteAudit(${a.id})">🗑️ Удалить</button></td>
-                </tr>
+            const container = document.getElementById('audit-cards');
+            if (!container) return;
+            
+            container.innerHTML = audits.map(a => `
+                <div class="country-card">
+                    <div class="country-flag">${a.flag || '🏳️'}</div>
+                    <h3 class="country-name">${a.name || a.country}</h3>
+                    <div class="country-info">
+                        <div class="country-info-item">
+                            <span class="label">Регион:</span>
+                            <span>${getRegionName(a.region)}</span>
+                        </div>
+                        <div class="country-info-item">
+                            <span class="label">Налог:</span>
+                            <span>${a.tax || 'По запросу'}</span>
+                        </div>
+                        ${a.requirements ? `
+                        <div class="country-info-item">
+                            <span class="label">Требования:</span>
+                            <span>${(a.requirements || '').split('\n').filter(r => r.trim()).map(r => `• ${r}`).join('<br>')}</span>
+                        </div>
+                        ` : ''}
+                        ${a.standards ? `
+                        <div class="country-info-item">
+                            <span class="label">Стандарты:</span>
+                            <span>${a.standards}</span>
+                        </div>
+                        ` : ''}
+                    </div>
+                    <div class="country-price">${a.price || a.priceText || 'По запросу'}</div>
+                    <div class="country-actions">
+                        <button class="btn btn-primary btn-sm" onclick="editAuditCountry('${a.id}')">✏️ Редактировать</button>
+                        <button class="btn btn-danger btn-sm" onclick="deleteAuditCountry('${a.id}')">🗑️ Удалить</button>
+                    </div>
+                </div>
             `).join('');
         }
         
-        function addAuditCountry() {
-            const country = prompt('Название страны:');
-            if (!country) return;
-            const region = prompt('Регион:', 'Европа') || 'Европа';
-            const tax = prompt('Налог (диапазон допустим):', '0–12.5%') || '0%';
-            const infoUrl = prompt('Ссылка на подробную информацию (статью):', '/pages/articles/audit-template.html') || '';
+        function getRegionName(region) {
+            const regionNames = {
+                'europe': 'Европа',
+                'asia': 'Азия',
+                'america': 'Америка',
+                'oceania': 'Австралия и Океания',
+                'africa': 'Африка',
+                'offshore': 'Оффшоры'
+            };
+            return regionNames[region] || region || 'Не указан';
+        }
+        
+        function showAuditModal(countryId = null) {
+            const modal = document.getElementById('audit-modal');
+            const form = document.getElementById('audit-form');
+            const title = document.getElementById('audit-modal-title');
+            
+            if (countryId) {
+            const audits = JSON.parse(localStorage.getItem(getStorageKey('auditCountries'))) || [];
+                const country = audits.find(c => String(c.id) === String(countryId));
+                if (country) {
+                    title.textContent = 'Редактировать страну';
+                    document.getElementById('audit-id').value = country.id;
+                    document.getElementById('audit-flag').value = country.flag || '';
+                    document.getElementById('audit-name').value = country.name || country.country || '';
+                    document.getElementById('audit-region').value = country.region || 'europe';
+                    document.getElementById('audit-tax').value = country.tax || '';
+                    document.getElementById('audit-requirements').value = country.requirements || '';
+                    document.getElementById('audit-standards').value = country.standards || '';
+                    document.getElementById('audit-price').value = country.price || country.priceText || '';
+                    document.getElementById('audit-article').value = country.articleUrl || country.infoUrl || '';
+                }
+            } else {
+                title.textContent = 'Добавить страну для аудита';
+                form.reset();
+            }
+            
+            modal.style.display = 'block';
+        }
+        
+        function hideAuditModal() {
+            document.getElementById('audit-modal').style.display = 'none';
+        }
+        
+        function editAuditCountry(id) {
+            showAuditModal(id);
+        }
+        
+        function saveAuditCountry(event) {
+            event.preventDefault();
             
             const audits = JSON.parse(localStorage.getItem(getStorageKey('auditCountries'))) || [];
-            audits.push({ id: Date.now(), country, region, tax, infoUrl });
+            const id = document.getElementById('audit-id').value || Date.now();
+            const countryData = {
+                id: id,
+                flag: document.getElementById('audit-flag').value || '🏳️',
+                name: document.getElementById('audit-name').value,
+                country: document.getElementById('audit-name').value, // for backward compatibility
+                region: document.getElementById('audit-region').value,
+                tax: document.getElementById('audit-tax').value,
+                requirements: document.getElementById('audit-requirements').value,
+                standards: document.getElementById('audit-standards').value,
+                price: document.getElementById('audit-price').value,
+                priceText: document.getElementById('audit-price').value,
+                articleUrl: document.getElementById('audit-article').value,
+                infoUrl: document.getElementById('audit-article').value // for backward compatibility
+            };
+            
+            const existingIndex = audits.findIndex(c => String(c.id) === String(id));
+            if (existingIndex !== -1) {
+                audits[existingIndex] = countryData;
+            } else {
+                audits.push(countryData);
+            }
             
             localStorage.setItem(getStorageKey('auditCountries'), JSON.stringify(audits));
             loadAudit();
+            hideAuditModal();
             saveAllToServerDebounced();
         }
         
-        function deleteAudit(id) {
+        function deleteAuditCountry(id) {
             if (confirm(t('messages.confirmDelete'))) {
                 let audits = JSON.parse(localStorage.getItem(getStorageKey('auditCountries'))) || [];
-                audits = audits.filter(a => a.id !== id);
+                audits = audits.filter(a => String(a.id) !== String(id));
                 localStorage.setItem(getStorageKey('auditCountries'), JSON.stringify(audits));
                 loadAudit();
                 saveAllToServerDebounced();

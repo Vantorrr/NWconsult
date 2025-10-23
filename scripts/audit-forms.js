@@ -127,6 +127,7 @@ document.addEventListener('DOMContentLoaded', function() {
                 name: formData.get('name'),
                 email: formData.get('email'),
                 phone: formData.get('phone'),
+                contactMethod: formData.get('contactMethod'),
                 company: formData.get('company') || 'Не указано',
                 message: formData.get('message') || 'Без комментариев',
                 country: formData.get('country')

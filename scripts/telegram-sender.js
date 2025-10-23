@@ -43,6 +43,7 @@ function formatRegistrationMessage(data) {
 👤 <b>Клиент:</b> ${data.name}
 📧 <b>Email:</b> ${data.email}
 📱 <b>Телефон:</b> ${data.phone}
+📞 <b>Способ связи:</b> ${data.contactMethod || 'Не указан'}
 ${data.message ? `💬 <b>Сообщение:</b> ${data.message}` : ''}
 
 🕐 <i>${timestamp}</i>`;
@@ -62,6 +63,7 @@ function formatBankMessage(data) {
 👤 <b>Клиент:</b> ${data.name}
 📧 <b>Email:</b> ${data.email}
 📱 <b>Телефон:</b> ${data.phone}
+📞 <b>Способ связи:</b> ${data.contactMethod || 'Не указан'}
 ${data.company ? `🏢 <b>Компания:</b> ${data.company}` : ''}
 ${data.message ? `💬 <b>Сообщение:</b> ${data.message}` : ''}
 
@@ -144,6 +146,7 @@ function formatAuditMessage(data) {
 👤 <b>Клиент:</b> ${data.name}
 📧 <b>Email:</b> ${data.email}
 📱 <b>Телефон:</b> ${data.phone}
+📞 <b>Способ связи:</b> ${data.contactMethod || 'Не указан'}
 ${data.company && data.company !== 'Не указано' ? `🏢 <b>Компания:</b> ${data.company}` : ''}
 ${data.message && data.message !== 'Без комментариев' ? `💬 <b>Сообщение:</b> ${data.message}` : ''}
 

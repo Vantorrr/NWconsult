@@ -338,8 +338,30 @@
     renderBanks();
   });
   
-  // Initial render
-  renderBanks();
+  // Hash filter function
+  function filterByHash() {
+    const hash = location.hash.slice(1);
+    if (typeFilter) {
+      if (hash === 'banks') {
+        typeFilter.value = 'traditional';
+        filterBanks();
+      } else if (hash === 'emi') {
+        typeFilter.value = 'emi';
+        filterBanks();
+      } else {
+        typeFilter.value = '';
+        filterBanks();
+      }
+    } else {
+      renderBanks();
+    }
+  }
+  
+  // Initial render with hash check
+  filterByHash();
+  
+  // Listen for hash changes
+  window.addEventListener('hashchange', filterByHash);
   
   // Bank Modal functionality
   const bankModal = document.getElementById('bank-modal');

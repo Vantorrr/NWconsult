@@ -40,6 +40,26 @@ function transliterate(text) {
         }
       }
     }
+    
+    // Update audit dropdown
+    if (data && Array.isArray(data.auditCountries)) {
+      const auditCountries = data.auditCountries;
+      
+      const auditMenuItem = document.querySelector('.nav__item a[href*="audit"]');
+      if (auditMenuItem) {
+        const dropdown = auditMenuItem.parentElement.querySelector('.dropdown');
+        if (dropdown && auditCountries.length > 0) {
+          const sorted = [...auditCountries].filter(c=>c&&(c.name||c.country)).sort((a,b)=>(a.name||a.country).localeCompare(b.name||b.country,'ru'));
+          const dropdownHTML = sorted.map(country => {
+            const name = country.name || country.country;
+            const countryId = (country.id !== undefined && country.id !== null) ? String(country.id) : transliterate(name);
+            return `<li><a href="./pages/audit.html#${countryId}"><span class="dropdown-flag">${country.flag || '🏳️'}</span> ${name}</a></li>`;
+          }).join('');
+          
+          dropdown.innerHTML = dropdownHTML + '<li><a href="./pages/audit.html"><span class="dropdown-flag">🌍</span> Все страны</a></li>';
+        }
+      }
+    }
   } catch (e) {}
 })();
 

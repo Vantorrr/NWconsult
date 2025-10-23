@@ -75,7 +75,7 @@
         <div class="country-price">от ${priceText}</div>
         <div style="display:flex;gap:10px;flex-wrap:wrap;">
           <button class="country-cta" onclick="openRegistrationModal('${country.id || `country-${index}`}')">Заказать регистрацию</button>
-          ${hasArticle ? `<button class=\"country-cta\" style=\"background:#2c3e50;\" onclick=\"openCountryArticle('${(country.articleUrl || '').replace(/'/g, '')}', '${(country.name || '').replace(/'/g, '')}')\">Открыть статью</button>` : ''}
+          ${hasArticle ? `<button class=\"country-cta\" style=\"background:#2c3e50;\" onclick=\"openCountryArticle('${(country.articleUrl || '').replace(/'/g, '')}', '${(country.name || '').replace(/'/g, '')}')\">Подробнее</button>` : ''}
         </div>
       </div>`;
     }).join('');
@@ -266,15 +266,20 @@
     e.preventDefault();
     const formData = new FormData(registrationForm);
     const data = {
-      service: 'registration',
       country: formData.get('country'),
       name: formData.get('name'),
       email: formData.get('email'),
       phone: formData.get('phone'),
+      contactMethod: formData.get('contactMethod'),
       message: formData.get('message')
     };
     try {
-      await sendToTelegram(`Регистрация: ${data.country}\nИмя: ${data.name}\nEmail: ${data.email}\nТелефон: ${data.phone}${data.message ? `\nСообщение: ${data.message}` : ''}`);
+      if (window.sendRegistrationToTelegram) {
+        await window.sendRegistrationToTelegram(formData);
+      } else {
+        // Fallback to old method
+        await sendToTelegram(`Регистрация: ${data.country}\nИмя: ${data.name}\nEmail: ${data.email}\nТелефон: ${data.phone}\nСпособ связи: ${data.contactMethod || 'Не указан'}${data.message ? `\nСообщение: ${data.message}` : ''}`);
+      }
       registrationForm.style.display = 'none';
       formSuccess.style.display = 'block';
       formSuccess.innerHTML = '<p>✅ Спасибо! Мы свяжемся с вами в течение 15 минут.</p>';

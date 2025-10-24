@@ -174,7 +174,7 @@
         if (!url) return '';
         const safeName = (country.name || '').replace(/'/g,'');
         const safeUrl = url.replace(/'/g,'');
-        return `<button class=\"country-cta\" style=\"background:#2c3e50;\" onclick=\"openCountryArticle('${safeUrl}','${safeName}')\">${isEnglish ? 'Open article' : 'Открыть статью'}</button>`;
+        return `<button class=\"country-cta\" style=\"background:#2c3e50;\" onclick=\"openCountryArticle('${safeUrl}','${safeName}')\">Plus d'informations</button>`;
       })();
 
       return `

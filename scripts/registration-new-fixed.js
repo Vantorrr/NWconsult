@@ -250,7 +250,14 @@
 
   window.openRegistrationModal = (countryId) => {
     console.log('Opening modal for country:', countryId);
-    const country = countries.find(c => (c.id || `country-${countries.indexOf(c)}`) === countryId);
+    console.log('Available countries:', countries.map(c => ({id: c.id, name: c.name})));
+    
+    // Try to find by exact ID first, then by generated ID
+    let country = countries.find(c => String(c.id) === String(countryId));
+    if (!country) {
+      country = countries.find(c => `country-${countries.indexOf(c)}` === countryId);
+    }
+    
     console.log('Found country:', country);
     console.log('Modal element:', modal);
     if (!country || !modal) {

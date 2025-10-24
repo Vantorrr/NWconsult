@@ -74,7 +74,7 @@
         </div>
         <div class="country-price">от ${priceText}</div>
         <div style="display:flex;gap:10px;flex-wrap:wrap;">
-          <button class="country-cta" onclick="openRegistrationModal('${country.id || `country-${index}`}')">Заказать регистрацию</button>
+          <button class="country-cta" onclick="openRegistrationModal('${country.id || `country-${index}`}')">Заказать</button>
           ${hasArticle ? `<button class=\"country-cta\" style=\"background:#2c3e50;\" onclick=\"openCountryArticle('${(country.articleUrl || '').replace(/'/g, '')}', '${(country.name || '').replace(/'/g, '')}')\">Подробнее</button>` : ''}
         </div>
       </div>`;
@@ -249,8 +249,14 @@
   const formSuccess = document.getElementById('form-success');
 
   window.openRegistrationModal = (countryId) => {
+    console.log('Opening modal for country:', countryId);
     const country = countries.find(c => (c.id || `country-${countries.indexOf(c)}`) === countryId);
-    if (!country || !modal) return;
+    console.log('Found country:', country);
+    console.log('Modal element:', modal);
+    if (!country || !modal) {
+      console.error('Country or modal not found');
+      return;
+    }
     modalFlag.textContent = country.flag || '🏳️';
     modalTitle.textContent = `Регистрация компании в ${country.name}`;
     modalSubtitle.textContent = `Заполните форму и получите консультацию по регистрации в ${country.name}`;

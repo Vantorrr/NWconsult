@@ -211,7 +211,7 @@
             <span class="country-card__flag">${country.flag || '🏳️'}</span>
             <div class="country-card__info">
               <h3>${country.name}</h3>
-              <span class="country-card__region">${country.regionText || country.region || ''}</span>
+              <span class="country-card__region">${getRegionName(country.region)}</span>
             </div>
           </div>
           <div class="country-card__details">
@@ -369,6 +369,18 @@
       el.style.transition = 'opacity 0.6s ease, transform 0.6s ease';
       auditObserver.observe(el);
     });
+  }
+
+  function getRegionName(region) {
+    const regionNames = {
+      'europe': 'Europe',
+      'asia': 'Asie', 
+      'america': 'Amérique',
+      'oceania': 'Océanie',
+      'africa': 'Afrique',
+      'offshore': 'Offshore'
+    };
+    return regionNames[region] || region || 'Non spécifié';
   }
 
   if (document.readyState === 'loading') {

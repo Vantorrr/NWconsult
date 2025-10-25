@@ -331,7 +331,7 @@
     const hash = (location.hash || '').replace('#','');
     if (hash) {
       const found = auditCountriesData.find(c => {
-        const cId = c.id || c.name.toLowerCase().replace(/[^a-z]/g, '');
+        const cId = String(c.id || transliterate(c.name));
         return cId === hash;
       });
       if (found) {
@@ -342,6 +342,25 @@
     } else {
       renderCountries(auditCountriesData);
     }
+    
+    // Listen for hash changes
+    window.addEventListener('hashchange', () => {
+      const hash = (location.hash || '').replace('#','');
+      if (hash) {
+        const found = auditCountriesData.find(c => {
+          const cId = String(c.id || transliterate(c.name));
+          return cId === hash;
+        });
+        if (found) {
+          renderCountries([found]);
+        } else {
+          renderCountries(auditCountriesData);
+        }
+      } else {
+        renderCountries(auditCountriesData);
+      }
+    });
+  }
 
     const searchInput = document.getElementById('search');
     const regionSelect = document.getElementById('region');
@@ -368,6 +387,22 @@
     const openBtn = document.getElementById('open-country-picker');
     const closeBtn = document.getElementById('picker-close');
     let selectedRegion = '';
+
+    function transliterate(text) {
+      const map = {
+        'а':'a','б':'b','в':'v','г':'g','д':'d','е':'e','ё':'e','ж':'zh','з':'z','и':'i','й':'y','к':'k','л':'l','м':'m','н':'n','о':'o','п':'p','р':'r','с':'s','т':'t','у':'u','ф':'f','х':'h','ц':'c','ч':'ch','ш':'sh','щ':'sch','ъ':'','ы':'y','ь':'','э':'e','ю':'yu','я':'ya',
+        'А':'a','Б':'b','В':'v','Г':'g','Д':'d','Е':'e','Ё':'e','Ж':'zh','З':'z','И':'i','Й':'y','К':'k','Л':'l','М':'m','Н':'n','О':'o','П':'p','Р':'r','С':'s','Т':'t','У':'u','Ф':'f','Х':'h','Ц':'c','Ч':'ch','Ш':'sh','Щ':'sch','Ъ':'','Ы':'y','Ь':'','Э':'e','Ю':'yu','Я':'ya'
+      };
+      return String(text)
+        .split('')
+        .map(ch => map[ch] !== undefined ? map[ch] : ch)
+        .join('')
+        .toLowerCase()
+        .replace(/[^a-z0-9\s-]/g, '')
+        .trim()
+        .replace(/\s+/g, '-')
+        .replace(/-+/g, '-');
+    }
 
     function keyLabel(k){
       switch((k||'').toLowerCase()){

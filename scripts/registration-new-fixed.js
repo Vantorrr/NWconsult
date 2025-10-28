@@ -338,13 +338,13 @@
     if (url) {
       const ok = await urlExists(url.endsWith('.html') || url.includes('?') ? url : `${url}.html`);
       if (ok) {
-        window.open(url.endsWith('.html') || url.includes('?') ? url : `${url}.html`, '_blank');
+        window.location.href = url.endsWith('.html') || url.includes('?') ? url : `${url}.html`;
         return;
       }
     }
     const slug = slugify(countryName || 'article');
-    const viewer = '/pages/articles/view.html?slug=' + encodeURIComponent(slug);
-    window.open(viewer, '_blank');
+    const viewer = '../pages/articles/view.html?slug=' + encodeURIComponent(slug);
+    window.location.href = viewer;
   };
 })();
 

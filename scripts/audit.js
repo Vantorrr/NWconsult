@@ -211,7 +211,7 @@
             <span class="country-card__flag">${country.flag || '🏳️'}</span>
             <div class="country-card__info">
               <h3>${country.name}</h3>
-              <span class="country-card__region">${country.regionText || country.region || ''}</span>
+              <span class="country-card__region">${getRegionName(country.region)}</span>
             </div>
           </div>
           <div class="country-card__details">

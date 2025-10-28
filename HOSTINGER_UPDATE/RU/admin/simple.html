@@ -405,6 +405,7 @@
             <div class="tab" onclick="showTab('other')">Прочие услуги</div>
             <div class="tab" onclick="showTab('articles')">Статьи</div>
             <div class="tab" onclick="showTab('slider')">Слайдер</div>
+            <div class="tab" onclick="showTab('contacts')">Контакты</div>
             <div class="tab" onclick="showTab('users')">Пользователи</div>
         </div>
         
@@ -677,6 +678,36 @@
             </div>
         </div>
 
+        <!-- КОНТАКТЫ -->
+        <div id="contacts" class="tab-content">
+            <div class="section-header">
+                <h2>📞 Управление контактами</h2>
+                <p>Настройка контактного телефона, Telegram и WhatsApp</p>
+            </div>
+            
+            <div class="config-form">
+                <div class="form-group">
+                    <label>Телефон</label>
+                    <input type="tel" id="contact-phone" placeholder="+44 7594 821518" />
+                    <small>Этот номер будет отображаться на всех страницах сайта</small>
+                </div>
+                
+                <div class="form-group">
+                    <label>Email</label>
+                    <input type="email" id="contact-email" placeholder="info@nw.consulting" />
+                </div>
+                
+                <div class="form-group">
+                    <label>Telegram ID</label>
+                    <input type="text" id="contact-telegram" placeholder="Заявки NW" />
+                    <small>Имя бота или канала для получения заявок</small>
+                </div>
+                
+                <button class="btn btn-primary" onclick="saveContacts()">Сохранить контакты</button>
+                <div id="contacts-status" class="status-message"></div>
+            </div>
+        </div>
+
         <!-- ПОЛЬЗОВАТЕЛИ -->
         <div id="users" class="tab-content">
             <div class="section-header">
@@ -746,7 +777,7 @@
                 if (!res.ok) return;
                 const data = await res.json();
                 if (!data || typeof data !== 'object') return;
-                const keys = ['registrationCountries','banksData','auditCountries','kikArticle','showcaseSlides','articles','adminUsers'];
+                const keys = ['registrationCountries','banksData','auditCountries','kikArticle','showcaseSlides','articles','adminUsers','contacts'];
                 keys.forEach(k => {
                     if (k in data) {
                         localStorage.setItem(getStorageKey(k), JSON.stringify(data[k]));
@@ -1678,9 +1709,38 @@
             saveAllToServerDebounced();
         }
         
+        // КОНТАКТЫ
+        function saveContacts() {
+            const phone = document.getElementById('contact-phone').value;
+            const email = document.getElementById('contact-email').value;
+            const telegram = document.getElementById('contact-telegram').value;
+            
+            const contacts = { phone, email, telegram };
+            localStorage.setItem(getStorageKey('contacts'), JSON.stringify(contacts));
+            
+            const status = document.getElementById('contacts-status');
+            status.textContent = '✅ Контакты сохранены!';
+            status.className = 'status-message success';
+            
+            setTimeout(() => {
+                status.textContent = '';
+                status.className = 'status-message';
+            }, 3000);
+            
+            saveAllToServerDebounced();
+        }
+        
+        function loadContacts() {
+            const contacts = JSON.parse(localStorage.getItem(getStorageKey('contacts')) || '{}');
+            if (contacts.phone) document.getElementById('contact-phone').value = contacts.phone;
+            if (contacts.email) document.getElementById('contact-email').value = contacts.email;
+            if (contacts.telegram) document.getElementById('contact-telegram').value = contacts.telegram;
+        }
+
         // ЗАГРУЗКА ПРИ СТАРТЕ
         document.addEventListener('DOMContentLoaded', function() {
             loadAllData();
+            loadContacts();
         });
     </script>
 </body>

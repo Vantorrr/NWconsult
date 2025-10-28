@@ -18,7 +18,7 @@ function transliterate(text) {
 // Sync dropdown menu with server data
 (async function() {
   try {
-    const res = await fetch('/api/save-data?lang=ru', { cache: 'no-store' });
+    const res = await fetch('/api/save-data?lang=ru&v=' + Date.now(), { cache: 'no-store' });
     if (!res.ok) return;
     const data = await res.json();
     

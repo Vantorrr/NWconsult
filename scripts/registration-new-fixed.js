@@ -60,6 +60,10 @@
         <h3 class="country-name">${country.name}</h3>
         <div class="country-info">
           <div class="country-info-item">
+            <span class="country-info-label">Регион:</span>
+            <span class="country-info-value">${getRegionName(country.region)}</span>
+          </div>
+          <div class="country-info-item">
             <span class="country-info-label">Срок регистрации:</span>
             <span class="country-info-value">${country.time || '—'}</span>
           </div>
@@ -79,6 +83,18 @@
         </div>
       </div>`;
     }).join('');
+  }
+
+  function getRegionName(region) {
+    const regionNames = {
+      'europe': 'Европа',
+      'asia': 'Азия', 
+      'america': 'Америка',
+      'oceania': 'Австралия и Океания',
+      'africa': 'Африка',
+      'offshore': 'Оффшоры'
+    };
+    return regionNames[region] || region || 'Не указан';
   }
 
   // Filter

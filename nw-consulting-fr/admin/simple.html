@@ -406,7 +406,7 @@
                     <label>Цена</label>
                     <div style="display: flex; gap: 10px;">
                         <select id="new-country-currency" style="width: 120px;">
-                            <option value="$">$ USD</option>
+                            <option value="€">€ USD</option>
                             <option value="€">€ EUR</option>
                             <option value="£">£ GBP</option>
                         </select>
@@ -627,7 +627,7 @@
         }
         
         function getStorageKey(key) {
-            return currentLang === 'ru' ? key : `${key}_${currentLang}`;
+            return currentLang === 'ru' ? key : `€{key}_€{currentLang}`;
         }
         
         // Преобразование строки в slug (латиница, тире)
@@ -650,7 +650,7 @@
         // СЕРВЕРНОЕ ХРАНЕНИЕ (Vercel API + Blob)
         async function hydrateFromServer() {
             try {
-                const res = await fetch(`/api/save-data?lang=${currentLang}`, { cache: 'no-store' });
+                const res = await fetch(`/api/save-data?lang=€{currentLang}`, { cache: 'no-store' });
                 if (!res.ok) {
                     console.warn('Server returned', res.status);
                     return;
@@ -698,7 +698,7 @@
         async function saveAllToServer() {
             try {
                 const body = getAllDataSnapshot();
-                const res = await fetch(`/api/save-data?lang=${currentLang}`, {
+                const res = await fetch(`/api/save-data?lang=€{currentLang}`, {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify(body)
@@ -717,7 +717,7 @@
         async function clearServerData() {
             if (!confirm('Удалить ВСЕ данные с сервера? Это действие необратимо!')) return;
             try {
-                await fetch(`/api/save-data?lang=${currentLang}`, {
+                await fetch(`/api/save-data?lang=€{currentLang}`, {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify({})
@@ -851,7 +851,7 @@
             document.querySelectorAll('.tab').forEach((tab, index) => {
                 const tabNames = ['countries', 'banks', 'audit', 'other', 'articles', 'slider', 'users'];
                 if (index < tabNames.length) {
-                    tab.textContent = t(`tabs.${tabNames[index]}`);
+                    tab.textContent = t(`tabs.€{tabNames[index]}`);
                 }
             });
             // Локализовать опции региона
@@ -866,7 +866,7 @@
                     { value: 'offshore', label: getRegionName('offshore') }
                 ];
                 const current = regionSelect.value;
-                regionSelect.innerHTML = options.map(o => `<option value="${o.value}">${o.label}</option>`).join('');
+                regionSelect.innerHTML = options.map(o => `<option value="€{o.value}">€{o.label}</option>`).join('');
                 if (current) regionSelect.value = current;
             }
         }
@@ -932,21 +932,21 @@
             const list = document.getElementById('countries-list');
             list.innerHTML = countries.map(c => `
                 <div class="country-card">
-                    <h3><span class="flag">${c.flag}</span> ${c.name}</h3>
-                    <p><strong>Регион:</strong> ${getRegionName(c.region)}</p>
-                    <p><strong>Срок:</strong> ${c.time}</p>
-                    <p><strong>Цена:</strong> ${c.priceText || '$' + c.price.toLocaleString()}</p>
-                    ${c.articleUrl ? `<p><strong>Статья:</strong> <a href="${c.articleUrl}" target="_blank" style="color: #3498db;">Открыть статью →</a></p>` : ''}
-                    ${c.features && c.features.length > 0 ? `
+                    <h3><span class="flag">€{c.flag}</span> €{c.name}</h3>
+                    <p><strong>Регион:</strong> €{getRegionName(c.region)}</p>
+                    <p><strong>Срок:</strong> €{c.time}</p>
+                    <p><strong>Цена:</strong> €{c.priceText || '€' + c.price.toLocaleString()}</p>
+                    €{c.articleUrl ? `<p><strong>Статья:</strong> <a href="€{c.articleUrl}" target="_blank" style="color: #3498db;">Открыть статью →</a></p>` : ''}
+                    €{c.features && c.features.length > 0 ? `
                         <div style="margin: 10px 0;">
                             <strong>Преимущества:</strong>
                             <ul style="margin: 5px 0; padding-left: 20px;">
-                                ${c.features.map(f => `<li style="color: #8899a6;">${f}</li>`).join('')}
+                                €{c.features.map(f => `<li style="color: #8899a6;">€{f}</li>`).join('')}
                             </ul>
                         </div>
                     ` : ''}
-                    <button class="btn btn-sm" onclick="editCountry('${c.id}')">✏️ Редактировать</button>
-                    <button class="btn btn-danger btn-sm" onclick="deleteCountry('${c.id}')">🗑️ Удалить</button>
+                    <button class="btn btn-sm" onclick="editCountry('€{c.id}')">✏️ Редактировать</button>
+                    <button class="btn btn-danger btn-sm" onclick="deleteCountry('€{c.id}')">🗑️ Удалить</button>
                 </div>
             `).join('');
         }
@@ -985,7 +985,7 @@
                 region: document.getElementById('new-country-region').value,
                 time: document.getElementById('new-country-time').value,
                 price: price,
-                priceText: `${currency}${price.toLocaleString()}`,
+                priceText: `€{currency}€{price.toLocaleString()}`,
                 features: document.getElementById('new-country-features').value.split('\n').filter(f => f.trim()),
                 articleUrl: document.getElementById('new-country-article').value || ''
             };
@@ -1019,7 +1019,7 @@
             document.getElementById('new-country-time').value = country.time;
             
             // Разбираем цену
-            const priceMatch = country.priceText ? country.priceText.match(/([€$£])(\d+(?:,\d+)*)/) : null;
+            const priceMatch = country.priceText ? country.priceText.match(/([€€£])(\d+(?:,\d+)*)/) : null;
             if (priceMatch) {
                 document.getElementById('new-country-currency').value = priceMatch[1];
                 document.getElementById('new-country-price').value = priceMatch[2].replace(/,/g, '');
@@ -1055,7 +1055,7 @@
                 region: document.getElementById('new-country-region').value,
                 time: document.getElementById('new-country-time').value,
                 price: price,
-                priceText: `${currency}${price.toLocaleString()}`,
+                priceText: `€{currency}€{price.toLocaleString()}`,
                 features: document.getElementById('new-country-features').value.split('\n').filter(f => f.trim()),
                 articleUrl: document.getElementById('new-country-article').value || ''
             };
@@ -1094,14 +1094,14 @@
             const list = document.getElementById('banks-list');
             list.innerHTML = banks.map(b => `
                 <tr>
-                    <td>${b.bank}</td>
-                    <td>${b.country}</td>
-                    <td>${b.type}</td>
-                    <td>${b.balance}</td>
-                    <td>${b.time}</td>
+                    <td>€{b.bank}</td>
+                    <td>€{b.country}</td>
+                    <td>€{b.type}</td>
+                    <td>€{b.balance}</td>
+                    <td>€{b.time}</td>
                     <td>
-                        <button class="btn btn-sm" onclick="editBank('${b.id}')">✏️ Редактировать</button>
-                        <button class="btn btn-danger btn-sm" onclick="deleteBank('${b.id}')">🗑️ Удалить</button>
+                        <button class="btn btn-sm" onclick="editBank('€{b.id}')">✏️ Редактировать</button>
+                        <button class="btn btn-danger btn-sm" onclick="deleteBank('€{b.id}')">🗑️ Удалить</button>
                     </td>
                 </tr>
             `).join('');
@@ -1117,7 +1117,7 @@
                 bank: name,
                 country: 'Страна',
                 type: 'Корпоративный',
-                balance: '$1,000',
+                balance: '€1,000',
                 time: '1-2 недели'
             });
             
@@ -1166,13 +1166,13 @@
             const list = document.getElementById('audit-list');
             list.innerHTML = audits.map(a => `
                 <tr>
-                    <td>${a.country}</td>
-                    <td>${a.region}</td>
-                    <td>${a.tax}</td>
-                    <td>${a.infoUrl ? `<a href="${a.infoUrl}" target="_blank" class=\"btn btn-sm\">👁️ Просмотр</a>` : ''}</td>
+                    <td>€{a.country}</td>
+                    <td>€{a.region}</td>
+                    <td>€{a.tax}</td>
+                    <td>€{a.infoUrl ? `<a href="€{a.infoUrl}" target="_blank" class=\"btn btn-sm\">👁️ Просмотр</a>` : ''}</td>
                     <td>
-                        <button class="btn btn-sm" onclick="editAudit('${a.id}')">✏️ Редактировать</button>
-                        <button class="btn btn-danger btn-sm" onclick="deleteAudit('${a.id}')">🗑️ Удалить</button>
+                        <button class="btn btn-sm" onclick="editAudit('€{a.id}')">✏️ Редактировать</button>
+                        <button class="btn btn-danger btn-sm" onclick="deleteAudit('€{a.id}')">🗑️ Удалить</button>
                     </td>
                 </tr>
             `).join('');
@@ -1271,12 +1271,12 @@
             const list = document.getElementById('slides-list');
             list.innerHTML = slides.map(s => `
                 <div class="country-card">
-                    <img src="${s.image}" style="width: 100%; height: 200px; object-fit: cover; border-radius: 8px; margin-bottom: 15px;">
-                    <h3>${s.title}</h3>
-                    <p style="color: #8899a6; margin-bottom: 10px;">${s.desc}</p>
-                    <p><strong>Ссылка:</strong> ${s.link}</p>
-                    <p><strong>Текст кнопки:</strong> ${s.linkText}</p>
-                    <button class="btn btn-danger btn-sm" onclick="deleteSlide(${s.id})">🗑️ Удалить</button>
+                    <img src="€{s.image}" style="width: 100%; height: 200px; object-fit: cover; border-radius: 8px; margin-bottom: 15px;">
+                    <h3>€{s.title}</h3>
+                    <p style="color: #8899a6; margin-bottom: 10px;">€{s.desc}</p>
+                    <p><strong>Ссылка:</strong> €{s.link}</p>
+                    <p><strong>Текст кнопки:</strong> €{s.linkText}</p>
+                    <button class="btn btn-danger btn-sm" onclick="deleteSlide(€{s.id})">🗑️ Удалить</button>
                 </div>
             `).join('');
         }
@@ -1387,7 +1387,7 @@
             for (const [category, categoryArticles] of Object.entries(groupedArticles)) {
                 html += `
                     <div class="form-card">
-                        <h3>${categoryNames[category] || category}</h3>
+                        <h3>€{categoryNames[category] || category}</h3>
                         <table>
                             <thead>
                                 <tr>
@@ -1403,12 +1403,12 @@
                 categoryArticles.forEach(article => {
                     html += `
                         <tr>
-                            <td>${article.title}</td>
-                            <td style="max-width: 300px; color: #8899a6;">${article.description}</td>
-                            <td>${article.time}</td>
+                            <td>€{article.title}</td>
+                            <td style="max-width: 300px; color: #8899a6;">€{article.description}</td>
+                            <td>€{article.time}</td>
                             <td>
-                                ${article.url ? `<a href="${article.url}" target="_blank" class="btn btn-sm">👁️ Просмотр</a>` : ''}
-                                <button class="btn btn-danger btn-sm" onclick="deleteArticle(${article.id})">🗑️ Удалить</button>
+                                €{article.url ? `<a href="€{article.url}" target="_blank" class="btn btn-sm">👁️ Просмотр</a>` : ''}
+                                <button class="btn btn-danger btn-sm" onclick="deleteArticle(€{article.id})">🗑️ Удалить</button>
                             </td>
                         </tr>
                     `;
@@ -1454,7 +1454,7 @@
             // Автоматическая генерация URL и slug, если URL не указан
             const slug = slugify(title);
             if (!url) {
-                url = `/pages/articles/view.html?slug=${slug}`;
+                url = `/pages/articles/view.html?slug=€{slug}`;
             }
 
             const newArticle = {
@@ -1481,7 +1481,7 @@
             document.getElementById('new-article-url').value = '';
             
             saveAllToServerDebounced();
-            alert(`Сохранено! Ссылка: ${url}`);
+            alert(`Сохранено! Ссылка: €{url}`);
         }
         
         function deleteArticle(id) {
@@ -1503,11 +1503,11 @@
             if (!list) return;
             list.innerHTML = users.map(u => `
                 <tr>
-                    <td>${u.name}</td>
-                    <td>${u.email}</td>
-                    <td>${u.role}</td>
+                    <td>€{u.name}</td>
+                    <td>€{u.email}</td>
+                    <td>€{u.role}</td>
                     <td>
-                        <button class="btn btn-danger btn-sm" onclick="deleteUser(${u.id})">🗑️ Удалить</button>
+                        <button class="btn btn-danger btn-sm" onclick="deleteUser(€{u.id})">🗑️ Удалить</button>
                     </td>
                 </tr>
             `).join('');

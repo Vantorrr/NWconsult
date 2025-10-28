@@ -25,7 +25,7 @@
     <script>
       const p = new URLSearchParams(location.search);
       const country = p.get('country') || 'Pays';
-      document.getElementById('title').textContent = `Audit — ${country}`;
+      document.getElementById('title').textContent = `Audit — €{country}`;
       const list = document.getElementById('bullet');
       const tips = [
         'Seuil d’audit obligatoire et périodes',

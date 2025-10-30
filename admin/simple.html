@@ -432,7 +432,7 @@
         <div id="banks" class="tab-content">
             <div class="section-header">
                 <h2>🏦 Управление банками</h2>
-                <button class="btn btn-success" onclick="addBank()">➕ Добавить банк</button>
+                <button class="btn btn-success" onclick="showBankModal()">➕ Добавить банк</button>
             </div>
             
             <table>
@@ -449,6 +449,49 @@
                 </thead>
                 <tbody id="banks-list"></tbody>
             </table>
+        </div>
+        
+        <!-- Bank Modal -->
+        <div id="bank-modal" class="admin-modal" style="display:none;">
+            <div class="modal-content">
+                <span class="close" onclick="hideBankModal()">&times;</span>
+                <h3 id="bank-modal-title">Добавить банк</h3>
+                <input type="hidden" id="bank-edit-id">
+                <div class="form-group">
+                    <label>Название банка</label>
+                    <input type="text" id="bank-name" placeholder="Bank of Cyprus">
+                </div>
+                <div class="form-group">
+                    <label>Страна</label>
+                    <input type="text" id="bank-country" placeholder="Кипр">
+                </div>
+                <div class="form-group">
+                    <label>Тип счета</label>
+                    <select id="bank-type">
+                        <option>Традиционный</option>
+                        <option>Цифровой</option>
+                        <option>EMI</option>
+                        <option>Крипто</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label>Открытие</label>
+                    <select id="bank-remote">
+                        <option value="false">С визитом</option>
+                        <option value="true">Удалённо</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label>Срок</label>
+                    <input type="text" id="bank-time" placeholder="1-2 недели">
+                </div>
+                <div class="form-group">
+                    <label>Стоимость</label>
+                    <input type="text" id="bank-cost" placeholder="€5,000">
+                </div>
+                <button class="btn btn-success" onclick="saveBank()">💾 Сохранить</button>
+                <button class="btn" onclick="hideBankModal()">❌ Отмена</button>
+            </div>
         </div>
         
         <!-- АУДИТ -->
@@ -488,7 +531,7 @@
                 </div>
                 <div class="form-group">
                     <label>Требования к аудиту</label>
-                    <input type="text" id="new-audit-required" placeholder="Обязательный ежегодный / По размеру компании и т.п.">
+                    <textarea id="new-audit-required" rows="4" placeholder="Обязательный ежегодный&#10;По размеру компании&#10;С оборотом более €X&#10;Каждое требование с новой строки"></textarea>
                 </div>
                 <div class="form-group">
                     <label>Стандарты отчётности</label>
@@ -1148,61 +1191,82 @@
             `).join('');
         }
         
-        function addBank() {
-            const name = prompt('Название банка:');
-            if (!name) return;
-            const country = prompt('Страна:', 'Страна') || 'Страна';
-            const type = prompt('Тип (Традиционный/Цифровой/EMI/Крипто):', 'Традиционный') || 'Традиционный';
-            const remote = confirm('Открытие удалённо? (ОК — удалённо, Отмена — с визитом)');
-            const time = prompt('Срок:', '1-2 недели') || '1-2 недели';
-            const cost = prompt('Стоимость услуги:', '$0') || '$0';
+        function showBankModal(id = null) {
+            const modal = document.getElementById('bank-modal');
+            const title = document.getElementById('bank-modal-title');
+            const editIdInput = document.getElementById('bank-edit-id');
+            
+            if (id) {
+                // Edit mode
+                const banks = JSON.parse(localStorage.getItem(getStorageKey('banksData'))) || [];
+                const bank = banks.find(b => String(b.id) === String(id));
+                if (!bank) return;
+                
+                title.textContent = 'Редактировать банк';
+                editIdInput.value = id;
+                document.getElementById('bank-name').value = bank.bank || '';
+                document.getElementById('bank-country').value = bank.country || '';
+                document.getElementById('bank-type').value = bank.type || 'Традиционный';
+                document.getElementById('bank-remote').value = bank.remote ? 'true' : 'false';
+                document.getElementById('bank-time').value = bank.time || '';
+                document.getElementById('bank-cost').value = bank.cost || bank.balance || '';
+            } else {
+                // Add mode
+                title.textContent = 'Добавить банк';
+                editIdInput.value = '';
+                document.getElementById('bank-name').value = '';
+                document.getElementById('bank-country').value = '';
+                document.getElementById('bank-type').value = 'Традиционный';
+                document.getElementById('bank-remote').value = 'false';
+                document.getElementById('bank-time').value = '';
+                document.getElementById('bank-cost').value = '';
+            }
+            
+            modal.style.display = 'block';
+        }
+        
+        function hideBankModal() {
+            document.getElementById('bank-modal').style.display = 'none';
+        }
+        
+        function saveBank() {
+            const editId = document.getElementById('bank-edit-id').value;
+            const name = document.getElementById('bank-name').value.trim();
+            const country = document.getElementById('bank-country').value.trim();
+            const type = document.getElementById('bank-type').value;
+            const remote = document.getElementById('bank-remote').value === 'true';
+            const time = document.getElementById('bank-time').value.trim();
+            const cost = document.getElementById('bank-cost').value.trim();
+            
+            if (!name || !country) {
+                alert('Заполните название банка и страну');
+                return;
+            }
             
             const banks = JSON.parse(localStorage.getItem(getStorageKey('banksData'))) || [];
-            banks.push({ id: Date.now(), bank: name, country, type, remote, time, cost });
+            
+            if (editId) {
+                // Update existing
+                const idx = banks.findIndex(b => String(b.id) === String(editId));
+                if (idx !== -1) {
+                    banks[idx] = { ...banks[idx], bank: name, country, type, remote, time, cost };
+                }
+            } else {
+                // Add new
+                banks.push({ id: Date.now(), bank: name, country, type, remote, time, cost });
+            }
             
             localStorage.setItem(getStorageKey('banksData'), JSON.stringify(banks));
             loadBanks();
             saveAllToServerDebounced();
+            hideBankModal();
+            alert(t('messages.saved'));
         }
 
         function editBank(id) {
-            const banks = JSON.parse(localStorage.getItem(getStorageKey('banksData'))) || [];
-            const bank = banks.find(b => String(b.id) === String(id));
-            if (!bank) return;
-            const name = prompt('Название банка:', bank.bank) || bank.bank;
-            const country = prompt('Страна:', bank.country) || bank.country;
-            const type = prompt('Тип (Традиционный/Цифровой/EMI/Крипто):', bank.type || 'Традиционный') || bank.type;
-            const remote = confirm('Открытие удалённо? (ОК — удалённо, Отмена — с визитом)');
-            const time = prompt('Срок:', bank.time || '') || bank.time;
-            const cost = prompt('Стоимость услуги:', bank.cost || bank.balance || '') || (bank.cost || bank.balance || '');
-            const idx = banks.findIndex(b => String(b.id) === String(id));
-            banks[idx] = { ...banks[idx], bank: name, country, type, remote, time, cost };
-            localStorage.setItem(getStorageKey('banksData'), JSON.stringify(banks));
-            loadBanks();
-            saveAllToServer();
-            alert(t('messages.saved'));
+            showBankModal(id);
         }
         
-        function editBank(id) {
-            const banks = JSON.parse(localStorage.getItem(getStorageKey('banksData'))) || [];
-            const bank = banks.find(b => b.id == id);
-            if (!bank) return;
-            
-            const name = prompt('Название банка:', bank.bank);
-            if (!name) return;
-            const country = prompt('Страна:', bank.country) || bank.country;
-            const type = prompt('Тип счета:', bank.type) || bank.type;
-            const balance = prompt('Мин. баланс:', bank.balance) || bank.balance;
-            const time = prompt('Срок:', bank.time) || bank.time;
-            
-            const index = banks.findIndex(b => b.id == id);
-            banks[index] = { ...banks[index], bank: name, country, type, balance, time };
-            
-            localStorage.setItem(getStorageKey('banksData'), JSON.stringify(banks));
-            loadBanks();
-            saveAllToServer();
-            alert(t('messages.saved'));
-        }
         
         function deleteBank(id) {
             if (!confirm(t('messages.confirmDelete'))) return;
@@ -1226,12 +1290,16 @@
                 try { localStorage.setItem(getStorageKey('auditCountries'), JSON.stringify(items)); } catch(e){}
             }
             const grid = document.getElementById('audit-grid');
-            grid.innerHTML = items.map(c => `
+            grid.innerHTML = items.map(c => {
+                const requirementsList = (c.auditRequired || '').split('\n').filter(r => r.trim()).map(r => `<li>${r.trim()}</li>`).join('');
+                const requirementsHTML = requirementsList ? `<ul style="margin:0;padding-left:20px;">${requirementsList}</ul>` : '';
+                return `
                 <div class="country-card">
                     <h3><span class="flag">${c.flag || '🏳️'}</span> ${c.name}</h3>
                     <p><strong>Регион:</strong> ${getRegionName(c.region)}</p>
                     <p><strong>Налог:</strong> ${c.taxRate || ''}</p>
-                    <p><strong>Требования:</strong> ${c.auditRequired || ''}</p>
+                    <p><strong>Требования:</strong></p>
+                    ${requirementsHTML || '<p style="margin-left:20px;">—</p>'}
                     <p><strong>Стандарты:</strong> ${c.standards || ''}</p>
                     ${c.articleUrl ? `<p><strong>Статья:</strong> <a href="${c.articleUrl}" target="_blank" style="color:#3498db;">Подробнее →</a></p>` : ''}
                     <div class="form-actions">
@@ -1239,7 +1307,8 @@
                         <button class="btn btn-danger btn-sm" onclick="deleteAudit('${c.id}')">🗑️ Удалить</button>
                     </div>
                 </div>
-            `).join('');
+                `;
+            }).join('');
         }
         
         function showAddAuditForm() {

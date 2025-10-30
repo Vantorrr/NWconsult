@@ -180,15 +180,16 @@
   window.openCountryArticle = async (rawUrl, countryName) => {
     const url = (rawUrl || '').trim();
     if (url) {
-      const ok = await urlExists(url.endsWith('.html') || url.includes('?') ? url : `${url}.html`);
+      const final = url.endsWith('.html') || url.includes('?') ? url : `${url}.html`;
+      const ok = await urlExists(final);
       if (ok) {
-        window.open(url.endsWith('.html') || url.includes('?') ? url : `${url}.html`, '_blank');
+        window.location.href = final;
         return;
       }
     }
     const slug = slugify(countryName || 'article');
     const viewer = '/pages/articles/view.html?slug=' + encodeURIComponent(slug);
-    window.open(viewer, '_blank');
+    window.location.href = viewer;
   };
 })();
 

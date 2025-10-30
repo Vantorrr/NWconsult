@@ -334,10 +334,10 @@
     const url = (rawUrl || '').trim();
     if (url) {
       const final = url.endsWith('.html') || url.includes('?') ? url : `${url}.html`;
-      if (await urlExists(final)) { window.open(final, '_blank'); return; }
+      if (await urlExists(final)) { window.location.href = final; return; }
     }
     const slug = slugify(countryName || 'article');
     const viewer = '/nw-consulting-fr/pages/articles/view.html?slug=' + encodeURIComponent(slug);
-    window.open(viewer, '_blank');
+    window.location.href = viewer;
   };
 })();

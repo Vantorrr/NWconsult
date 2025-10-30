@@ -1,0 +1,9 @@
+{
+  "rewrites": [
+    { "source": "/en", "destination": "/nw-consulting-en/index.html" },
+    { "source": "/en/:path*", "destination": "/nw-consulting-en/:path*" },
+    { "source": "/fr", "destination": "/nw-consulting-fr/index.html" },
+    { "source": "/fr/:path*", "destination": "/nw-consulting-fr/:path*" }
+  ]
+}
+
